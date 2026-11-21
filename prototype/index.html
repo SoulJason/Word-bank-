@@ -2,127 +2,142 @@
 <title>Margin</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Caveat:wght@400;500&display=swap">
 <style>
-/* Layout: a running head, a horizontal gallery of leaves (one word per leaf), and a ruled writing line.
+/* Layout: a running head, a horizontal gallery of leaves (one word per leaf), and a ruled writing line in the thumb zone.
    Everything else lives behind a quiet fleuron that opens the Contents page. */
 :root{
   --paper:#F2EEE6; --leaf:#FBF9F4; --ink:#26252B; --ink-2:#5E5A55; --graphite:#9A948A;
-  --rule:#E0DACE; --accent:#2F416E; --pencil:#7D7869; --veil:rgba(38,37,43,.18);
-  --grain-op:.5; --grain-blend:multiply;
+  --rule:#E0DACE; --accent:#2F416E; --pencil:#7D7869; --hand:#3D4F86; --veil:rgba(38,37,43,.18);
+  --grain-op:.5; --grain-blend:multiply; --s:1;
   --f-display:"Cormorant Garamond","Iowan Old Style",Palatino,Georgia,serif;
   --f-text:"EB Garamond","Iowan Old Style",Palatino,Georgia,serif;
+  --f-hand:"Caveat","Bradley Hand","Segoe Print",cursive;
   --ease:cubic-bezier(.22,.61,.36,1);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --paper:#191715; --leaf:#221F1C; --ink:#EAE3D5; --ink-2:#B3AA9B; --graphite:#7C7468;
-  --rule:#35302A; --accent:#D8B677; --pencil:#A89B83; --veil:rgba(0,0,0,.45);
+  --rule:#35302A; --accent:#D8B677; --pencil:#A89B83; --hand:#A9B8E6; --veil:rgba(0,0,0,.45);
   --grain-op:.35; --grain-blend:soft-light; color-scheme:dark}}
 :root[data-theme="dark"]{
   --paper:#191715; --leaf:#221F1C; --ink:#EAE3D5; --ink-2:#B3AA9B; --graphite:#7C7468;
-  --rule:#35302A; --accent:#D8B677; --pencil:#A89B83; --veil:rgba(0,0,0,.45);
+  --rule:#35302A; --accent:#D8B677; --pencil:#A89B83; --hand:#A9B8E6; --veil:rgba(0,0,0,.45);
   --grain-op:.35; --grain-blend:soft-light; color-scheme:dark}
 *{box-sizing:border-box}
 html,body{height:100%}
-body{background:var(--paper);color:var(--ink);font-family:var(--f-text);font-size:18px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow:hidden;font-variant-numeric:oldstyle-nums}
-body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:var(--grain-op);mix-blend-mode:var(--grain-blend);
+body{background:var(--paper);color:var(--ink);font-family:var(--f-text);font-size:calc(18px*var(--s));line-height:1.5;-webkit-font-smoothing:antialiased;overflow:hidden;font-variant-numeric:oldstyle-nums;-webkit-tap-highlight-color:transparent}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opacity:var(--grain-op);mix-blend-mode:var(--grain-blend);
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .4 0 0 0 0 .33 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 button,input,textarea{font:inherit;color:inherit}
 button{cursor:pointer;background:none;border:0;padding:0}
 :focus-visible{outline:1px solid var(--accent);outline-offset:3px;border-radius:2px}
 .sc{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--graphite);font-variant-numeric:lining-nums}
 .app{height:100%;display:flex;flex-direction:column}
+.hand{font-family:var(--f-hand);color:var(--hand);font-size:calc(23px*var(--s));line-height:1.25}
 
 /* running head */
-.head{text-align:center;padding:14px max(16px,env(safe-area-inset-right,0px)) 4px max(16px,env(safe-area-inset-left,0px));flex-shrink:0}
-.head .title{font-family:var(--f-display);font-style:italic;font-size:22px;font-weight:500;color:var(--ink)}
+.head{text-align:center;padding:14px max(16px,env(safe-area-inset-right,0px)) 2px max(16px,env(safe-area-inset-left,0px));flex-shrink:0}
+.head .title{font-family:var(--f-display);font-style:italic;font-size:22px;font-weight:500;color:var(--ink);min-height:32px}
 .head .title:hover{color:var(--accent)}
-.chap{display:inline-flex;align-items:center;gap:10px;margin-top:2px}
-.chap button{color:var(--graphite);font-size:16px;width:28px;height:28px;border-radius:50%;transition:color .3s}
+.chap{display:inline-flex;align-items:center;gap:6px}
+.chap button{color:var(--graphite);font-size:16px;min-width:44px;height:36px;border-radius:50%;transition:color .3s}
 .chap button:hover{color:var(--ink)}
 
 /* gallery */
-.gallery{flex:1;min-height:0;display:flex;gap:18px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding:14px calc(50% - min(44vw,270px)) 18px;scrollbar-width:none;overscroll-behavior-x:contain}
+.gallery{flex:1;min-height:0;display:flex;gap:18px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding:12px calc(50% - min(44vw,270px)) 16px;scrollbar-width:none;overscroll-behavior-x:contain}
 .gallery::-webkit-scrollbar{display:none}
-.leaf{flex:0 0 min(88vw,540px);scroll-snap-align:center;background:var(--leaf);border-radius:3px;box-shadow:0 1px 0 var(--rule),0 18px 40px -28px rgba(40,30,20,.35);
-  padding:26px 26px 18px;overflow-y:auto;display:flex;flex-direction:column;opacity:.38;transform:scale(.965);transition:opacity .6s var(--ease),transform .6s var(--ease);scrollbar-width:thin}
+.leaf{flex:0 0 min(88vw,540px);scroll-snap-align:center;scroll-snap-stop:always;background:var(--leaf);border-radius:3px;box-shadow:0 1px 0 var(--rule),0 18px 40px -28px rgba(40,30,20,.35);
+  padding:26px 26px 14px;overflow-y:auto;display:flex;flex-direction:column;opacity:.38;transform:scale(.965);transition:opacity .6s var(--ease),transform .6s var(--ease);scrollbar-width:none}
 .leaf.cur{opacity:1;transform:none}
 .leaf .rh{display:flex;justify-content:space-between;gap:12px}
-.hw{font-family:var(--f-display);font-weight:600;font-size:clamp(40px,11vw,56px);line-height:1;margin:22px 0 6px;letter-spacing:-.005em;color:var(--hwc,var(--ink));overflow-wrap:anywhere}
-.say{color:var(--ink-2);font-size:15px;display:flex;gap:10px;flex-wrap:wrap;align-items:baseline}
+.hw{font-family:var(--f-display);font-weight:600;font-size:calc(clamp(40px,11vw,56px)*var(--s));line-height:1;margin:22px 0 6px;color:var(--hwc,var(--ink));overflow-wrap:anywhere;transition:color 1.2s}
+.say{color:var(--ink-2);font-size:calc(15px*var(--s));display:flex;gap:10px;flex-wrap:wrap;align-items:baseline}
 .say .ps{font-style:italic}
-.say .ph{letter-spacing:.06em;font-size:13px;font-variant-numeric:lining-nums}
-.gist{font-size:23px;line-height:1.35;margin:20px 0 0;text-wrap:pretty}
-.ctx{margin:22px 0 0;padding-left:16px;border-left:1px solid var(--rule);font-style:italic;color:var(--ink-2);font-size:18px}
+.say .ph{letter-spacing:.06em;font-size:calc(13px*var(--s));font-variant-numeric:lining-nums}
+.gist{font-size:calc(23px*var(--s));line-height:1.35;margin:20px 0 0;text-wrap:pretty}
+.ctx{margin:22px 0 0;padding-left:16px;border-left:1px solid var(--rule);font-style:italic;color:var(--ink-2);font-size:calc(18px*var(--s))}
 .pencil{position:relative;color:var(--ink);white-space:nowrap}
 .pencil::after{content:"";position:absolute;left:-2px;right:-2px;bottom:-4px;height:7px;background:var(--pencil);
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'%3E%3Cpath d='M1 5.5C18 3.2 37 6.4 55 4.6S86 3 99 4.2' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat;
-  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'%3E%3Cpath d='M1 5.5C18 3.2 37 6.4 55 4.6S86 3 99 4.2' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat;
-  clip-path:inset(0 0 0 0)}
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'%3E%3Cpath d='M1 5.5C18 3.2 37 6.4 55 4.6S86 3 99 4.2' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat}
 .fresh .pencil::after{clip-path:inset(0 100% 0 0);animation:draw 1.1s 1.1s var(--ease) forwards}
 @keyframes draw{to{clip-path:inset(0 0 0 0)}}
-.kin{margin-top:18px;font-size:16px;color:var(--ink-2)}
+.kin{margin-top:18px;font-size:calc(16px*var(--s));color:var(--ink-2)}
 .kin i{color:var(--ink)}
-.quote{margin:22px 0 0;text-align:center;font-style:italic;color:var(--ink-2);font-size:16px;text-wrap:balance}
+.quote{margin:22px 0 0;text-align:center;font-style:italic;color:var(--ink-2);font-size:calc(16px*var(--s));text-wrap:balance}
 .quote .by{display:block;font-style:normal;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--graphite);margin-top:4px}
+.margin-note{margin-top:20px;transform:rotate(-1deg);transform-origin:left}
+.margin-note textarea{width:100%;border:0;border-bottom:1px dashed var(--rule);background:none;outline:none;resize:none;font-family:var(--f-hand);color:var(--hand);font-size:calc(23px*var(--s));line-height:1.25;min-height:2.6em}
+.addnote{margin-top:18px;font-family:var(--f-hand);font-size:calc(20px*var(--s));color:var(--graphite);text-align:left;min-height:44px}
+.addnote:hover{color:var(--hand)}
+.own{margin-top:16px;font-size:calc(16px*var(--s));color:var(--ink-2)}
 .senses{margin-top:18px}
-.senses summary{list-style:none;cursor:pointer;color:var(--graphite);font-size:14px;font-style:italic}
+.senses summary{list-style:none;cursor:pointer;color:var(--graphite);font-size:calc(14px*var(--s));font-style:italic;min-height:32px}
 .senses summary::-webkit-details-marker{display:none}
-.senses ol{margin:10px 0 0;padding-left:22px;font-size:16px;color:var(--ink-2)}
+.senses ol{margin:6px 0 0;padding-left:22px;font-size:calc(16px*var(--s));color:var(--ink-2)}
 .senses li{margin-bottom:6px;padding-left:4px}
 .senses li button{text-align:left;color:inherit}
-.senses li button:hover{color:var(--ink)}
 .senses li.on{color:var(--ink)}
-.echo{margin-top:18px;font-size:15px;font-style:italic;color:var(--accent)}
-.foot{margin-top:auto;padding-top:26px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.echo{margin-top:18px;font-size:calc(15px*var(--s));font-style:italic;color:var(--accent)}
+.foot{margin-top:auto;padding-top:22px;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .foot .folio{font-size:14px;color:var(--graphite);font-variant-numeric:lining-nums}
-.foot .acts{display:flex;gap:16px}
-.foot .acts button{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--graphite);transition:color .3s}
+.foot .acts{display:flex;gap:4px}
+.foot .acts button{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--graphite);transition:color .3s;min-height:44px;padding:0 8px}
 .foot .acts button:hover{color:var(--ink)}
+/* veiled leaf: guess before the meaning */
+.veiled .hw{color:var(--graphite)}
+.guessbox{margin-top:24px;display:grid;gap:12px}
+.guessbox p{margin:0;font-style:italic;color:var(--ink-2);font-size:calc(16px*var(--s))}
+.guessbox input{border:0;border-bottom:1px dashed var(--rule);background:none;outline:none;font-family:var(--f-hand);color:var(--hand);font-size:calc(24px*var(--s));padding:2px 0}
+.guessbox input::placeholder{color:var(--graphite);opacity:.7}
+.lift{justify-self:start;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);min-height:44px}
+.yourguess{margin-top:10px;font-size:calc(15px*var(--s));color:var(--ink-2)}
 /* type setting in */
 .fresh .set>*{animation:inkIn .9s var(--ease) both}
 .fresh .set>*:nth-child(2){animation-delay:.12s}.fresh .set>*:nth-child(3){animation-delay:.35s}.fresh .set>*:nth-child(4){animation-delay:.6s}
 .fresh .set>*:nth-child(5){animation-delay:.8s}.fresh .set>*:nth-child(6){animation-delay:.95s}.fresh .set>*:nth-child(n+7){animation-delay:1.1s}
 @keyframes inkIn{from{opacity:0;filter:blur(4px);transform:translateY(3px)}to{opacity:1;filter:none;transform:none}}
 .blank{justify-content:center;align-items:center;text-align:center;color:var(--graphite)}
-.blank .orn{font-size:26px;color:var(--rule);margin-bottom:12px}
+.blank .orn{font-size:26px;color:var(--graphite);opacity:.5;margin-bottom:12px}
 .blank p{margin:0;font-style:italic;max-width:30ch}
-.missing .hw{color:var(--graphite)}
 
-/* writing line */
-.writer{flex-shrink:0;padding:6px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
-.writer form{max-width:540px;margin:0 auto;display:flex;align-items:flex-end;gap:14px}
-.line{flex:1;min-width:0;position:relative}
-.line input{width:100%;border:0;background:none;outline:none;border-bottom:1px solid var(--rule);font-family:var(--f-display);font-style:italic;font-size:26px;padding:4px 2px 6px;transition:border-color .4s}
+/* writing line (thumb zone) */
+.writer{flex-shrink:0;padding:4px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.writer form{max-width:540px;margin:0 auto;display:flex;align-items:flex-end;gap:12px}
+.line{flex:1;min-width:0}
+.line input{width:100%;border:0;background:none;outline:none;border-bottom:1px solid var(--rule);font-family:var(--f-display);font-style:italic;font-size:26px;padding:6px 2px 6px;transition:border-color .4s}
 .line input:focus{border-color:var(--ink-2)}
 .line input::placeholder{color:var(--graphite);opacity:.8}
-.ctxline{display:flex;gap:10px;margin-top:6px;overflow:hidden;max-height:0;opacity:0;transition:max-height .45s var(--ease),opacity .45s}
-.writer.open .ctxline{max-height:60px;opacity:1}
-.ctxline input{border:0;border-bottom:1px solid var(--rule);background:none;outline:none;font-style:italic;font-size:16px;padding:4px 2px;color:var(--ink-2)}
-.ctxline #ctx{flex:1;min-width:0}.ctxline #pg{width:62px}
-.orn-btn{font-size:24px;line-height:1;color:var(--graphite);width:40px;height:40px;border-radius:50%;flex-shrink:0;transition:color .4s,transform .6s var(--ease)}
+.ctxline{display:flex;gap:10px;align-items:flex-end;overflow:hidden;max-height:0;opacity:0;transition:max-height .45s var(--ease),opacity .45s}
+.writer.open .ctxline{max-height:64px;opacity:1}
+.ctxline input{border:0;border-bottom:1px solid var(--rule);background:none;outline:none;font-style:italic;font-size:16px;padding:8px 2px 4px;color:var(--ink-2)}
+.ctxline #ctx{flex:1;min-width:0}.ctxline #pg{width:56px}
+.later{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--graphite);white-space:nowrap;min-height:40px;padding:0 2px}
+.later:hover{color:var(--ink)}
+.orn-btn{font-size:24px;line-height:1;color:var(--graphite);width:44px;height:44px;border-radius:50%;flex-shrink:0;transition:color .4s,transform .6s var(--ease)}
 .orn-btn:hover{color:var(--ink);transform:rotate(-8deg)}
-.orn-btn .dot{display:block;width:5px;height:5px;border-radius:50%;background:var(--accent);margin:-4px auto 0;opacity:0;transition:opacity .5s}
+.orn-btn .dot{display:block;width:5px;height:5px;border-radius:50%;background:var(--accent);margin:-3px auto 0;opacity:0;transition:opacity .5s}
 .orn-btn.due .dot{opacity:1}
-.hint{max-width:540px;margin:4px auto 0;font-size:13px;font-style:italic;color:var(--graphite);min-height:18px;transition:opacity .5s}
+.hint{max-width:540px;margin:2px auto 0;font-size:13px;font-style:italic;color:var(--graphite);min-height:18px;text-align:center;transition:opacity .5s}
+.hint button{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-left:8px;min-height:28px}
 
-/* pages (contents, index, commonplace, shelf, revisit) */
-.page{position:fixed;inset:0;z-index:20;background:var(--paper);overflow-y:auto;opacity:0;transform:translateY(14px);transition:opacity .45s var(--ease),transform .55s var(--ease);visibility:hidden}
-.page.on{opacity:1;transform:none;visibility:visible}
-.page .inner{max-width:600px;margin:0 auto;padding:calc(22px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(60px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
-.close{display:block;margin:0 auto 26px;color:var(--graphite);font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+/* pages */
+.page{position:fixed;inset:0;z-index:20;background:var(--paper);overflow-y:auto;opacity:0;transform:translateY(14px);transition:opacity .45s var(--ease),transform .55s var(--ease),visibility 0s .55s;visibility:hidden}
+.page.on{opacity:1;transform:none;visibility:visible;transition:opacity .45s var(--ease),transform .55s var(--ease)}
+.page .inner{max-width:600px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(60px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+.close{display:block;margin:0 auto 22px;color:var(--graphite);font-size:12px;letter-spacing:.16em;text-transform:uppercase;min-height:44px;padding:0 12px}
 .close:hover{color:var(--ink)}
 .ptitle{font-family:var(--f-display);font-weight:500;font-size:40px;text-align:center;margin:0;line-height:1.1;text-wrap:balance}
 .psub{text-align:center;font-style:italic;color:var(--ink-2);margin:8px 0 34px}
 .toc{list-style:none;margin:0;padding:0}
-.toc li button{width:100%;display:flex;align-items:baseline;gap:8px;padding:12px 0;text-align:left;font-size:21px}
+.toc li button{width:100%;display:flex;align-items:baseline;gap:8px;padding:12px 0;text-align:left;font-size:21px;min-height:52px}
 .toc li button:hover .tn{color:var(--accent)}
 .toc .lead{flex:1;border-bottom:1px dotted var(--graphite);transform:translateY(-5px);min-width:20px;opacity:.6}
 .toc .tv{font-style:italic;color:var(--ink-2);font-size:17px}
 .toc .tn{transition:color .3s}
-.orn-c{text-align:center;color:var(--graphite);margin:34px 0;letter-spacing:.6em}
+.orn-c{text-align:center;color:var(--graphite);margin:30px 0;letter-spacing:.6em}
 .idx h3{font-family:var(--f-display);font-size:30px;font-weight:600;margin:26px 0 4px;color:var(--ink-2)}
-.idx .e{display:block;width:100%;text-align:left;padding:6px 0;font-size:17px;line-height:1.4}
+.idx .e{display:block;width:100%;text-align:left;padding:8px 0;font-size:17px;line-height:1.4}
 .idx .e b{font-weight:500}
 .idx .e .m{color:var(--ink-2)}
 .idx .e .s{color:var(--graphite);font-style:italic;font-size:15px}
@@ -132,58 +147,73 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .cp-e{margin:0 0 18px;font-size:17px}
 .cp-e .w{font-family:var(--f-display);font-weight:600;font-size:22px}
 .cp-e .c{display:block;font-style:italic;color:var(--ink-2);margin-top:2px}
+.cp-e .hand{display:block;font-size:20px;margin-top:2px}
 .colophon{text-align:center;font-style:italic;color:var(--graphite);font-size:15px;margin-top:40px}
-.shelf .b{display:flex;justify-content:space-between;align-items:baseline;width:100%;padding:12px 0;border-bottom:1px solid var(--rule);text-align:left;gap:12px}
+.shelf .b{display:flex;justify-content:space-between;align-items:baseline;width:100%;padding:12px 0;border-bottom:1px solid var(--rule);text-align:left;gap:12px;min-height:52px}
 .shelf .b .t{font-family:var(--f-display);font-size:24px;font-style:italic}
 .shelf .b .n{color:var(--graphite);font-size:15px;white-space:nowrap}
 .shelf .b.cur .t{color:var(--accent)}
 .newbook{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;align-items:flex-end}
 .newbook input{flex:1 1 160px;min-width:0;border:0;border-bottom:1px solid var(--rule);background:none;outline:none;font-style:italic;font-size:18px;padding:6px 2px}
-.txtbtn{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);padding:8px 0}
-.txtbtn:disabled{color:var(--graphite);cursor:default}
+.txtbtn{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);min-height:44px;padding:0 4px}
+.txtbtn.dim{color:var(--graphite)}
+.prefs .p{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.prefs .p div{min-width:0}
+.prefs .p b{font-weight:500;font-size:19px;display:block}
+.prefs .p span{font-style:italic;color:var(--ink-2);font-size:15px}
+.prefs .p button{flex-shrink:0;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--graphite);min-height:44px;min-width:52px;text-align:right}
+.prefs .p button[aria-pressed="true"]{color:var(--accent)}
 
-/* slip: a word returns */
+/* slips */
 .veil{position:fixed;inset:0;z-index:30;background:var(--veil);opacity:0;transition:opacity .5s;pointer-events:none}
 .veil.on{opacity:1;pointer-events:auto}
-.slip{position:fixed;z-index:31;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));width:min(calc(100% - 32px),480px);background:var(--leaf);border-radius:3px;padding:24px 24px 18px;
-  box-shadow:0 24px 50px -20px rgba(30,20,10,.45);transform:translate(-50%,120%) rotate(-1.2deg);transition:transform .8s var(--ease);text-align:center}
-.slip.on{transform:translate(-50%,0) rotate(-.6deg)}
-.slip .q{font-size:21px;line-height:1.45;font-style:italic;margin:14px 0 18px;text-wrap:pretty}
-.gap{display:inline-block;min-width:4.2em;border-bottom:1px solid var(--ink-2);font-style:normal;font-family:var(--f-display);font-weight:600;color:var(--ink);transition:color .5s}
+.slip{position:fixed;z-index:31;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));width:min(calc(100% - 32px),480px);max-height:calc(100% - 80px);overflow-y:auto;background:var(--leaf);border-radius:3px;padding:22px 22px 14px;
+  box-shadow:0 24px 50px -20px rgba(30,20,10,.45);transform:translate(-50%,130%) rotate(-1.2deg);transition:transform .8s var(--ease);text-align:center}
+.slip.on{transform:translate(-50%,0) rotate(-.5deg)}
+.slip .q{font-size:calc(21px*var(--s));line-height:1.45;font-style:italic;margin:14px 0 16px;text-wrap:pretty}
+.gap{display:inline-block;min-width:4.2em;border-bottom:1px solid var(--ink-2);font-style:normal;font-family:var(--f-display);font-weight:600;color:var(--ink)}
 .gap .ltr{color:var(--graphite);letter-spacing:.25em}
 .slip .ans{font-family:var(--f-display);font-weight:600;font-size:34px;line-height:1.1;margin:4px 0 2px;animation:inkIn .8s var(--ease) both}
 .slip .gl{color:var(--ink-2);font-size:16px;margin:0 0 6px;animation:inkIn .8s .15s var(--ease) both}
-.slip .row{display:flex;justify-content:center;gap:26px;margin-top:14px;flex-wrap:wrap}
-.choices{display:flex;justify-content:center;gap:10px 22px;flex-wrap:wrap;margin-top:4px}
-.choices button{font-family:var(--f-display);font-size:24px;font-weight:500;padding:2px 4px;border-bottom:1px solid transparent;transition:border-color .3s,color .3s}
+.slip .hand{display:block;margin:4px 0 6px;animation:inkIn .8s .3s var(--ease) both}
+.slip .row{display:flex;justify-content:center;gap:4px 24px;margin-top:10px;flex-wrap:wrap}
+.choices{display:flex;justify-content:center;gap:6px 22px;flex-wrap:wrap;margin-top:4px}
+.choices button{font-family:var(--f-display);font-size:24px;font-weight:500;padding:2px 6px;min-height:44px;border-bottom:1px solid transparent;transition:border-color .3s,color .3s}
 .choices button:hover{border-color:var(--rule)}
-.choices button.r{border-color:var(--ink-2)}
-.choices button.x{color:var(--graphite);text-decoration:line-through;text-decoration-thickness:1px}
-.revisit .slip{position:static;transform:rotate(-.4deg);width:auto;margin-top:10px;box-shadow:0 1px 0 var(--rule),0 18px 40px -28px rgba(40,30,20,.35)}
+.typed{display:flex;gap:10px;justify-content:center;align-items:flex-end;margin-top:4px}
+.typed input,.slip textarea{border:0;border-bottom:1px solid var(--rule);background:none;outline:none;font-family:var(--f-display);font-size:26px;font-weight:600;text-align:center;width:min(100%,240px);padding:2px}
+.slip textarea{font-family:var(--f-hand);font-weight:400;color:var(--hand);font-size:24px;text-align:left;width:100%;resize:none;min-height:3.4em;border-bottom-style:dashed}
+.chend{list-style:none;margin:10px 0 6px;padding:0;text-align:left}
+.chend li{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);min-height:48px;padding:8px 0}
+.chend li:last-child{border-bottom:0}
+.chend button{font-family:var(--f-display);font-weight:600;font-size:22px;text-align:left;flex-shrink:0}
+.chend .m{color:var(--graphite);font-style:italic;font-size:15px;min-width:0}
+.chend .m.shown{color:var(--ink-2);font-style:normal;animation:inkIn .7s var(--ease) both}
+.revisit .slip{position:static;transform:rotate(-.4deg);width:auto;max-height:none;margin-top:10px;box-shadow:0 1px 0 var(--rule),0 18px 40px -28px rgba(40,30,20,.35)}
 .revisit .slip.turn{animation:turn .7s var(--ease)}
 @keyframes turn{from{opacity:0;transform:translateX(24px) rotate(1deg)}to{opacity:1;transform:rotate(-.4deg)}}
 .modal .leaf{opacity:1;transform:none;margin:0 auto;max-width:540px;min-height:60vh}
-.missing-sugg button{font-family:var(--f-display);font-style:italic;font-size:22px;color:var(--accent);margin:0 8px}
+.missing-sugg button{font-family:var(--f-display);font-style:italic;font-size:22px;color:var(--accent);margin:0 8px;min-height:44px}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
-@media (min-width:900px){.gallery{gap:28px}.leaf{padding:34px 38px 22px}}
+@media (min-width:900px){.gallery{gap:28px}.leaf{padding:34px 38px 18px}}
 </style>
 
 <div class="app">
   <header class="head">
     <button class="title" id="bookTitle" data-go="shelf" aria-label="Change book"></button>
-    <div><span class="chap"><button data-act="ch-" aria-label="Previous chapter">‹</button><span class="sc" id="chapLbl"></span><button data-act="ch+" aria-label="Next chapter">›</button></span></div>
+    <div><span class="chap"><button data-act="ch-" aria-label="Previous chapter">‹</button><span class="sc" id="chapLbl"></span><button data-act="ch+" aria-label="Finish this chapter">›</button></span></div>
   </header>
   <section class="gallery" id="gallery" aria-label="Words from this book" tabindex="-1"></section>
   <div class="writer" id="writer">
     <form id="cap" autocomplete="off">
       <div class="line">
         <input id="q" placeholder="write a word…" aria-label="Look up a word" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
-        <div class="ctxline"><input id="ctx" placeholder="the sentence, if you like" aria-label="Sentence from the book"><input id="pg" placeholder="page" inputmode="numeric" aria-label="Page"></div>
+        <div class="ctxline"><input id="ctx" placeholder="the sentence, if you like" aria-label="Sentence from the book" enterkeyhint="search"><input id="pg" placeholder="page" inputmode="numeric" aria-label="Page" enterkeyhint="search"><button type="button" class="later" id="later" title="Save the word without its meaning, to look at when you finish the chapter">later</button></div>
       </div>
       <button type="submit" hidden aria-hidden="true" tabindex="-1"></button>
       <button type="button" class="orn-btn" id="orn" data-go="contents" aria-label="Contents">❦<span class="dot"></span></button>
     </form>
-    <p class="hint" id="hint"></p>
+    <p class="hint" id="hint" aria-live="polite"></p>
   </div>
 </div>
 <div class="page" id="page" role="dialog" aria-modal="true"><div class="inner" id="pageInner"></div></div>
@@ -192,19 +222,23 @@ button{cursor:pointer;background:none;border:0;padding:0}
 
 <script>
 // ===== state =====
-const DAY=864e5, now=()=>Date.now(), INTERVALS=[0,1,3,7,16,35];
+const DAY=864e5, HOUR=36e5, now=()=>Date.now(), INTERVALS=[0,1,3,7,16,35];
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
 const roman=n=>{let r="";for(const[v,s]of[[1000,"m"],[900,"cm"],[500,"d"],[400,"cd"],[100,"c"],[90,"xc"],[50,"l"],[40,"xl"],[10,"x"],[9,"ix"],[5,"v"],[4,"iv"],[1,"i"]])while(n>=v){r+=s;n-=v}return r};
-const SEED=[["ardent","Dorothea's ardent wish to do some great good in the world.",9,1,3],["sanguine","Mr. Brooke was sanguine about his chances at the election.",22,2,2],["quixotic","Her neighbours thought the cottage scheme quixotic.",31,3,1],["provincial","The provincial gossip of the town reached him by noon.",64,4,4],["taciturn","Caleb, taciturn as ever, said nothing at dinner.",88,5,0],["obdurate","Old Featherstone remained obdurate to the end.",102,6,1],["parsimony","His parsimony was the talk of the parish.",118,7,0],["ebullient","Fred came in ebullient after his good fortune.",124,7,0]];
-function seed(){return{books:[{id:"b1",title:"Middlemarch",author:"George Eliot",chapter:7}],active:"b1",lastSlip:0,
-  words:SEED.map((r,i)=>({id:"s"+i,bookId:"b1",word:r[0],context:r[1],page:r[2],chapter:r[3],strength:r[4],pick:0,added:now()-(8-i)*DAY*2,due:i%3===0?now()-DAY:now()+(i+1)*DAY,known:false,sample:true,echoes:[]}))}}
-let S;try{S=JSON.parse(localStorage.getItem("margin.v2"))}catch(e){}
+const SEED=[["ardent","Dorothea's ardent wish to do some great good in the world.",9,1,3,"a candle held too close"],["sanguine","Mr. Brooke was sanguine about his chances at the election.",22,2,2,""],["quixotic","Her neighbours thought the cottage scheme quixotic.",31,3,1,"Don Quixote & the windmills"],["provincial","The provincial gossip of the town reached him by noon.",64,4,4,""],["taciturn","Caleb, taciturn as ever, said nothing at dinner.",88,5,0,"tacit, silent"],["obdurate","Old Featherstone remained obdurate to the end.",102,6,1,""],["parsimony","His parsimony was the talk of the parish.",118,7,0,""],["ebullient","Fred came in ebullient after his good fortune.",124,7,0,""]];
+const PREFS={returns:true,guess:false,awake:false,scale:1};
+function seed(){return{v:3,books:[{id:"b1",title:"Middlemarch",author:"George Eliot",chapter:7}],active:"b1",lastActive:0,lastSlip:0,prefs:{...PREFS},
+  words:SEED.map((r,i)=>({id:"s"+i,bookId:"b1",word:r[0],context:r[1],page:r[2],chapter:r[3],strength:r[4],note:r[5],pick:0,added:now()-(8-i)*DAY*2,due:i%3===0?now()-DAY:now()+(i+1)*DAY,known:false,sample:true,echoes:[]}))}}
+let S;try{S=JSON.parse(localStorage.getItem("margin.v3"))}catch(e){}
 if(!S||!Array.isArray(S.words))S=seed();
-const save=()=>{try{localStorage.setItem("margin.v2",JSON.stringify(S))}catch(e){}};
+S.prefs={...PREFS,...(S.prefs||{})};
+const save=()=>{try{localStorage.setItem("margin.v3",JSON.stringify(S))}catch(e){}};
 const book=()=>S.books.find(b=>b.id===S.active)||S.books[0];
 const byId=id=>S.words.find(w=>w.id===id);
 const $=id=>document.getElementById(id);
+const sessionStart=S.lastActive; // when you last used the app, before this visit
+const touch=()=>{S.lastActive=now();save()};
 
 // ===== dictionary (WordNet 3.1 + CMU, shipped beside the page) =====
 const shards={};
@@ -215,14 +249,14 @@ function forms(w){
   const m=w.match(/^(.*?)([bcdfgklmnprstvz])\2(ed|ing|er|est)$/);if(m)out.push(m[1]+m[2]);
   return [...new Set(out)];
 }
+const clean=raw=>raw.toLowerCase().trim().replace(/[’]/g,"'").replace(/[^a-z' -]/g,"").replace(/\s+/g,"-");
 async function findEntry(raw){
-  const w=raw.toLowerCase().trim().replace(/[’]/g,"'").replace(/[^a-z' -]/g,"").replace(/\s+/g,"-");
-  if(!w)return null;
+  const w=clean(raw);if(!w)return null;
   for(const f of forms(w)){const sh=await shard(f[0]);if(Object.hasOwn(sh,f))return{lemma:f,say:sh[f][0],senses:sh[f][1]}}
   return null;
 }
 async function suggest(raw){
-  const w=raw.toLowerCase().trim();const sh=await shard(w[0]);let best=[];
+  const w=clean(raw);if(!w)return[];const sh=await shard(w[0]);let best=[];
   const lev=(a,b)=>{const d=Array.from({length:b.length+1},(_,i)=>i);for(let i=1;i<=a.length;i++){let p=d[0];d[0]=i;for(let j=1;j<=b.length;j++){const t=d[j];d[j]=Math.min(d[j]+1,d[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return d[b.length]};
   for(const k in sh){if(Math.abs(k.length-w.length)>2)continue;const s=lev(w,k);if(s<=2)best.push([s,k])}
   return best.sort((a,b)=>a[0]-b[0]).slice(0,3).map(x=>x[1]);
@@ -235,32 +269,45 @@ function pickSense(senses,context,lemma){ // simplified Lesk: overlap between yo
 }
 async function hydrate(w){if(w.senses)return;const e=await findEntry(w.word);if(e){w.word=e.lemma;w.say=e.say;w.senses=e.senses;w.pick=Math.min(w.pick||0,e.senses.length-1)}else{w.senses=[]}}
 
-// ===== rendering a leaf =====
+// ===== the leaf =====
 const POSN={n:"noun",v:"verb",adj:"adjective",adv:"adverb"};
 const inkColor=w=>`color-mix(in srgb, var(--ink) ${w.known?100:40+w.strength*12}%, var(--graphite))`;
-function markWord(ctx,w){
-  const e=esc(ctx);const stem=esc(w.typed||w.word).slice(0,Math.max(4,(w.typed||w.word).length-2)).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
-  const re=new RegExp(`\\b(${stem}[a-z]*)`,"i");return re.test(e)?e.replace(re,'<span class="pencil">$1</span>'):e;
+const stemRe=w=>{const t=(w.typed||w.word);return t.slice(0,Math.max(4,t.length-2)).replace(/[^a-z'-]/g,"")};
+function markWord(ctx,w){const e=esc(ctx),re=new RegExp(`\\b(${stemRe(w)}[a-z]*)`,"i");return re.test(e)?e.replace(re,'<span class="pencil">$1</span>'):e}
+function quoteFor(w){for(const s of [w.senses[w.pick],...w.senses]){const q=s&&s[2].find(e=>e[1]);if(q)return q}return null}
+const rh=w=>`<div class="rh"><span class="sc">Chapter ${roman(w.chapter||1)}</span><span class="sc">${w.page?"p. "+w.page:""}</span></div>`;
+let noting=null;
+function noteHTML(w){
+  if(noting===w.id)return `<div class="margin-note"><textarea class="notearea" data-id="${w.id}" rows="2" aria-label="Your note in the margin" placeholder="whatever it reminds you of">${esc(w.note||"")}</textarea></div>`;
+  return w.note?`<button class="margin-note hand" data-act="note" data-id="${w.id}" style="text-align:left" aria-label="Edit your note">${esc(w.note)}</button>`:`<button class="addnote" data-act="note" data-id="${w.id}">+ a note in the margin</button>`;
 }
-function quoteFor(w){const order=[w.senses[w.pick],...w.senses];for(const s of order){const q=s&&s[2].find(e=>e[1]);if(q)return q}return null}
 function leafHTML(w,i,n,fresh){
-  if(!w.senses)return `<article class="leaf" data-id="${w.id}"><div class="rh"><span class="sc">Chapter ${roman(w.chapter||1)}</span></div><h2 class="hw">${esc(w.word)}</h2></article>`;
-  if(!w.senses.length)return `<article class="leaf missing" data-id="${w.id}"><div class="rh"><span class="sc">Chapter ${roman(w.chapter||1)}</span></div><h2 class="hw">${esc(w.word)}</h2><p class="gist">Not in this dictionary.</p><div class="foot"><span></span><span class="acts"><button data-act="del" data-id="${w.id}">Remove</button></span></div></article>`;
-  const s=w.senses[w.pick]||w.senses[0];const q=quoteFor(w);const plainEx=!w.context&&s[2].find(e=>!e[1]);
-  const others=w.senses.length>1;const echo=(w.echoes||[]).slice(-1)[0];
+  const foot=`<div class="foot"><span class="folio">${n>1?`${i+1} of ${n}`:""}</span><span class="acts">${w.senses&&w.senses.length&&!w.veiled?`<button data-act="known" data-id="${w.id}">${w.known?"Keep":"Known"}</button>`:""}<button data-act="del" data-id="${w.id}">Remove</button></span></div>`;
+  if(!w.senses)return `<article class="leaf" data-id="${w.id}">${rh(w)}<h2 class="hw">${esc(w.word)}</h2></article>`;
+  if(!w.senses.length)return `<article class="leaf" data-id="${w.id}">${rh(w)}<h2 class="hw" style="color:var(--graphite)">${esc(w.word)}</h2><p class="gist">Not in this dictionary.</p>${foot}</article>`;
+  const s=w.senses[w.pick]||w.senses[0];
+  if(w.veiled)return `<article class="leaf veiled" data-id="${w.id}">${rh(w)}
+    <h2 class="hw">${esc(w.word)}</h2><div class="say"><span class="ps">${POSN[s[0]]||s[0]}</span>${w.say?`<span class="ph">${esc(w.say)}</span>`:""}</div>
+    ${w.context?`<p class="ctx">${markWord(w.context,w)}</p>`:""}
+    <div class="guessbox"><p>${w.context?"What might it mean, from the sentence?":"What might it mean?"} A guess, even a wrong one, helps it stay.</p>
+      <input class="guess" data-id="${w.id}" placeholder="your guess" aria-label="Your guess" enterkeyhint="done" autocapitalize="off">
+      <button class="lift" data-act="unveil" data-id="${w.id}">Lift the veil</button></div>${foot}</article>`;
+  const q=quoteFor(w),plainEx=!w.context&&s[2].find(e=>!e[1]),echo=(w.echoes||[]).slice(-1)[0];
   return `<article class="leaf${fresh?" fresh":""}" data-id="${w.id}" style="--hwc:${inkColor(w)}">
    <div class="set">
-    <div class="rh"><span class="sc">Chapter ${roman(w.chapter||1)}</span><span class="sc">${w.page?"p. "+w.page:""}</span></div>
+    ${rh(w)}
     <h2 class="hw">${esc(w.word)}</h2>
     <div class="say"><span class="ps">${POSN[s[0]]||s[0]}</span>${w.say?`<span class="ph">${esc(w.say)}</span>`:""}</div>
     <p class="gist">${esc(s[1].charAt(0).toUpperCase()+s[1].slice(1))}.</p>
+    ${w.guess?`<p class="yourguess">You guessed <span class="hand">${esc(w.guess)}</span></p>`:""}
     ${w.context?`<p class="ctx">${markWord(w.context,w)}</p>`:plainEx?`<p class="ctx">${esc(plainEx[0])}</p>`:""}
     ${s[3].length?`<p class="kin">Kindred: ${s[3].map(k=>`<i>${esc(k.replace(/-/g," "))}</i>`).join(", ")}</p>`:""}
+    ${noteHTML(w)}
+    ${w.own?`<p class="own">In your words: <i>${esc(w.own)}</i></p>`:""}
     ${echo?`<p class="echo">Met again in chapter ${roman(echo.chapter||1)}${echo.page?", p. "+echo.page:""}. It will come back sooner.</p>`:""}
     ${q?`<p class="quote">“${esc(q[0])}”<span class="by">${esc(q[1])}</span></p>`:""}
-    ${others?`<details class="senses"><summary>${w.senses.length-1} other sense${w.senses.length>2?"s":""}</summary><ol>${w.senses.map((x,k)=>`<li class="${k===w.pick?"on":""}"><button data-act="sense" data-id="${w.id}" data-k="${k}" title="Use this sense"><i>${x[0]}.</i> ${esc(x[1])}</button></li>`).join("")}</ol></details>`:""}
-   </div>
-   <div class="foot"><span class="folio">${i+1} of ${n}</span><span class="acts"><button data-act="known" data-id="${w.id}">${w.known?"Keep":"Known"}</button><button data-act="del" data-id="${w.id}">Remove</button></span></div>
+    ${w.senses.length>1?`<details class="senses"><summary>${w.senses.length-1} other sense${w.senses.length>2?"s":""}</summary><ol>${w.senses.map((x,k)=>`<li class="${k===w.pick?"on":""}"><button data-act="sense" data-id="${w.id}" data-k="${k}" title="Use this sense"><i>${x[0]}.</i> ${esc(x[1])}</button></li>`).join("")}</ol></details>`:""}
+   </div>${foot}
   </article>`;
 }
 const galleryWords=()=>{const b=book();return S.words.filter(w=>!w.known&&(w.bookId===b.id||(w.echoes||[]).some(e=>e.bookId===b.id))).sort((a,c)=>(a.lastMet||a.added)-(c.lastMet||c.added))};
@@ -273,98 +320,143 @@ function renderGallery(focusId,smooth){
   observer=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle("cur",e.intersectionRatio>.6)),{root:g,threshold:[.6]});
   g.querySelectorAll(".leaf").forEach(l=>observer.observe(l));
   const target=g.querySelector(`[data-id="${focusId||(ws.length?ws[ws.length-1].id:"blank")}"]`);
-  if(target)requestAnimationFrame(()=>target.scrollIntoView({behavior:smooth?"smooth":"instant",inline:"center",block:"nearest"}));
+  if(target){g.style.scrollSnapType="none";target.scrollIntoView({behavior:"instant",inline:"center",block:"nearest"});g.style.scrollSnapType="";if(smooth)target.animate?.([{transform:"translateY(10px)",opacity:.3},{transform:"none",opacity:1}],{duration:600,easing:"cubic-bezier(.22,.61,.36,1)"})}
   freshId=null;
+  if(noting){const t=g.querySelector(".notearea");if(t){t.focus({preventScroll:true});t.setSelectionRange(t.value.length,t.value.length)}}
 }
 function renderHead(){
   const b=book();$("bookTitle").textContent=b.title;$("chapLbl").textContent="Chapter "+roman(b.chapter);
   $("orn").classList.toggle("due",dueWords().length>0);
+  document.documentElement.style.setProperty("--s",S.prefs.scale);
 }
+
+// ===== hints with undo =====
+let hintT,undoFn=null;
+function hint(t,undo,ms=5000){const h=$("hint");undoFn=undo||null;h.innerHTML=esc(t)+(undo?`<button data-act="undo">Undo</button>`:"");clearTimeout(hintT);hintT=setTimeout(()=>{h.textContent="";undoFn=null},ms)}
 
 // ===== lookup =====
-let hintT;
-function hint(t,ms=4200){const h=$("hint");h.textContent=t;clearTimeout(hintT);if(ms)hintT=setTimeout(()=>h.textContent="",ms)}
-async function lookup(raw,context,page){
-  raw=raw.trim();if(!raw)return;
+async function lookup(raw,context,page,later){
+  raw=raw.trim();if(!raw)return;touch();
   const e=await findEntry(raw);
-  if(!e){const sg=await suggest(raw);openPage(`<button class="close" data-close>Return to the book</button><div class="leaf modal-leaf" style="opacity:1;transform:none;margin:0 auto;max-width:540px"><h2 class="hw" style="color:var(--graphite)">${esc(raw)}</h2><p class="gist">Not in this dictionary.</p>${sg.length?`<p class="kin">Perhaps</p><p class="missing-sugg">${sg.map(s=>`<button data-act="try" data-w="${esc(s)}">${esc(s)}</button>`).join("")}</p>`:`<p class="kin">Check the spelling, or try the word's plain form.</p>`}</div>`);return}
+  if(!e){const sg=await suggest(raw);openPage(`<button class="close" data-close>Return to the book</button><div class="leaf" style="opacity:1;transform:none;margin:0 auto;max-width:540px"><h2 class="hw" style="color:var(--graphite)">${esc(raw)}</h2><p class="gist">Not in this dictionary.</p>${sg.length?`<p class="kin">Perhaps</p><p class="missing-sugg">${sg.map(s=>`<button data-act="try" data-w="${esc(s)}" data-c="${esc(context)}" data-p="${esc(page)}">${esc(s)}</button>`).join("")}</p>`:`<p class="kin">Check the spelling, or try the word's plain form.</p>`}</div>`);return}
   const b=book();
   const prior=S.words.find(w=>w.word===e.lemma);
-  if(prior){ // an echo: you've met this word before
+  if(prior){ // an echo: you've met this word before, so it hasn't stuck yet
     prior.echoes=prior.echoes||[];prior.echoes.push({bookId:b.id,chapter:b.chapter,page:page?+page:null,context,at:now()});
     prior.strength=Math.max(0,prior.strength-1);prior.due=now()+DAY;prior.known=false;prior.lastMet=now();
-    if(context&&!prior.context)prior.context=context;
-    save();freshId=prior.id;renderGallery(prior.id,true);hint("You've met this one before.");return;
+    if(context&&!prior.context){prior.context=context;prior.typed=raw.toLowerCase()}
+    save();freshId=prior.id;renderGallery(prior.id,true);hint("You've met this one before. It's back in the gallery.");return;
   }
-  const w={id:uid(),bookId:b.id,word:e.lemma,typed:raw.toLowerCase(),say:e.say,senses:e.senses,pick:pickSense(e.senses,context,e.lemma),context:context||"",page:page?+page:null,chapter:b.chapter,strength:0,added:now(),due:now()+DAY,known:false,echoes:[]};
-  S.words.push(w);save();freshId=w.id;renderGallery(w.id,true);renderHead();
+  const w={id:uid(),bookId:b.id,word:e.lemma,typed:raw.toLowerCase(),say:e.say,senses:e.senses,pick:pickSense(e.senses,context,e.lemma),context:context||"",page:page?+page:null,chapter:b.chapter,strength:0,added:now(),due:now()+DAY,known:false,echoes:[],note:"",veiled:!!(later||S.prefs.guess),later:!!later};
+  S.words.push(w);save();freshId=w.id;
+  if(later){renderGallery(null);hint(`“${w.word}” is pencilled in for the end of the chapter.`)}else renderGallery(w.id,true);
+  renderHead();
 }
 
-// ===== spaced return =====
-const dueWords=()=>S.words.filter(w=>!w.known&&w.senses&&w.senses.length&&w.due<=now());
+// ===== remembering =====
+const dueWords=()=>S.words.filter(w=>!w.known&&!w.veiled&&w.senses&&w.senses.length&&w.due<=now());
 function schedule(w,remembered){
   w.strength=remembered?Math.min(5,w.strength+1):Math.max(0,w.strength-1);
-  w.due=now()+(remembered?Math.max(1,INTERVALS[w.strength]):(1/24))*DAY;save();
+  w.due=now()+(remembered?Math.max(1,INTERVALS[w.strength])*DAY:HOUR);save();
 }
+const sameWord=(typed,w)=>{const t=clean(typed);return !!t&&(t===w.word||forms(t).includes(w.word)||t===(w.typed||""))};
 function clozeHTML(w,revealed){
   const src=w.context||(w.senses[w.pick][2].find(e=>e)||[])[0];
   const gapIn=revealed?esc(w.word):`<span class="ltr">${esc(w.word[0])}${"·".repeat(Math.max(2,w.word.length-1))}</span>`;
-  if(src){const stem=(w.typed||w.word).slice(0,Math.max(4,(w.typed||w.word).length-2)).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");const re=new RegExp(`\\b${stem}[a-z]*`,"i");
-    if(re.test(src))return esc(src).replace(new RegExp(`\\b${esc(stem)}[a-z]*`,"i"),`<span class="gap">${gapIn}</span>`);}
+  const re=new RegExp(`\\b${stemRe(w)}[a-z]*`,"i");
+  if(src&&re.test(src))return esc(src).replace(re,`<span class="gap">${gapIn}</span>`);
   return `<span style="font-style:normal">${esc(w.senses[w.pick][1])}</span><br><span class="gap">${gapIn}</span>`;
 }
-function choicesFor(w){const pool=S.words.filter(x=>x.id!==w.id&&x.senses&&x.senses.length).map(x=>x.word);if(pool.length<2)return null;return [w.word,...pool.sort(()=>Math.random()-.5).slice(0,2)].sort(()=>Math.random()-.5)}
+function choicesFor(w){const pool=[...new Set(S.words.filter(x=>x.id!==w.id&&x.senses&&x.senses.length).map(x=>x.word))];if(pool.length<2)return null;return [w.word,...pool.sort(()=>Math.random()-.5).slice(0,2)].sort(()=>Math.random()-.5)}
+// a ladder of difficulty: recognise → recall → use
+function modeFor(w,allowUse){if(allowUse&&w.strength>=4)return"use";if(w.strength>=2)return"recall";return choicesFor(w)?"choice":"reveal"}
+function newItem(st,w,label,allowUse){Object.assign(st,{revealed:false,verdict:null,label,mode:modeFor(w,allowUse),choices:null,typed:""});if(st.mode==="choice")st.choices=choicesFor(w)}
 function slipBody(w,st){
-  const ch=st.choices;
-  let h=`<div class="sc">${st.label}</div><p class="q">${clozeHTML(w,st.revealed)}</p>`;
+  let h=`<div class="sc">${st.label}</div>`;
   if(!st.revealed){
-    h+=ch?`<div class="choices">${ch.map(c=>`<button data-act="choose" data-v="${esc(c)}">${esc(c)}</button>`).join("")}</div><div class="row"><button class="txtbtn" data-act="reveal" style="color:var(--graphite)">I don't know</button></div>`
-         :`<div class="row"><button class="txtbtn" data-act="reveal">Reveal</button></div>`;
+    if(st.mode==="choice")h+=`<p class="q">${clozeHTML(w,false)}</p><div class="choices">${st.choices.map(c=>`<button data-act="choose" data-v="${esc(c)}">${esc(c)}</button>`).join("")}</div><div class="row"><button class="txtbtn dim" data-act="reveal">I don't know</button></div>`;
+    else if(st.mode==="reveal")h+=`<p class="q">${clozeHTML(w,false)}</p><div class="row"><button class="txtbtn" data-act="reveal">Reveal</button></div>`;
+    else if(st.mode==="recall")h+=`<p class="q">${esc(w.senses[w.pick][1].charAt(0).toUpperCase()+w.senses[w.pick][1].slice(1))}.<br><span style="font-size:16px;color:var(--graphite)">${w.word.length} letters, beginning with <b style="font-style:normal">${esc(w.word[0])}</b></span></p>
+      <form class="typed" data-form="recall"><input id="recallIn" aria-label="The word" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done"><button class="txtbtn">Check</button></form><div class="row"><button class="txtbtn dim" data-act="reveal">Show me</button></div>`;
+    else h+=`<p class="q">Write a line of your own with <b style="font-family:var(--f-display);font-style:normal">${esc(w.word)}</b>, <span style="color:var(--ink-2)">${esc(w.senses[w.pick][1])}</span>.</p>
+      <textarea id="useIn" aria-label="Your sentence" placeholder="about your day, someone you know, anything"></textarea><div class="row"><button class="txtbtn" data-act="keepuse">Keep it on the leaf</button><button class="txtbtn dim" data-act="mark" data-v="1">Skip</button></div>`;
   }else{
     const s=w.senses[w.pick];
-    h+=`<div class="ans" style="color:${inkColor(w)}">${esc(w.word)}</div><p class="gl">${esc(s[1])}.</p>`;
-    h+=st.verdict==null?`<div class="row"><button class="txtbtn" data-act="mark" data-v="1">I remembered</button><button class="txtbtn" data-act="mark" data-v="0" style="color:var(--graphite)">Not yet</button></div>`
-      :`<div class="row"><button class="txtbtn" data-act="slipnext">${st.verdict?"It's inked a little darker":"It will return tomorrow"} &nbsp;→</button></div>`;
+    h+=`<p class="q" style="margin-bottom:6px">${st.mode==="use"?`<i>${esc(w.own||"")}</i>`:clozeHTML(w,true)}</p><div class="ans" style="color:${inkColor(w)}">${esc(w.word)}</div><p class="gl">${esc(s[1])}.</p>${w.note?`<span class="hand">${esc(w.note)}</span>`:""}`;
+    if(st.mode==="recall"&&st.typed)h+=`<p class="gl" style="font-style:italic">${st.verdict?"Exactly.":`You wrote “${esc(st.typed)}”.`}</p>`;
+    h+=st.verdict==null?`<div class="row"><button class="txtbtn" data-act="mark" data-v="1">I remembered</button><button class="txtbtn dim" data-act="mark" data-v="0">Not yet</button></div>`
+      :`<div class="row"><button class="txtbtn" data-act="slipnext">${st.verdict?"Inked a little darker":"It will come back soon"} &nbsp;→</button></div>`;
   }
   return h;
 }
-// The Return: a slip rises when you open the book
-let slipState=null;
-function maybeSlip(){
-  const due=dueWords().filter(w=>now()-(w.lastMet||w.added)>3600e3);
-  if(!due.length||now()-(S.lastSlip||0)<20*60e3)return;
-  const qs=due.sort(()=>Math.random()-.5).slice(0,2);
-  slipState={queue:qs.map(w=>w.id),i:0,revealed:false,verdict:null,label:"Before you read on",choices:choicesFor(qs[0])};
-  S.lastSlip=now();save();
-  setTimeout(()=>{drawSlip();$("veil").classList.add("on");$("slip").classList.add("on")},900);
+function slipAction(st,a,v){
+  const w=byId(st.queue[st.i]);touch();
+  if(a==="choose"){st.revealed=true;st.verdict=v===w.word;schedule(w,st.verdict)}
+  if(a==="reveal")st.revealed=true;
+  if(a==="recall"){st.typed=v;st.revealed=true;st.verdict=sameWord(v,w);schedule(w,st.verdict)}
+  if(a==="mark"){st.verdict=v==="1";if(st.mode==="use"&&!st.revealed)st.revealed=true;schedule(w,st.verdict)}
+  if(a==="keepuse"){const t=v.trim();if(!t)return;w.own=t;st.revealed=true;st.verdict=true;schedule(w,true)}
+  if(st.verdict&&st.kept!=null&&(a!=="reveal"))st.kept++;
 }
-function drawSlip(){const w=byId(slipState.queue[slipState.i]);$("slip").innerHTML=slipBody(w,slipState)+(slipState.revealed?"":`<div class="row" style="margin-top:8px"><button class="sc" data-act="slipclose">Not now</button></div>`)}
-function closeSlip(){$("slip").classList.remove("on");$("veil").classList.remove("on");slipState=null;renderHead()}
+// The Return: at the start of a reading session, at most two words rise on a slip
+let slipState=null;
+function maybeReturn(){
+  if(!S.prefs.returns)return;
+  const fresh=now()-(sessionStart||0)>30*60e3&&now()-(S.lastSlip||0)>30*60e3;
+  const due=dueWords().filter(w=>now()-(w.lastMet||w.added)>HOUR);
+  if(!fresh||!due.length)return;
+  const qs=due.sort((a,b)=>a.due-b.due).slice(0,2);
+  slipState={kind:"return",queue:qs.map(w=>w.id),i:0};newItem(slipState,qs[0],"Before you read on",false);
+  S.lastSlip=now();save();
+  setTimeout(()=>showSlip(),900);
+}
+function showSlip(){drawSlip();$("veil").classList.add("on");$("slip").classList.add("on")}
+function drawSlip(){
+  const st=slipState;if(!st)return;
+  if(st.kind==="chapter")return drawChapterEnd();
+  const w=byId(st.queue[st.i]);$("slip").innerHTML=slipBody(w,st)+(st.revealed?"":`<div class="row"><button class="sc" data-act="slipclose" style="min-height:40px">Not now</button></div>`);
+  if(st.mode==="recall"&&!st.revealed)setTimeout(()=>$("recallIn")?.focus(),350);
+}
+function closeSlip(){$("slip").classList.remove("on");$("veil").classList.remove("on");slipState=null;renderHead();renderGallery(galleryFocus())}
+const galleryFocus=()=>{const c=$("gallery").querySelector(".leaf.cur");return c?.dataset.id};
+// Chapter's end: a natural pause. Words from the chapter, meanings folded; pencilled words wait here.
+function chapterEnd(ch){
+  const b=book();const ws=S.words.filter(w=>w.bookId===b.id&&w.chapter===ch&&!w.known&&w.senses&&w.senses.length);
+  if(!ws.length)return false;
+  slipState={kind:"chapter",ch,ids:ws.map(w=>w.id),shown:{}};showSlip();return true;
+}
+function drawChapterEnd(){
+  const st=slipState;const ws=st.ids.map(byId).filter(Boolean);
+  const pencilled=ws.filter(w=>w.veiled).length;
+  $("slip").innerHTML=`<div class="sc">End of chapter ${roman(st.ch)}</div>
+   <p class="q" style="font-size:18px;margin:10px 0 4px">${pencilled?`${pencilled} pencilled word${pencilled>1?"s":""} waiting. Tap a word to see if its meaning comes back.`:"Before you turn the page: tap a word to see if its meaning comes back."}</p>
+   <ul class="chend">${ws.map(w=>`<li><button data-act="${w.veiled?"gotoleaf":"peek"}" data-id="${w.id}" style="color:${w.veiled?"var(--graphite)":inkColor(w)}">${esc(w.word)}</button><span class="m${st.shown[w.id]?" shown":""}">${w.veiled?"pencilled · guess, then lift the veil":st.shown[w.id]?esc(w.senses[w.pick][1]):"· · ·"}</span></li>`).join("")}</ul>
+   <div class="row"><button class="txtbtn" data-act="slipclose">Read on</button></div>`;
+}
 
-// Revisit: a longer, still quiet, session
+// Revisit: a longer round, still quiet
 let rv=null;
 function startRevisit(){
-  let pool=dueWords();if(pool.length<3)pool=pool.concat(S.words.filter(w=>!w.known&&w.senses&&w.senses.length&&!pool.includes(w)).sort((a,b)=>a.strength-b.strength)).slice(0,Math.max(3,pool.length));
-  pool=pool.slice(0,6);
-  rv={queue:pool.map(w=>w.id),i:0,revealed:false,verdict:null,label:"",choices:null,kept:0};nextRv(true);
+  let pool=dueWords();
+  if(pool.length<3)pool=pool.concat(S.words.filter(w=>!w.known&&!w.veiled&&w.senses&&w.senses.length&&!pool.includes(w)).sort((a,b)=>a.strength-b.strength)).slice(0,Math.max(3,pool.length));
+  pool=pool.slice(0,6).sort(()=>Math.random()-.5); // interleave books and chapters
+  if(!pool.length){openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Revisit</h1><div class="orn-c">⁂</div><p class="psub">Nothing to revisit yet. Words come back here a day after you meet them.</p>`,"revisit");return}
+  rv={kind:"revisit",queue:pool.map(w=>w.id),i:0,kept:0};newItem(rv,pool[0],`1 of ${pool.length}`,true);drawRv();
 }
-function nextRv(first){if(!first)rv.i++;if(rv.i<rv.queue.length){const w=byId(rv.queue[rv.i]);Object.assign(rv,{revealed:false,verdict:null,label:`${rv.i+1} of ${rv.queue.length}`,choices:rv.i%2?null:choicesFor(w)})}drawRv()}
+function nextRv(){rv.i++;if(rv.i<rv.queue.length)newItem(rv,byId(rv.queue[rv.i]),`${rv.i+1} of ${rv.queue.length}`,true);drawRv()}
 function drawRv(){
-  if(rv.i>=rv.queue.length){openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Revisit</h1><div class="orn-c">⁂</div><p class="psub" style="margin-top:0">${rv.kept} of ${rv.queue.length} came back to you.<br>The rest will find you again soon.</p>`,"revisit");return}
+  if(rv.i>=rv.queue.length){openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Revisit</h1><div class="orn-c">⁂</div><p class="psub" style="margin-top:0">${rv.kept} of ${rv.queue.length} came back to you.<br>The rest will find you again, a little sooner.</p><div class="row" style="display:flex;justify-content:center"><button class="txtbtn" data-close>Return to the book</button></div>`,"revisit");return}
   const w=byId(rv.queue[rv.i]);
-  openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Revisit</h1><p class="psub">Words from your margins, returning.</p><div class="slip on turn">${slipBody(w,rv)}</div>`,"revisit");
+  openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Revisit</h1><p class="psub">Words from your margins, returning.</p><div class="revisit"><div class="slip on turn">${slipBody(w,rv)}</div></div>`,"revisit");
+  if(rv.mode==="recall"&&!rv.revealed)setTimeout(()=>$("recallIn")?.focus(),300);
 }
-function slipAction(st,a,v){
-  const w=byId(st.queue[st.i]);
-  if(a==="choose"){st.revealed=true;st.verdict=v===w.word;schedule(w,st.verdict);if(st.verdict&&st===rv)rv.kept++}
-  if(a==="reveal")st.revealed=true;
-  if(a==="mark"){st.verdict=v==="1";schedule(w,st.verdict);if(st.verdict&&st===rv)rv.kept++}
-}
+const activeSt=()=>pageKind==="revisit"?rv:slipState;
+const redraw=st=>st===rv?drawRv():drawSlip();
 
 // ===== pages =====
 let pageKind=null;
 function openPage(html,kind){pageKind=kind||null;$("pageInner").innerHTML=html;const p=$("page");if(!p.classList.contains("on")){p.scrollTop=0;p.classList.add("on")}}
-function closePage(){$("page").classList.remove("on");pageKind=null;rv=null;renderHead();renderGallery()}
+function closePage(){$("page").classList.remove("on");pageKind=null;rv=null;renderHead();renderGallery(galleryFocus())}
 function pageContents(){
   const b=book(),due=dueWords().length,all=S.words.length;
   openPage(`<button class="close" data-close>Return to the book</button>
@@ -375,84 +467,117 @@ function pageContents(){
     <li><button data-go="index"><span class="tn">Index</span><span class="lead"></span><span class="tv">${all} words</span></button></li>
     <li><button data-go="commonplace"><span class="tn">Commonplace Book</span><span class="lead"></span><span class="tv">${esc(b.title)}</span></button></li>
     <li><button data-go="shelf"><span class="tn">The Shelf</span><span class="lead"></span><span class="tv">${S.books.length} book${S.books.length>1?"s":""}</span></button></li>
+    <li><button data-go="prefs"><span class="tn">Preferences</span><span class="lead"></span><span class="tv">how it behaves</span></button></li>
    </ul><div class="orn-c">❦</div>
-   <p class="psub" style="font-size:15px">Definitions from WordNet, Princeton University. Pronunciations from the CMU Pronouncing Dictionary.${S.words.some(w=>w.sample)?`<br>The Middlemarch words are examples. <button class="txtbtn" data-act="reset" style="padding:0;font-size:inherit;letter-spacing:0;text-transform:none;text-decoration:underline">Begin with an empty margin</button>`:""}</p>`,"contents");
+   <p class="psub" style="font-size:15px">Definitions from WordNet, Princeton University. Pronunciations from the CMU Pronouncing Dictionary.${S.words.some(w=>w.sample)?`<br>The Middlemarch words are examples. <button class="txtbtn" data-act="reset" style="font-size:inherit;letter-spacing:0;text-transform:none;text-decoration:underline;min-height:0">Begin with an empty margin</button>`:""}</p>`,"contents");
 }
 let idxQ="";
 function pageIndex(){
-  const q=idxQ.toLowerCase();const ws=S.words.filter(w=>w.senses&&(!q||w.word.includes(q)||(w.senses[w.pick]||[])[1]?.includes(q))).sort((a,b)=>a.word.localeCompare(b.word));
+  const q=idxQ.toLowerCase();const ws=S.words.filter(w=>w.senses&&w.senses.length&&(!q||w.word.includes(q)||(w.senses[w.pick]||[])[1]?.includes(q)||(w.note||"").toLowerCase().includes(q))).sort((a,b)=>a.word.localeCompare(b.word));
   const groups={};ws.forEach(w=>(groups[w.word[0].toUpperCase()]??=[]).push(w));
-  const body=Object.keys(groups).map(L=>`<h3>${L}</h3>`+groups[L].map(w=>{const s=w.senses[w.pick]||["",""];const bk=S.books.find(b=>b.id===w.bookId);return `<button class="e${w.known?" known":""}" data-act="open" data-id="${w.id}"><b>${esc(w.word)}</b>, <i>${s[0]}.</i> <span class="m">${esc(s[1])}.</span> <span class="s">${esc(bk?.title||"")}, ${roman(w.chapter||1)}</span></button>`}).join("")).join("");
-  const html=`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Index</h1><p class="psub">Every word in your margins, in order.</p>
-    <input class="search" id="idxq" placeholder="find a word or a meaning" value="${esc(idxQ)}" aria-label="Search the index"><div class="idx" id="idxBody">${body||`<p class="psub">Nothing yet.</p>`}</div>`;
-  if(pageKind==="index"){$("idxBody").innerHTML=body||`<p class="psub">Nothing matches.</p>`}else openPage(html,"index");
+  const body=Object.keys(groups).map(L=>`<h3>${L}</h3>`+groups[L].map(w=>{const s=w.senses[w.pick];const bk=S.books.find(b=>b.id===w.bookId);return `<button class="e${w.known?" known":""}" data-act="open" data-id="${w.id}"><b>${esc(w.word)}</b>, <i>${s[0]}.</i> <span class="m">${w.veiled?"pencilled in":esc(s[1])+"."}</span> <span class="s">${esc(bk?.title||"")}, ${roman(w.chapter||1)}${w.known?" · known":""}</span></button>`}).join("")).join("");
+  if(pageKind==="index"){$("idxBody").innerHTML=body||`<p class="psub">Nothing matches.</p>`;return}
+  openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Index</h1><p class="psub">Every word in your margins, from every book.</p>
+    <input class="search" id="idxq" placeholder="find a word, a meaning or a note" value="${esc(idxQ)}" aria-label="Search the index"><div class="idx" id="idxBody">${body||`<p class="psub">Nothing yet.</p>`}</div>`,"index");
 }
 function pageCommonplace(){
-  const b=book();const ws=S.words.filter(w=>w.bookId===b.id&&w.senses&&w.senses.length).sort((a,c)=>(a.chapter-c.chapter)||((a.page||0)-(c.page||0)));
+  const b=book();const ws=S.words.filter(w=>w.bookId===b.id&&w.senses&&w.senses.length&&!w.veiled).sort((a,c)=>(a.chapter-c.chapter)||((a.page||0)-(c.page||0)));
   const chs={};ws.forEach(w=>(chs[w.chapter]??=[]).push(w));
-  const first=ws.length?new Date(Math.min(...ws.map(w=>w.added))):null,last=ws.length?new Date(Math.max(...ws.map(w=>w.added))):null;
-  const fmt=d=>d.toLocaleDateString(undefined,{day:"numeric",month:"long"});
+  const fmt=d=>new Date(d).toLocaleDateString(undefined,{day:"numeric",month:"long"});
   openPage(`<button class="close" data-close>Return to the book</button>
    <p class="sc" style="text-align:center;margin:0 0 10px">A commonplace book</p>
    <h1 class="ptitle" style="font-style:italic">${esc(b.title)}</h1><p class="psub">${b.author?"after "+esc(b.author):""}</p>
-   ${Object.keys(chs).sort((a,c)=>a-c).map(c=>`<p class="sc cp-ch">Chapter ${roman(+c)}</p>`+chs[c].map(w=>{const s=w.senses[w.pick];return `<p class="cp-e"><span class="w">${esc(w.word)}</span> <i>${s[0]}.</i> ${esc(s[1])}.${w.context?`<span class="c">${markWord(w.context,w)}${w.page?` <span style="font-style:normal;color:var(--graphite)">p. ${w.page}</span>`:""}</span>`:""}</p>`}).join("")).join("")||`<p class="psub">The words you gather from this book will be set here, chapter by chapter.</p>`}
-   ${ws.length?`<div class="orn-c">❦</div><p class="colophon">${ws.length} word${ws.length>1?"s":""} gathered${first?` between ${fmt(first)} and ${fmt(last)}`:""}.</p>`:""}`,"commonplace");
+   ${Object.keys(chs).sort((a,c)=>a-c).map(c=>`<p class="sc cp-ch">Chapter ${roman(+c)}</p>`+chs[c].map(w=>{const s=w.senses[w.pick];return `<p class="cp-e"><span class="w">${esc(w.word)}</span> <i>${s[0]}.</i> ${esc(s[1])}.${w.context?`<span class="c">${markWord(w.context,w)}${w.page?` <span style="font-style:normal;color:var(--graphite)">p. ${w.page}</span>`:""}</span>`:""}${w.note?`<span class="hand">${esc(w.note)}</span>`:""}</p>`}).join("")).join("")||`<p class="psub">The words you gather from this book will be set here, chapter by chapter.</p>`}
+   ${ws.length?`<div class="orn-c">❦</div><p class="colophon">${ws.length} word${ws.length>1?"s":""} gathered between ${fmt(Math.min(...ws.map(w=>w.added)))} and ${fmt(Math.max(...ws.map(w=>w.added)))}.</p>`:""}`,"commonplace");
 }
 function pageShelf(){
   openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">The Shelf</h1><p class="psub">Choose the book you're reading.</p>
    <div class="shelf">${S.books.map(b=>`<button class="b${b.id===S.active?" cur":""}" data-act="setbook" data-id="${b.id}"><span class="t">${esc(b.title)}</span><span class="n">${esc(b.author||"")} · ${S.words.filter(w=>w.bookId===b.id).length}</span></button>`).join("")}</div>
    <form class="newbook" id="nb" autocomplete="off"><input id="nbt" placeholder="a new book" aria-label="Title" required><input id="nba" placeholder="its author" aria-label="Author"><button class="txtbtn">Place on shelf</button></form>`,"shelf");
 }
-function openLeaf(id){const w=byId(id);openPage(`<button class="close" data-go="index">Back to the index</button><div class="modal">${leafHTML(w,0,1,false).replace(/<span class="folio">.*?<\/span>/,'<span></span>')}</div>`,"leaf")}
+function pagePrefs(){
+  const P=S.prefs,t=(k,b,s)=>`<div class="p"><div><b>${b}</b><span>${s}</span></div><button data-act="pref" data-k="${k}" aria-pressed="${!!P[k]}">${P[k]?"On":"Off"}</button></div>`;
+  openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Preferences</h1><p class="psub">Margin should be as quiet as you want it.</p>
+   <div class="prefs">
+    ${t("returns","Words return when I open the book","At most two, at the start of a reading session. Otherwise they wait in Revisit.")}
+    ${t("guess","Guess before the meaning","Each new word arrives veiled, so you can guess from the sentence first. Guessing first helps a word stay.")}
+    ${t("awake","Keep the screen awake","For when the phone lies open beside a paper book.")}
+    <div class="p"><div><b>Size of type</b><span>Larger or smaller text on the leaves.</span></div><span style="display:flex;gap:4px"><button data-act="scale" data-v="-1" aria-label="Smaller type" style="min-width:44px;text-align:center;font-size:15px;letter-spacing:0;text-transform:none">A</button><button data-act="scale" data-v="1" aria-label="Larger type" style="min-width:44px;text-align:center;font-size:22px;letter-spacing:0;text-transform:none">A</button></span></div>
+   </div>`,"prefs");
+}
+function openLeaf(id){const w=byId(id);openPage(`<button class="close" data-go="index">Back to the index</button><div class="modal">${leafHTML(w,0,1,false)}</div>`,"leaf")}
+const refresh=id=>pageKind==="leaf"?openLeaf(id):renderGallery(id);
+
+// ===== keep the page awake (optional) =====
+let wakeLock=null;
+async function syncWake(){try{if(S.prefs.awake&&document.visibilityState==="visible"){wakeLock=await navigator.wakeLock?.request("screen")}else{await wakeLock?.release();wakeLock=null}}catch(e){wakeLock=null}}
+document.addEventListener("visibilitychange",syncWake);
 
 // ===== events =====
-document.addEventListener("click",async e=>{
+document.addEventListener("click",e=>{
   const t=e.target.closest("[data-go],[data-act],[data-close]");if(!t)return;
   if(t.hasAttribute("data-close")){closePage();return}
   const go=t.dataset.go;
   if(go==="contents")return pageContents();
-  if(go==="index"){return pageIndex()}
+  if(go==="index")return pageIndex();
   if(go==="commonplace")return pageCommonplace();
   if(go==="shelf")return pageShelf();
+  if(go==="prefs")return pagePrefs();
   if(go==="revisit")return startRevisit();
   const a=t.dataset.act,id=t.dataset.id,b=book();
-  if(["choose","reveal","mark"].includes(a)){const st=slipState||rv;slipAction(st,a,t.dataset.v);st===rv?drawRv():drawSlip();return}
-  if(a==="slipnext"){if(rv&&pageKind==="revisit")return nextRv();slipState.i++;if(slipState.i>=slipState.queue.length)return closeSlip();const w=byId(slipState.queue[slipState.i]);Object.assign(slipState,{revealed:false,verdict:null,label:"And one more",choices:choicesFor(w)});return drawSlip()}
+  if(["choose","reveal","mark"].includes(a)){const st=activeSt();slipAction(st,a,t.dataset.v);return redraw(st)}
+  if(a==="keepuse"){const st=activeSt();slipAction(st,a,$("useIn").value);return redraw(st)}
+  if(a==="slipnext"){if(pageKind==="revisit")return nextRv();slipState.i++;if(slipState.i>=slipState.queue.length)return closeSlip();newItem(slipState,byId(slipState.queue[slipState.i]),"And one more",false);return drawSlip()}
   if(a==="slipclose")return closeSlip();
+  if(a==="peek"){slipState.shown[id]=true;byId(id).lastMet=byId(id).lastMet||byId(id).added;return drawChapterEnd()}
+  if(a==="gotoleaf"){$("slip").classList.remove("on");$("veil").classList.remove("on");slipState=null;renderGallery(id,true);setTimeout(()=>$("gallery").querySelector(`[data-id="${id}"] .guess`)?.focus(),500);return}
   if(a==="ch-"){b.chapter=Math.max(1,b.chapter-1);save();return renderHead()}
-  if(a==="ch+"){b.chapter++;save();renderHead();return hint(`New words will be filed under chapter ${roman(b.chapter)}.`)}
-  if(a==="sense"){const w=byId(id);w.pick=+t.dataset.k;save();if(pageKind==="leaf")return openLeaf(id);return renderGallery(id)}
-  if(a==="known"){const w=byId(id);w.known=!w.known;save();if(pageKind==="leaf")return openLeaf(id);hint(w.known?`“${w.word}” is pressed into the index.`:"");return renderGallery()}
-  if(a==="del"){S.words=S.words.filter(x=>x.id!==id);save();if(pageKind==="leaf")return pageIndex();return renderGallery()}
+  if(a==="ch+"){const old=b.chapter;b.chapter++;save();renderHead();touch();if(!chapterEnd(old))hint(`New words will be filed under chapter ${roman(b.chapter)}.`);return}
+  if(a==="sense"){const w=byId(id);w.pick=+t.dataset.k;save();return refresh(id)}
+  if(a==="unveil"){const w=byId(id);const g=document.querySelector(`.guess[data-id="${id}"]`);w.guess=(g?.value||"").trim();w.veiled=false;w.later=false;w.due=now()+DAY;save();freshId=id;touch();return refresh(id)}
+  if(a==="note"){noting=id;return refresh(id)}
+  if(a==="known"){const w=byId(id);w.known=!w.known;save();if(pageKind==="leaf")return openLeaf(id);hint(`“${w.word}” is pressed into the index.`,()=>{w.known=false;save();renderGallery(id)});return renderGallery()}
+  if(a==="del"){const i=S.words.findIndex(x=>x.id===id);const [w]=S.words.splice(i,1);save();hint(`“${w.word}” removed.`,()=>{S.words.splice(i,0,w);save();renderGallery(w.id)});if(pageKind==="leaf")return pageIndex();return renderGallery()}
+  if(a==="undo"){const f=undoFn;undoFn=null;$("hint").textContent="";f?.();return}
   if(a==="open")return openLeaf(id);
-  if(a==="try"){closePage();return lookup(t.dataset.w,"","")}
-  if(a==="setbook"){S.active=id;save();closePage();renderHead();return}
+  if(a==="try"){closePage();return lookup(t.dataset.w,t.dataset.c||"",t.dataset.p||"")}
+  if(a==="setbook"){S.active=id;save();closePage();return}
   if(a==="reset"){S.words=S.words.filter(w=>!w.sample);save();closePage();return}
+  if(a==="pref"){S.prefs[t.dataset.k]=!S.prefs[t.dataset.k];save();syncWake();return pagePrefs()}
+  if(a==="scale"){S.prefs.scale=Math.round(Math.min(1.3,Math.max(.9,S.prefs.scale+ +t.dataset.v*.1))*10)/10;save();renderHead();return}
 });
-$("cap").addEventListener("submit",e=>{e.preventDefault();const q=$("q").value,c=$("ctx").value.trim(),p=$("pg").value.trim();$("q").value="";$("ctx").value="";$("pg").value="";$("writer").classList.remove("open");$("q").blur();lookup(q,c,p)});
+function submitLookup(later){const q=$("q").value,c=$("ctx").value.trim(),p=$("pg").value.trim();if(!q.trim())return;$("q").value="";$("ctx").value="";$("pg").value="";$("writer").classList.remove("open");document.activeElement?.blur();lookup(q,c,p,later)}
+$("cap").addEventListener("submit",e=>{e.preventDefault();submitLookup(false)});
+$("later").addEventListener("click",()=>submitLookup(true));
 $("q").addEventListener("focus",()=>$("writer").classList.add("open"));
 document.addEventListener("pointerdown",e=>{if(!e.target.closest(".writer"))$("writer").classList.remove("open")});
-document.addEventListener("submit",e=>{if(e.target.id!=="nb")return;e.preventDefault();const t=$("nbt").value.trim();if(!t)return;const nb={id:uid(),title:t,author:$("nba").value.trim(),chapter:1};S.books.push(nb);S.active=nb.id;save();closePage()});
+document.addEventListener("submit",e=>{
+  if(e.target.id==="nb"){e.preventDefault();const t=$("nbt").value.trim();if(!t)return;const nb={id:uid(),title:t,author:$("nba").value.trim(),chapter:1};S.books.push(nb);S.active=nb.id;save();closePage();return}
+  if(e.target.dataset.form==="recall"){e.preventDefault();const st=activeSt();const v=$("recallIn").value;if(!v.trim())return;slipAction(st,"recall",v);redraw(st)}
+});
 document.addEventListener("input",e=>{if(e.target.id==="idxq"){idxQ=e.target.value;pageIndex()}});
-$("veil").addEventListener("click",closeSlip);
+document.addEventListener("focusout",e=>{if(e.target.classList?.contains("notearea")){const w=byId(e.target.dataset.id);if(w){w.note=e.target.value.trim();save()}noting=null;setTimeout(()=>refresh(w?.id),0)}});
 document.addEventListener("keydown",e=>{
+  if(e.target.classList?.contains("guess")&&e.key==="Enter"){e.preventDefault();document.querySelector(`[data-act="unveil"][data-id="${e.target.dataset.id}"]`)?.click();return}
+  if(e.target.classList?.contains("notearea")&&e.key==="Enter"&&!e.shiftKey){e.preventDefault();e.target.blur();return}
   const typing=/INPUT|TEXTAREA/.test(document.activeElement?.tagName);
-  if(e.key==="Escape"){if(slipState)return closeSlip();if(pageKind)return closePage();$("q").blur()}
+  if(e.key==="Escape"){if(slipState)return closeSlip();if(pageKind)return closePage();document.activeElement?.blur()}
   if(typing||pageKind||slipState||e.metaKey||e.ctrlKey||e.altKey)return;
   const g=$("gallery");
   if(e.key==="ArrowRight"||e.key==="ArrowLeft"){e.preventDefault();g.scrollBy({left:(e.key==="ArrowRight"?1:-1)*g.querySelector(".leaf").offsetWidth,behavior:"smooth"})}
-  else if(/^[a-zA-Z]$/.test(e.key)){$("q").focus()}
+  else if(/^[a-zA-Z]$/.test(e.key)&&(document.activeElement===document.body||!document.activeElement))$("q").focus();
 });
+$("veil").addEventListener("click",closeSlip);
 // pinch the gallery closed to see the Index
-let pinch0=0;
-$("gallery").addEventListener("touchstart",e=>{if(e.touches.length===2)pinch0=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY)},{passive:true});
-$("gallery").addEventListener("touchmove",e=>{if(e.touches.length===2&&pinch0){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);if(d<pinch0*.6){pinch0=0;pageIndex()}}},{passive:true});
+let pinch0=0;const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+$("gallery").addEventListener("touchstart",e=>{if(e.touches.length===2)pinch0=dist(e.touches)},{passive:true});
+$("gallery").addEventListener("touchmove",e=>{if(e.touches.length===2&&pinch0&&dist(e.touches)<pinch0*.6){pinch0=0;pageContents()}},{passive:true});
 
 // ===== boot =====
 (async()=>{
-  renderHead();renderGallery();
+  renderHead();renderGallery();syncWake();
   const pending=S.words.filter(w=>!w.senses);
   if(pending.length){await Promise.all(pending.map(hydrate));save();renderGallery();renderHead()}
-  maybeSlip();
+  maybeReturn();touch();
 })();
 </script>
