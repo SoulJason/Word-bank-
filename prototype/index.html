@@ -4,8 +4,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Caveat:wght@400;500&display=swap">
 <style>
-/* Layout: a running head, a horizontal gallery of leaves (one word per leaf), and a ruled writing line in the thumb zone.
-   Everything else lives behind a quiet fleuron that opens the Contents page. */
+/* Layout: the book's title as a running head, a horizontal gallery of leaves (one word per leaf),
+   and a writing line in the thumb zone that is ready the moment the app opens. Everything else sits behind ❦. */
 :root{
   --paper:#F2EEE6; --leaf:#FBF9F4; --ink:#26252B; --ink-2:#5E5A55; --graphite:#9A948A;
   --rule:#E0DACE; --accent:#2F416E; --pencil:#7D7869; --hand:#3D4F86; --veil:rgba(38,37,43,.18);
@@ -36,89 +36,85 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .hand{font-family:var(--f-hand);color:var(--hand);font-size:calc(23px*var(--s));line-height:1.25}
 
 /* running head */
-.head{text-align:center;padding:14px max(16px,env(safe-area-inset-right,0px)) 2px max(16px,env(safe-area-inset-left,0px));flex-shrink:0}
-.head .title{font-family:var(--f-display);font-style:italic;font-size:22px;font-weight:500;color:var(--ink);min-height:32px}
+.head{text-align:center;padding:12px max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));flex-shrink:0}
+.head .title{font-family:var(--f-display);font-style:italic;font-size:23px;font-weight:500;color:var(--ink);min-height:44px;padding:0 12px}
 .head .title:hover{color:var(--accent)}
-.chap{display:inline-flex;align-items:center;gap:6px}
-.chap button{color:var(--graphite);font-size:16px;min-width:44px;height:36px;border-radius:50%;transition:color .3s}
-.chap button:hover{color:var(--ink)}
 
 /* gallery */
-.gallery{flex:1;min-height:0;display:flex;gap:18px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding:12px calc(50% - min(44vw,270px)) 16px;scrollbar-width:none;overscroll-behavior-x:contain}
+.gallery{flex:1;min-height:0;display:flex;gap:18px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding:8px calc(50% - min(44vw,270px)) 14px;scrollbar-width:none;overscroll-behavior-x:contain}
 .gallery::-webkit-scrollbar{display:none}
 .leaf{flex:0 0 min(88vw,540px);scroll-snap-align:center;scroll-snap-stop:always;background:var(--leaf);border-radius:3px;box-shadow:0 1px 0 var(--rule),0 18px 40px -28px rgba(40,30,20,.35);
-  padding:26px 26px 14px;overflow-y:auto;display:flex;flex-direction:column;opacity:.38;transform:scale(.965);transition:opacity .6s var(--ease),transform .6s var(--ease);scrollbar-width:none}
+  padding:24px 26px 12px;overflow-y:auto;display:flex;flex-direction:column;opacity:.38;transform:scale(.965);transition:opacity .6s var(--ease),transform .6s var(--ease);scrollbar-width:none}
 .leaf.cur{opacity:1;transform:none}
 .leaf .rh{display:flex;justify-content:space-between;gap:12px}
-.hw{font-family:var(--f-display);font-weight:600;font-size:calc(clamp(40px,11vw,56px)*var(--s));line-height:1;margin:22px 0 6px;color:var(--hwc,var(--ink));overflow-wrap:anywhere;transition:color 1.2s}
+.hw{font-family:var(--f-display);font-weight:600;font-size:calc(clamp(40px,11vw,56px)*var(--s));line-height:1;margin:20px 0 6px;color:var(--hwc,var(--ink));overflow-wrap:anywhere;transition:color 1.2s}
 .say{color:var(--ink-2);font-size:calc(15px*var(--s));display:flex;gap:10px;flex-wrap:wrap;align-items:baseline}
 .say .ps{font-style:italic}
 .say .ph{letter-spacing:.06em;font-size:calc(13px*var(--s));font-variant-numeric:lining-nums}
-.gist{font-size:calc(23px*var(--s));line-height:1.35;margin:20px 0 0;text-wrap:pretty}
-.ctx{margin:22px 0 0;padding-left:16px;border-left:1px solid var(--rule);font-style:italic;color:var(--ink-2);font-size:calc(18px*var(--s))}
-.pencil{position:relative;color:var(--ink);white-space:nowrap}
+.gist{font-size:calc(23px*var(--s));line-height:1.35;margin:18px 0 0;text-wrap:pretty}
+.ctx{margin:20px 0 0;padding-left:16px;border-left:1px solid var(--rule);font-style:italic;color:var(--ink-2);font-size:calc(18px*var(--s))}
+.pencil{position:relative;color:var(--ink)}
 .pencil::after{content:"";position:absolute;left:-2px;right:-2px;bottom:-4px;height:7px;background:var(--pencil);
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'%3E%3Cpath d='M1 5.5C18 3.2 37 6.4 55 4.6S86 3 99 4.2' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat;
   mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'%3E%3Cpath d='M1 5.5C18 3.2 37 6.4 55 4.6S86 3 99 4.2' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat}
 .fresh .pencil::after{clip-path:inset(0 100% 0 0);animation:draw 1.1s 1.1s var(--ease) forwards}
 @keyframes draw{to{clip-path:inset(0 0 0 0)}}
-.kin{margin-top:18px;font-size:calc(16px*var(--s));color:var(--ink-2)}
+.kin{margin-top:16px;font-size:calc(16px*var(--s));color:var(--ink-2)}
 .kin i{color:var(--ink)}
-.quote{margin:22px 0 0;text-align:center;font-style:italic;color:var(--ink-2);font-size:calc(16px*var(--s));text-wrap:balance}
+.quote{margin:20px 0 0;text-align:center;font-style:italic;color:var(--ink-2);font-size:calc(16px*var(--s));text-wrap:balance}
 .quote .by{display:block;font-style:normal;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--graphite);margin-top:4px}
-.margin-note{margin-top:20px;transform:rotate(-1deg);transform-origin:left}
+.margin-note{margin-top:18px;transform:rotate(-1deg);transform-origin:left;display:block}
 .margin-note textarea{width:100%;border:0;border-bottom:1px dashed var(--rule);background:none;outline:none;resize:none;font-family:var(--f-hand);color:var(--hand);font-size:calc(23px*var(--s));line-height:1.25;min-height:2.6em}
-.addnote{margin-top:18px;font-family:var(--f-hand);font-size:calc(20px*var(--s));color:var(--graphite);text-align:left;min-height:44px}
+.addnote{margin-top:14px;font-family:var(--f-hand);font-size:calc(20px*var(--s));color:var(--graphite);text-align:left;min-height:44px}
 .addnote:hover{color:var(--hand)}
-.own{margin-top:16px;font-size:calc(16px*var(--s));color:var(--ink-2)}
-.senses{margin-top:18px}
+.owns{margin-top:16px;font-size:calc(16px*var(--s));color:var(--ink-2)}
+.owns .hand{display:block;font-size:calc(21px*var(--s))}
+.senses{margin-top:16px}
 .senses summary{list-style:none;cursor:pointer;color:var(--graphite);font-size:calc(14px*var(--s));font-style:italic;min-height:32px}
 .senses summary::-webkit-details-marker{display:none}
 .senses ol{margin:6px 0 0;padding-left:22px;font-size:calc(16px*var(--s));color:var(--ink-2)}
 .senses li{margin-bottom:6px;padding-left:4px}
 .senses li button{text-align:left;color:inherit}
 .senses li.on{color:var(--ink)}
-.echo{margin-top:18px;font-size:calc(15px*var(--s));font-style:italic;color:var(--accent)}
-.foot{margin-top:auto;padding-top:22px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.echo{margin-top:16px;font-size:calc(15px*var(--s));font-style:italic;color:var(--accent)}
+.foot{margin-top:auto;padding-top:20px;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .foot .folio{font-size:14px;color:var(--graphite);font-variant-numeric:lining-nums}
 .foot .acts{display:flex;gap:4px}
 .foot .acts button{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--graphite);transition:color .3s;min-height:44px;padding:0 8px}
 .foot .acts button:hover{color:var(--ink)}
-/* veiled leaf: guess before the meaning */
-.veiled .hw{color:var(--graphite)}
-.guessbox{margin-top:24px;display:grid;gap:12px}
-.guessbox p{margin:0;font-style:italic;color:var(--ink-2);font-size:calc(16px*var(--s))}
-.guessbox input{border:0;border-bottom:1px dashed var(--rule);background:none;outline:none;font-family:var(--f-hand);color:var(--hand);font-size:calc(24px*var(--s));padding:2px 0}
-.guessbox input::placeholder{color:var(--graphite);opacity:.7}
-.lift{justify-self:start;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);min-height:44px}
-.yourguess{margin-top:10px;font-size:calc(15px*var(--s));color:var(--ink-2)}
-/* type setting in */
 .fresh .set>*{animation:inkIn .9s var(--ease) both}
-.fresh .set>*:nth-child(2){animation-delay:.12s}.fresh .set>*:nth-child(3){animation-delay:.35s}.fresh .set>*:nth-child(4){animation-delay:.6s}
-.fresh .set>*:nth-child(5){animation-delay:.8s}.fresh .set>*:nth-child(6){animation-delay:.95s}.fresh .set>*:nth-child(n+7){animation-delay:1.1s}
+.fresh .set>*:nth-child(2){animation-delay:.1s}.fresh .set>*:nth-child(3){animation-delay:.3s}.fresh .set>*:nth-child(4){animation-delay:.5s}
+.fresh .set>*:nth-child(5){animation-delay:.75s}.fresh .set>*:nth-child(n+6){animation-delay:.95s}
 @keyframes inkIn{from{opacity:0;filter:blur(4px);transform:translateY(3px)}to{opacity:1;filter:none;transform:none}}
 .blank{justify-content:center;align-items:center;text-align:center;color:var(--graphite)}
-.blank .orn{font-size:26px;color:var(--graphite);opacity:.5;margin-bottom:12px}
+.blank .orn{font-size:26px;opacity:.5;margin-bottom:12px}
 .blank p{margin:0;font-style:italic;max-width:30ch}
 
-/* writing line (thumb zone) */
-.writer{flex-shrink:0;padding:4px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+/* writing line */
+.writer{flex-shrink:0;position:relative;padding:2px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .writer form{max-width:540px;margin:0 auto;display:flex;align-items:flex-end;gap:12px}
 .line{flex:1;min-width:0}
-.line input{width:100%;border:0;background:none;outline:none;border-bottom:1px solid var(--rule);font-family:var(--f-display);font-style:italic;font-size:26px;padding:6px 2px 6px;transition:border-color .4s}
+.line input{width:100%;border:0;background:none;outline:none;border-bottom:1px solid var(--rule);font-family:var(--f-display);font-style:italic;font-size:26px;padding:6px 2px;transition:border-color .4s}
 .line input:focus{border-color:var(--ink-2)}
 .line input::placeholder{color:var(--graphite);opacity:.8}
-.ctxline{display:flex;gap:10px;align-items:flex-end;overflow:hidden;max-height:0;opacity:0;transition:max-height .45s var(--ease),opacity .45s}
-.writer.open .ctxline{max-height:64px;opacity:1}
-.ctxline input{border:0;border-bottom:1px solid var(--rule);background:none;outline:none;font-style:italic;font-size:16px;padding:8px 2px 4px;color:var(--ink-2)}
-.ctxline #ctx{flex:1;min-width:0}.ctxline #pg{width:56px}
-.later{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--graphite);white-space:nowrap;min-height:40px;padding:0 2px}
-.later:hover{color:var(--ink)}
+.sugg{max-width:540px;margin:0 auto;display:flex;gap:2px 18px;flex-wrap:wrap}
+.sugg:empty{display:none}
+.sugg button{font-family:var(--f-display);font-size:21px;font-style:italic;color:var(--ink-2);min-height:40px;padding:0 2px;animation:inkIn .35s var(--ease) both}
+.sugg button:hover{color:var(--ink)}
+.sugg button.mine{color:var(--accent)}
+.sugg button.mine::before{content:"· ";font-style:normal}
+.sugg .note{font-size:14px;font-style:italic;color:var(--graphite);align-self:center}
+.chooser{max-width:540px;margin:0 auto 6px;font-size:19px;line-height:1.9;color:var(--ink-2);font-style:italic;max-height:40vh;overflow-y:auto}
+.chooser:empty{display:none}
+.chooser .sc{display:block;font-style:normal;line-height:1.4;margin-bottom:2px}
+.chooser button{font-style:italic;color:var(--ink);border-bottom:1px dotted var(--graphite);padding:0 1px;min-height:32px}
+.chooser button.stop{color:var(--ink-2);border:0}
+.chooser button:hover{color:var(--accent);border-color:var(--accent)}
 .orn-btn{font-size:24px;line-height:1;color:var(--graphite);width:44px;height:44px;border-radius:50%;flex-shrink:0;transition:color .4s,transform .6s var(--ease)}
 .orn-btn:hover{color:var(--ink);transform:rotate(-8deg)}
 .orn-btn .dot{display:block;width:5px;height:5px;border-radius:50%;background:var(--accent);margin:-3px auto 0;opacity:0;transition:opacity .5s}
 .orn-btn.due .dot{opacity:1}
-.hint{max-width:540px;margin:2px auto 0;font-size:13px;font-style:italic;color:var(--graphite);min-height:18px;text-align:center;transition:opacity .5s}
+.hint{max-width:540px;margin:2px auto 0;font-size:13px;font-style:italic;color:var(--graphite);min-height:18px;text-align:center}
 .hint button{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-left:8px;min-height:28px}
 
 /* pages */
@@ -128,35 +124,37 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .close{display:block;margin:0 auto 22px;color:var(--graphite);font-size:12px;letter-spacing:.16em;text-transform:uppercase;min-height:44px;padding:0 12px}
 .close:hover{color:var(--ink)}
 .ptitle{font-family:var(--f-display);font-weight:500;font-size:40px;text-align:center;margin:0;line-height:1.1;text-wrap:balance}
-.psub{text-align:center;font-style:italic;color:var(--ink-2);margin:8px 0 34px}
+.psub{text-align:center;font-style:italic;color:var(--ink-2);margin:8px 0 30px;text-wrap:balance}
 .toc{list-style:none;margin:0;padding:0}
-.toc li button{width:100%;display:flex;align-items:baseline;gap:8px;padding:12px 0;text-align:left;font-size:21px;min-height:52px}
-.toc li button:hover .tn{color:var(--accent)}
+.toc li>button,.toc li>span{width:100%;display:flex;align-items:baseline;gap:8px;padding:12px 0;text-align:left;font-size:21px;min-height:52px}
+.toc li>button:hover .tn{color:var(--accent)}
+.toc li>span{color:var(--graphite)}
 .toc .lead{flex:1;border-bottom:1px dotted var(--graphite);transform:translateY(-5px);min-width:20px;opacity:.6}
 .toc .tv{font-style:italic;color:var(--ink-2);font-size:17px}
-.toc .tn{transition:color .3s}
+.toc li>span .tv{color:var(--graphite)}
 .orn-c{text-align:center;color:var(--graphite);margin:30px 0;letter-spacing:.6em}
 .idx h3{font-family:var(--f-display);font-size:30px;font-weight:600;margin:26px 0 4px;color:var(--ink-2)}
-.idx .e{display:block;width:100%;text-align:left;padding:8px 0;font-size:17px;line-height:1.4}
+.idx .e,.bk-e{display:block;width:100%;text-align:left;padding:8px 0;font-size:17px;line-height:1.4}
 .idx .e b{font-weight:500}
 .idx .e .m{color:var(--ink-2)}
 .idx .e .s{color:var(--graphite);font-style:italic;font-size:15px}
-.idx .e.known b{color:var(--graphite)}
 .search{display:block;width:100%;border:0;border-bottom:1px solid var(--rule);background:none;outline:none;font-style:italic;font-size:18px;padding:6px 2px;margin-bottom:6px}
-.cp-ch{text-align:center;margin:34px 0 14px}
-.cp-e{margin:0 0 18px;font-size:17px}
-.cp-e .w{font-family:var(--f-display);font-weight:600;font-size:22px}
-.cp-e .c{display:block;font-style:italic;color:var(--ink-2);margin-top:2px}
-.cp-e .hand{display:block;font-size:20px;margin-top:2px}
-.colophon{text-align:center;font-style:italic;color:var(--graphite);font-size:15px;margin-top:40px}
+.sess{text-align:center;margin:32px 0 10px}
+.bk-e .w{font-family:var(--f-display);font-weight:600;font-size:23px}
+.bk-e .c{display:block;font-style:italic;color:var(--ink-2);margin-top:2px;font-size:16px}
+.bk-e .hand{display:block;font-size:20px;margin-top:2px}
+.bk-e:hover .w{color:var(--accent)!important}
 .shelf .b{display:flex;justify-content:space-between;align-items:baseline;width:100%;padding:12px 0;border-bottom:1px solid var(--rule);text-align:left;gap:12px;min-height:52px}
 .shelf .b .t{font-family:var(--f-display);font-size:24px;font-style:italic}
 .shelf .b .n{color:var(--graphite);font-size:15px;white-space:nowrap}
 .shelf .b.cur .t{color:var(--accent)}
-.newbook{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;align-items:flex-end}
-.newbook input{flex:1 1 160px;min-width:0;border:0;border-bottom:1px solid var(--rule);background:none;outline:none;font-style:italic;font-size:18px;padding:6px 2px}
+.field{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px;align-items:flex-end}
+.field input{flex:1 1 160px;min-width:0;border:0;border-bottom:1px solid var(--rule);background:none;outline:none;font-style:italic;font-size:18px;padding:6px 2px}
+.paste{width:100%;min-height:200px;border:1px solid var(--rule);background:var(--leaf);border-radius:3px;outline:none;padding:14px;font-size:17px;line-height:1.5;resize:vertical}
+.paste:focus{border-color:var(--ink-2)}
 .txtbtn{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);min-height:44px;padding:0 4px}
 .txtbtn.dim{color:var(--graphite)}
+.center{display:flex;justify-content:center;gap:4px 22px;flex-wrap:wrap}
 .prefs .p{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding:16px 0;border-bottom:1px solid var(--rule)}
 .prefs .p div{min-width:0}
 .prefs .p b{font-weight:500;font-size:19px;display:block}
@@ -164,52 +162,53 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .prefs .p button{flex-shrink:0;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--graphite);min-height:44px;min-width:52px;text-align:right}
 .prefs .p button[aria-pressed="true"]{color:var(--accent)}
 
-/* slips */
+/* slips and revisit cards */
 .veil{position:fixed;inset:0;z-index:30;background:var(--veil);opacity:0;transition:opacity .5s;pointer-events:none}
 .veil.on{opacity:1;pointer-events:auto}
-.slip{position:fixed;z-index:31;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));width:min(calc(100% - 32px),480px);max-height:calc(100% - 80px);overflow-y:auto;background:var(--leaf);border-radius:3px;padding:22px 22px 14px;
-  box-shadow:0 24px 50px -20px rgba(30,20,10,.45);transform:translate(-50%,130%) rotate(-1.2deg);transition:transform .8s var(--ease);text-align:center}
-.slip.on{transform:translate(-50%,0) rotate(-.5deg)}
-.slip .q{font-size:calc(21px*var(--s));line-height:1.45;font-style:italic;margin:14px 0 16px;text-wrap:pretty}
+.slip{position:fixed;z-index:31;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));width:min(calc(100% - 32px),480px);max-height:calc(100% - 80px);overflow-y:auto;background:var(--leaf);border-radius:3px;padding:22px 22px 12px;
+  box-shadow:0 24px 50px -20px rgba(30,20,10,.45);transform:translate(-50%,130%) rotate(-1.2deg);transition:transform .8s var(--ease),visibility 0s .8s;visibility:hidden;text-align:center}
+.slip.on{transform:translate(-50%,0) rotate(-.5deg);visibility:visible;transition:transform .8s var(--ease)}
+.prime{list-style:none;margin:12px 0 4px;padding:0;text-align:left}
+.prime li{padding:7px 0;border-bottom:1px solid var(--rule);font-size:16px;color:var(--ink-2)}
+.prime li:last-child{border-bottom:0}
+.prime b{font-family:var(--f-display);font-weight:600;font-size:21px;margin-right:8px}
+.card{background:var(--leaf);border-radius:3px;padding:26px 24px 14px;text-align:center;transform:rotate(-.4deg);box-shadow:0 1px 0 var(--rule),0 18px 40px -28px rgba(40,30,20,.35);animation:turn .7s var(--ease)}
+@keyframes turn{from{opacity:0;transform:translateX(24px) rotate(1deg)}to{opacity:1;transform:rotate(-.4deg)}}
+.card .big{font-family:var(--f-display);font-weight:600;font-size:calc(44px*var(--s));line-height:1.05;margin:10px 0 6px}
+.card .q{font-size:calc(21px*var(--s));line-height:1.45;font-style:italic;margin:14px 0 16px;text-wrap:pretty}
+.card .by{display:block;font-style:normal;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--graphite);margin-top:6px}
+.card .ask{color:var(--ink-2);font-style:italic;margin:6px 0 10px}
 .gap{display:inline-block;min-width:4.2em;border-bottom:1px solid var(--ink-2);font-style:normal;font-family:var(--f-display);font-weight:600;color:var(--ink)}
 .gap .ltr{color:var(--graphite);letter-spacing:.25em}
-.slip .ans{font-family:var(--f-display);font-weight:600;font-size:34px;line-height:1.1;margin:4px 0 2px;animation:inkIn .8s var(--ease) both}
-.slip .gl{color:var(--ink-2);font-size:16px;margin:0 0 6px;animation:inkIn .8s .15s var(--ease) both}
-.slip .hand{display:block;margin:4px 0 6px;animation:inkIn .8s .3s var(--ease) both}
-.slip .row{display:flex;justify-content:center;gap:4px 24px;margin-top:10px;flex-wrap:wrap}
+.reveal{animation:inkIn .8s var(--ease) both;margin-top:4px}
+.reveal .m{font-size:calc(20px*var(--s));margin:6px 0}
+.reveal .x{color:var(--ink-2);font-size:16px;margin:6px 0}
+.reveal .hand{display:block;margin:6px 0}
 .choices{display:flex;justify-content:center;gap:6px 22px;flex-wrap:wrap;margin-top:4px}
 .choices button{font-family:var(--f-display);font-size:24px;font-weight:500;padding:2px 6px;min-height:44px;border-bottom:1px solid transparent;transition:border-color .3s,color .3s}
 .choices button:hover{border-color:var(--rule)}
-.typed{display:flex;gap:10px;justify-content:center;align-items:flex-end;margin-top:4px}
-.typed input,.slip textarea{border:0;border-bottom:1px solid var(--rule);background:none;outline:none;font-family:var(--f-display);font-size:26px;font-weight:600;text-align:center;width:min(100%,240px);padding:2px}
-.slip textarea{font-family:var(--f-hand);font-weight:400;color:var(--hand);font-size:24px;text-align:left;width:100%;resize:none;min-height:3.4em;border-bottom-style:dashed}
-.chend{list-style:none;margin:10px 0 6px;padding:0;text-align:left}
-.chend li{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);min-height:48px;padding:8px 0}
-.chend li:last-child{border-bottom:0}
-.chend button{font-family:var(--f-display);font-weight:600;font-size:22px;text-align:left;flex-shrink:0}
-.chend .m{color:var(--graphite);font-style:italic;font-size:15px;min-width:0}
-.chend .m.shown{color:var(--ink-2);font-style:normal;animation:inkIn .7s var(--ease) both}
-.revisit .slip{position:static;transform:rotate(-.4deg);width:auto;max-height:none;margin-top:10px;box-shadow:0 1px 0 var(--rule),0 18px 40px -28px rgba(40,30,20,.35)}
-.revisit .slip.turn{animation:turn .7s var(--ease)}
-@keyframes turn{from{opacity:0;transform:translateX(24px) rotate(1deg)}to{opacity:1;transform:rotate(-.4deg)}}
-.modal .leaf{opacity:1;transform:none;margin:0 auto;max-width:540px;min-height:60vh}
+.choices button:disabled{cursor:default}
+.choices button.r{border-color:var(--ink-2)}
+.choices button.x{color:var(--graphite);text-decoration:line-through;text-decoration-thickness:1px}
+.card textarea{width:100%;border:0;border-bottom:1px dashed var(--rule);background:none;outline:none;font-family:var(--f-hand);color:var(--hand);font-size:24px;resize:none;min-height:3.4em;margin-top:6px}
+.rate{display:flex;justify-content:center;gap:4px 26px;flex-wrap:wrap;margin-top:12px}
+.endlist{list-style:none;padding:0;margin:0 auto;max-width:420px}
+.endlist li{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:9px 0;border-bottom:1px solid var(--rule)}
+.endlist .w{font-family:var(--f-display);font-weight:600;font-size:24px;transition:color 2.4s var(--ease)}
+.endlist .n{font-style:italic;color:var(--graphite);font-size:15px;text-align:right}
 .missing-sugg button{font-family:var(--f-display);font-style:italic;font-size:22px;color:var(--accent);margin:0 8px;min-height:44px}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
-@media (min-width:900px){.gallery{gap:28px}.leaf{padding:34px 38px 18px}}
+@media (min-width:900px){.gallery{gap:28px}.leaf{padding:32px 38px 16px}}
 </style>
 
 <div class="app">
-  <header class="head">
-    <button class="title" id="bookTitle" data-go="shelf" aria-label="Change book"></button>
-    <div><span class="chap"><button data-act="ch-" aria-label="Previous chapter">‹</button><span class="sc" id="chapLbl"></span><button data-act="ch+" aria-label="Finish this chapter">›</button></span></div>
-  </header>
+  <header class="head"><button class="title" id="bookTitle" data-go="book" aria-label="This book's words"></button></header>
   <section class="gallery" id="gallery" aria-label="Words from this book" tabindex="-1"></section>
   <div class="writer" id="writer">
+    <div class="chooser" id="chooser"></div>
+    <div class="sugg" id="sugg" aria-label="Suggestions"></div>
     <form id="cap" autocomplete="off">
-      <div class="line">
-        <input id="q" placeholder="write a word…" aria-label="Look up a word" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
-        <div class="ctxline"><input id="ctx" placeholder="the sentence, if you like" aria-label="Sentence from the book" enterkeyhint="search"><input id="pg" placeholder="page" inputmode="numeric" aria-label="Page" enterkeyhint="search"><button type="button" class="later" id="later" title="Save the word without its meaning, to look at when you finish the chapter">later</button></div>
-      </div>
+      <div class="line"><input id="q" placeholder="write a word, or paste its sentence" aria-label="Look up a word, or paste the sentence it's in" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search"></div>
       <button type="submit" hidden aria-hidden="true" tabindex="-1"></button>
       <button type="button" class="orn-btn" id="orn" data-go="contents" aria-label="Contents">❦<span class="dot"></span></button>
     </form>
@@ -218,115 +217,126 @@ button{cursor:pointer;background:none;border:0;padding:0}
 </div>
 <div class="page" id="page" role="dialog" aria-modal="true"><div class="inner" id="pageInner"></div></div>
 <div class="veil" id="veil"></div>
-<div class="slip" id="slip" role="dialog" aria-label="A word returns"></div>
+<div class="slip" id="slip" role="dialog" aria-label="Before you read"></div>
 
 <script>
 // ===== state =====
-const DAY=864e5, HOUR=36e5, now=()=>Date.now(), INTERVALS=[0,1,3,7,16,35];
+const MIN=6e4, HOUR=36e5, DAY=864e5, now=()=>Date.now(), INTERVALS=[0,1,3,7,16,35];
+const SESSION_GAP=2*HOUR;
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
-const roman=n=>{let r="";for(const[v,s]of[[1000,"m"],[900,"cm"],[500,"d"],[400,"cd"],[100,"c"],[90,"xc"],[50,"l"],[40,"xl"],[10,"x"],[9,"ix"],[5,"v"],[4,"iv"],[1,"i"]])while(n>=v){r+=s;n-=v}return r};
-const SEED=[["ardent","Dorothea's ardent wish to do some great good in the world.",9,1,3,"a candle held too close"],["sanguine","Mr. Brooke was sanguine about his chances at the election.",22,2,2,""],["quixotic","Her neighbours thought the cottage scheme quixotic.",31,3,1,"Don Quixote & the windmills"],["provincial","The provincial gossip of the town reached him by noon.",64,4,4,""],["taciturn","Caleb, taciturn as ever, said nothing at dinner.",88,5,0,"tacit, silent"],["obdurate","Old Featherstone remained obdurate to the end.",102,6,1,""],["parsimony","His parsimony was the talk of the parish.",118,7,0,""],["ebullient","Fred came in ebullient after his good fortune.",124,7,0,""]];
-const PREFS={returns:true,guess:false,awake:false,scale:1};
-function seed(){return{v:3,books:[{id:"b1",title:"Middlemarch",author:"George Eliot",chapter:7}],active:"b1",lastActive:0,lastSlip:0,prefs:{...PREFS},
-  words:SEED.map((r,i)=>({id:"s"+i,bookId:"b1",word:r[0],context:r[1],page:r[2],chapter:r[3],strength:r[4],note:r[5],pick:0,added:now()-(8-i)*DAY*2,due:i%3===0?now()-DAY:now()+(i+1)*DAY,known:false,sample:true,echoes:[]}))}}
-let S;try{S=JSON.parse(localStorage.getItem("margin.v3"))}catch(e){}
+const cap1=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const ago=(d,h)=>now()-d*DAY-(h||0)*HOUR;
+// [word, sentence from the book, strength, when it was met, note in the margin]
+const SEED=[["ardent","Dorothea's ardent wish to do some great good in the world.",3,ago(6,-2),"a candle held too close"],["sanguine","Mr. Brooke was sanguine about his chances at the election.",2,ago(6,-2.2),""],["quixotic","Her neighbours thought the cottage scheme quixotic.",1,ago(6,-2.4),"Don Quixote and the windmills"],
+  ["provincial","The provincial gossip of the town reached him by noon.",4,ago(3,-10),""],["taciturn","Caleb, taciturn as ever, said nothing at dinner.",0,ago(3,-10.3),""],["obdurate","Old Featherstone remained obdurate to the end.",1,ago(3,-10.5),""],
+  ["parsimony","His parsimony was the talk of the parish.",0,ago(1,-3),""],["ebullient","Fred came in ebullient after his good fortune.",0,ago(1,-3.2),""],["lugubrious","",0,ago(1,-3.4),""]];
+const PREFS={prime:true,awake:false,scale:1};
+function seed(){return{v:4,books:[{id:"b1",title:"Middlemarch",author:"George Eliot"}],active:"b1",lastActive:0,lastPrime:0,prefs:{...PREFS},
+  words:SEED.map((r,i)=>({id:"s"+i,bookId:"b1",word:r[0],context:r[1],strength:r[2],added:r[3],note:r[4],owns:[],pick:0,due:r[2]<2?ago(0,1):now()+(i%3+1)*DAY,known:false,sample:true,echoes:[]}))}}
+let S;try{S=JSON.parse(localStorage.getItem("margin.v4"))}catch(e){}
 if(!S||!Array.isArray(S.words))S=seed();
 S.prefs={...PREFS,...(S.prefs||{})};
-const save=()=>{try{localStorage.setItem("margin.v3",JSON.stringify(S))}catch(e){}};
+const save=()=>{try{localStorage.setItem("margin.v4",JSON.stringify(S))}catch(e){}};
 const book=()=>S.books.find(b=>b.id===S.active)||S.books[0];
 const byId=id=>S.words.find(w=>w.id===id);
 const $=id=>document.getElementById(id);
-const sessionStart=S.lastActive; // when you last used the app, before this visit
+const lastVisit=S.lastActive;
 const touch=()=>{S.lastActive=now();save()};
+const usable=w=>w&&w.senses&&w.senses.length;
+
+// ===== reading sessions: grouped by time, so you never note a chapter or page =====
+function sessions(ws){
+  const sorted=[...ws].sort((a,b)=>a.added-b.added);const out=[];
+  for(const w of sorted){const last=out[out.length-1];if(last&&w.added-last.end<SESSION_GAP){last.words.push(w);last.end=w.added}else out.push({start:w.added,end:w.added,words:[w]})}
+  return out;
+}
+function sessionLabel(t){
+  const d=new Date(t),h=d.getHours(),part=h<5?"night":h<12?"morning":h<17?"afternoon":h<21?"evening":"night";
+  const t0=new Date();t0.setHours(0,0,0,0);const d0=new Date(d);d0.setHours(0,0,0,0);
+  const dd=Math.round((t0-d0)/DAY);
+  if(dd<=0)return part==="night"?(h<5&&new Date().getHours()>=12?"Last night":"Tonight"):"This "+part;
+  if(dd===1)return part==="night"?"Last night":"Yesterday "+part;
+  if(dd<7)return d.toLocaleDateString(undefined,{weekday:"long"})+" "+part;
+  return d.toLocaleDateString(undefined,{day:"numeric",month:"long"})+", "+part;
+}
 
 // ===== dictionary (WordNet 3.1 + CMU, shipped beside the page) =====
-const shards={};
-const shard=l=>shards[l]??=fetch(`dict/${l}.json`).then(r=>r.ok?r.json():{}).catch(()=>({}));
+const shards={},keys={};
+const shard=l=>shards[l]??=fetch(`dict/${l}.json`).then(r=>r.ok?r.json():{}).catch(()=>({})).then(o=>{keys[l]=Object.keys(o).sort((a,b)=>a.length-b.length||(a<b?-1:1));return o});
 function forms(w){
   const out=[w],add=(suf,rep)=>{if(w.endsWith(suf)&&w.length>suf.length+1)out.push(w.slice(0,-suf.length)+rep)};
   [["ies","y"],["ses","s"],["xes","x"],["zes","z"],["ches","ch"],["shes","sh"],["men","man"],["es","e"],["es",""],["s",""],["ied","y"],["ed","e"],["ed",""],["ing","e"],["ing",""],["ier","y"],["iest","y"],["er",""],["est",""],["er","e"],["est","e"],["ily","y"],["ly",""],["ness",""],["iness","y"]].forEach(([a,b])=>add(a,b));
   const m=w.match(/^(.*?)([bcdfgklmnprstvz])\2(ed|ing|er|est)$/);if(m)out.push(m[1]+m[2]);
   return [...new Set(out)];
 }
-const clean=raw=>raw.toLowerCase().trim().replace(/[’]/g,"'").replace(/[^a-z' -]/g,"").replace(/\s+/g,"-");
+const clean=raw=>raw.toLowerCase().trim().replace(/[’‘]/g,"'").replace(/^[^a-z]+|[^a-z]+$/g,"").replace(/[^a-z' -]/g,"").replace(/\s+/g,"-");
 async function findEntry(raw){
   const w=clean(raw);if(!w)return null;
   for(const f of forms(w)){const sh=await shard(f[0]);if(Object.hasOwn(sh,f))return{lemma:f,say:sh[f][0],senses:sh[f][1]}}
   return null;
 }
-async function suggest(raw){
-  const w=clean(raw);if(!w)return[];const sh=await shard(w[0]);let best=[];
-  const lev=(a,b)=>{const d=Array.from({length:b.length+1},(_,i)=>i);for(let i=1;i<=a.length;i++){let p=d[0];d[0]=i;for(let j=1;j<=b.length;j++){const t=d[j];d[j]=Math.min(d[j]+1,d[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return d[b.length]};
-  for(const k in sh){if(Math.abs(k.length-w.length)>2)continue;const s=lev(w,k);if(s<=2)best.push([s,k])}
-  return best.sort((a,b)=>a[0]-b[0]).slice(0,3).map(x=>x[1]);
-}
+const lev=(a,b)=>{const d=Array.from({length:b.length+1},(_,i)=>i);for(let i=1;i<=a.length;i++){let p=d[0];d[0]=i;for(let j=1;j<=b.length;j++){const t=d[j];d[j]=Math.min(d[j]+1,d[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return d[b.length]};
+async function fuzzy(w,n=3){if(!w)return[];await shard(w[0]);const best=[];for(const k of keys[w[0]]||[]){if(Math.abs(k.length-w.length)>2)continue;const s=lev(w,k);if(s<=2)best.push([s,k])}return best.sort((a,b)=>a[0]-b[0]).slice(0,n).map(x=>x[1])}
 const STOP=new Set("a an the and or but of to in on at for with by from as is was were be been being it its this that these those he she they them his her their him i you we our my your me us not no so if then than too very can could would should will shall may might must do does did have has had there here what which who whom whose when where why how all any some such into about over after before up down out off again just".split(" "));
 const toks=s=>(s||"").toLowerCase().match(/[a-z]+/g)?.filter(t=>t.length>2&&!STOP.has(t)).map(t=>t.slice(0,5))||[];
 function pickSense(senses,context,lemma){ // simplified Lesk: overlap between your sentence and each sense
   const c=new Set(toks(context).filter(t=>t!==lemma.slice(0,5)));if(!c.size)return 0;
   let best=0,bs=0;senses.forEach((s,i)=>{const bag=toks(s[1]+" "+s[2].map(e=>e[0]).join(" ")+" "+s[3].join(" "));const sc=bag.filter(t=>c.has(t)).length-i*.01;if(sc>bs){bs=sc;best=i}});return best;
 }
-async function hydrate(w){if(w.senses)return;const e=await findEntry(w.word);if(e){w.word=e.lemma;w.say=e.say;w.senses=e.senses;w.pick=Math.min(w.pick||0,e.senses.length-1)}else{w.senses=[]}}
+async function hydrate(w){if(w.senses)return;const e=await findEntry(w.word);if(e){w.word=e.lemma;w.say=e.say;w.senses=e.senses;w.pick=pickSense(e.senses,w.context,e.lemma)}else w.senses=[]}
 
 // ===== the leaf =====
 const POSN={n:"noun",v:"verb",adj:"adjective",adv:"adverb"};
-const inkColor=w=>`color-mix(in srgb, var(--ink) ${w.known?100:40+w.strength*12}%, var(--graphite))`;
-const stemRe=w=>{const t=(w.typed||w.word);return t.slice(0,Math.max(4,t.length-2)).replace(/[^a-z'-]/g,"")};
-function markWord(ctx,w){const e=esc(ctx),re=new RegExp(`\\b(${stemRe(w)}[a-z]*)`,"i");return re.test(e)?e.replace(re,'<span class="pencil">$1</span>'):e}
+const inkFor=s=>`color-mix(in srgb, var(--ink) ${40+Math.min(5,s)*12}%, var(--graphite))`;
+const inkColor=w=>w.known?"var(--ink)":inkFor(w.strength);
+const stemOf=w=>{const t=(w.typed||w.word);return t.slice(0,Math.max(4,t.length-2)).replace(/[^a-z'-]/g,"")};
+function markWord(ctx,w){const e=esc(ctx),re=new RegExp(`\\b(${stemOf(w)}[a-z]*)`,"i");return re.test(e)?e.replace(re,'<span class="pencil">$1</span>'):e}
 function quoteFor(w){for(const s of [w.senses[w.pick],...w.senses]){const q=s&&s[2].find(e=>e[1]);if(q)return q}return null}
-const rh=w=>`<div class="rh"><span class="sc">Chapter ${roman(w.chapter||1)}</span><span class="sc">${w.page?"p. "+w.page:""}</span></div>`;
 let noting=null;
 function noteHTML(w){
   if(noting===w.id)return `<div class="margin-note"><textarea class="notearea" data-id="${w.id}" rows="2" aria-label="Your note in the margin" placeholder="whatever it reminds you of">${esc(w.note||"")}</textarea></div>`;
   return w.note?`<button class="margin-note hand" data-act="note" data-id="${w.id}" style="text-align:left" aria-label="Edit your note">${esc(w.note)}</button>`:`<button class="addnote" data-act="note" data-id="${w.id}">+ a note in the margin</button>`;
 }
 function leafHTML(w,i,n,fresh){
-  const foot=`<div class="foot"><span class="folio">${n>1?`${i+1} of ${n}`:""}</span><span class="acts">${w.senses&&w.senses.length&&!w.veiled?`<button data-act="known" data-id="${w.id}">${w.known?"Keep":"Known"}</button>`:""}<button data-act="del" data-id="${w.id}">Remove</button></span></div>`;
-  if(!w.senses)return `<article class="leaf" data-id="${w.id}">${rh(w)}<h2 class="hw">${esc(w.word)}</h2></article>`;
-  if(!w.senses.length)return `<article class="leaf" data-id="${w.id}">${rh(w)}<h2 class="hw" style="color:var(--graphite)">${esc(w.word)}</h2><p class="gist">Not in this dictionary.</p>${foot}</article>`;
-  const s=w.senses[w.pick]||w.senses[0];
-  if(w.veiled)return `<article class="leaf veiled" data-id="${w.id}">${rh(w)}
-    <h2 class="hw">${esc(w.word)}</h2><div class="say"><span class="ps">${POSN[s[0]]||s[0]}</span>${w.say?`<span class="ph">${esc(w.say)}</span>`:""}</div>
-    ${w.context?`<p class="ctx">${markWord(w.context,w)}</p>`:""}
-    <div class="guessbox"><p>${w.context?"What might it mean, from the sentence?":"What might it mean?"} A guess, even a wrong one, helps it stay.</p>
-      <input class="guess" data-id="${w.id}" placeholder="your guess" aria-label="Your guess" enterkeyhint="done" autocapitalize="off">
-      <button class="lift" data-act="unveil" data-id="${w.id}">Lift the veil</button></div>${foot}</article>`;
-  const q=quoteFor(w),plainEx=!w.context&&s[2].find(e=>!e[1]),echo=(w.echoes||[]).slice(-1)[0];
+  const foot=`<div class="foot"><span class="folio">${n>1?`${i+1} of ${n}`:""}</span><span class="acts">${usable(w)?`<button data-act="known" data-id="${w.id}">${w.known?"Keep":"Known"}</button>`:""}<button data-act="del" data-id="${w.id}">Remove</button></span></div>`;
+  const rh=`<div class="rh"><span class="sc">${esc(sessionLabel(w.added))}</span></div>`;
+  if(!w.senses)return `<article class="leaf" data-id="${w.id}">${rh}<h2 class="hw">${esc(w.word)}</h2></article>`;
+  if(!w.senses.length)return `<article class="leaf" data-id="${w.id}">${rh}<h2 class="hw" style="color:var(--graphite)">${esc(w.word)}</h2><p class="gist">Not in this dictionary.</p>${foot}</article>`;
+  const s=w.senses[w.pick]||w.senses[0];const q=quoteFor(w),plainEx=!w.context&&s[2].find(e=>!e[1]),echo=(w.echoes||[]).slice(-1)[0];
   return `<article class="leaf${fresh?" fresh":""}" data-id="${w.id}" style="--hwc:${inkColor(w)}">
    <div class="set">
-    ${rh(w)}
+    ${rh}
     <h2 class="hw">${esc(w.word)}</h2>
     <div class="say"><span class="ps">${POSN[s[0]]||s[0]}</span>${w.say?`<span class="ph">${esc(w.say)}</span>`:""}</div>
-    <p class="gist">${esc(s[1].charAt(0).toUpperCase()+s[1].slice(1))}.</p>
-    ${w.guess?`<p class="yourguess">You guessed <span class="hand">${esc(w.guess)}</span></p>`:""}
+    <p class="gist">${esc(cap1(s[1]))}.</p>
     ${w.context?`<p class="ctx">${markWord(w.context,w)}</p>`:plainEx?`<p class="ctx">${esc(plainEx[0])}</p>`:""}
     ${s[3].length?`<p class="kin">Kindred: ${s[3].map(k=>`<i>${esc(k.replace(/-/g," "))}</i>`).join(", ")}</p>`:""}
     ${noteHTML(w)}
-    ${w.own?`<p class="own">In your words: <i>${esc(w.own)}</i></p>`:""}
-    ${echo?`<p class="echo">Met again in chapter ${roman(echo.chapter||1)}${echo.page?", p. "+echo.page:""}. It will come back sooner.</p>`:""}
+    ${(w.owns||[]).length?`<div class="owns"><span class="sc">In your hand</span>${w.owns.map(o=>`<span class="hand">${esc(o)}</span>`).join("")}</div>`:""}
+    ${echo?`<p class="echo">You looked this up again ${esc(sessionLabel(echo.at).toLowerCase())}. It will come back to you sooner.</p>`:""}
     ${q?`<p class="quote">“${esc(q[0])}”<span class="by">${esc(q[1])}</span></p>`:""}
     ${w.senses.length>1?`<details class="senses"><summary>${w.senses.length-1} other sense${w.senses.length>2?"s":""}</summary><ol>${w.senses.map((x,k)=>`<li class="${k===w.pick?"on":""}"><button data-act="sense" data-id="${w.id}" data-k="${k}" title="Use this sense"><i>${x[0]}.</i> ${esc(x[1])}</button></li>`).join("")}</ol></details>`:""}
    </div>${foot}
   </article>`;
 }
-const galleryWords=()=>{const b=book();return S.words.filter(w=>!w.known&&(w.bookId===b.id||(w.echoes||[]).some(e=>e.bookId===b.id))).sort((a,c)=>(a.lastMet||a.added)-(c.lastMet||c.added))};
+const galleryWords=()=>{const b=book();if(!b)return[];return S.words.filter(w=>!w.known&&(w.bookId===b.id||(w.echoes||[]).some(e=>e.bookId===b.id))).sort((a,c)=>(a.lastMet||a.added)-(c.lastMet||c.added))};
 let freshId=null,observer;
-function renderGallery(focusId,smooth){
+function renderGallery(focusId,arrive){
   const ws=galleryWords();const g=$("gallery");
   g.innerHTML=ws.map((w,i)=>leafHTML(w,i,ws.length,w.id===freshId)).join("")+
-    `<article class="leaf blank" data-id="blank"><div class="orn">⁂</div><p>${ws.length?"A fresh page. Write the next word you meet on the line below.":"Write the first word you meet on the line below. It will be set here, one word to a page."}</p></article>`;
+    `<article class="leaf blank" data-id="blank"><div class="orn">⁂</div><p>${ws.length?"A fresh page. When a word stops you, write it below, or paste the sentence it's in.":"When a word stops you, write it below, or paste the sentence it's in. It will be set here, one word to a page."}</p></article>`;
   observer?.disconnect();
   observer=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle("cur",e.intersectionRatio>.6)),{root:g,threshold:[.6]});
   g.querySelectorAll(".leaf").forEach(l=>observer.observe(l));
   const target=g.querySelector(`[data-id="${focusId||(ws.length?ws[ws.length-1].id:"blank")}"]`);
-  if(target){g.style.scrollSnapType="none";target.scrollIntoView({behavior:"instant",inline:"center",block:"nearest"});g.style.scrollSnapType="";if(smooth)target.animate?.([{transform:"translateY(10px)",opacity:.3},{transform:"none",opacity:1}],{duration:600,easing:"cubic-bezier(.22,.61,.36,1)"})}
+  if(target){g.style.scrollSnapType="none";target.scrollIntoView({behavior:"instant",inline:"center",block:"nearest"});g.style.scrollSnapType="";if(arrive)target.animate?.([{transform:"translateY(10px)",opacity:.3},{transform:"none",opacity:1}],{duration:600,easing:"cubic-bezier(.22,.61,.36,1)"})}
   freshId=null;
   if(noting){const t=g.querySelector(".notearea");if(t){t.focus({preventScroll:true});t.setSelectionRange(t.value.length,t.value.length)}}
 }
 function renderHead(){
-  const b=book();$("bookTitle").textContent=b.title;$("chapLbl").textContent="Chapter "+roman(b.chapter);
-  $("orn").classList.toggle("due",dueWords().length>0);
+  $("bookTitle").textContent=book()?.title||"";
+  $("orn").classList.toggle("due",dueWords().length>=3);
   document.documentElement.style.setProperty("--s",S.prefs.scale);
 }
 
@@ -334,250 +344,295 @@ function renderHead(){
 let hintT,undoFn=null;
 function hint(t,undo,ms=5000){const h=$("hint");undoFn=undo||null;h.innerHTML=esc(t)+(undo?`<button data-act="undo">Undo</button>`:"");clearTimeout(hintT);hintT=setTimeout(()=>{h.textContent="";undoFn=null},ms)}
 
+// ===== the writing line: autocomplete (your own words first) and paste-a-sentence =====
+let suggT;
+const words=s=>s.match(/[A-Za-z’'-]+/g)||[];
+async function updateSugg(){
+  const v=$("q").value;const w=clean(v);if(v)$("chooser").innerHTML="";
+  if(!w||words(v).length>1){$("sugg").innerHTML=words(v).length>2?`<span class="note">Press return, then tap the word you meant.</span>`:"";return}
+  const mine=[...new Set(S.words.filter(x=>x.word.startsWith(w)).map(x=>x.word))].slice(0,2);
+  const sh=await shard(w[0]);if($("q").value!==v)return;
+  let dict=[];for(const k of keys[w[0]]||[]){if(k.startsWith(w)&&k!==w&&!mine.includes(k)&&!sh[k][2]){dict.push(k);if(dict.length>=6)break}}
+  if(!dict.length&&!mine.length&&w.length>=4)dict=(await fuzzy(w)).filter(k=>k!==w);
+  if($("q").value!==v)return;
+  $("sugg").innerHTML=[...mine.map(k=>`<button type="button" class="mine" data-act="pick" data-w="${esc(k)}" title="Already in your words">${esc(k)}</button>`),...dict.slice(0,Math.max(0,4-mine.length)).map(k=>`<button type="button" data-act="pick" data-w="${esc(k)}">${esc(k)}</button>`)].join("");
+}
+function showChooser(sentence){
+  clearTimeout(suggT);$("sugg").innerHTML="";
+  $("chooser").innerHTML=`<span class="sc">Which word?</span>`+sentence.split(/(\s+)/).map(p=>{if(/^\s+$/.test(p))return " ";const w=clean(p);if(!w)return esc(p);return `<button type="button" class="${STOP.has(w)||w.length<3?"stop":""}" data-act="choose-word" data-w="${esc(p)}">${esc(p)}</button>`}).join("");
+  $("chooser").dataset.sentence=sentence;
+}
+function clearWriter(){clearTimeout(suggT);$("q").value="";$("sugg").innerHTML="";$("chooser").innerHTML="";delete $("chooser").dataset.sentence}
+function submitLine(){
+  const v=$("q").value.trim();if(!v)return;
+  if(words(v).length>2){$("q").value="";showChooser(v.replace(/\s+/g," "));$("q").blur();return}
+  clearWriter();$("q").blur();lookup(v,"");
+}
+
 // ===== lookup =====
-async function lookup(raw,context,page,later){
+async function lookup(raw,context){
   raw=raw.trim();if(!raw)return;touch();
   const e=await findEntry(raw);
-  if(!e){const sg=await suggest(raw);openPage(`<button class="close" data-close>Return to the book</button><div class="leaf" style="opacity:1;transform:none;margin:0 auto;max-width:540px"><h2 class="hw" style="color:var(--graphite)">${esc(raw)}</h2><p class="gist">Not in this dictionary.</p>${sg.length?`<p class="kin">Perhaps</p><p class="missing-sugg">${sg.map(s=>`<button data-act="try" data-w="${esc(s)}" data-c="${esc(context)}" data-p="${esc(page)}">${esc(s)}</button>`).join("")}</p>`:`<p class="kin">Check the spelling, or try the word's plain form.</p>`}</div>`);return}
+  if(!e){const sg=await fuzzy(clean(raw));openPage(`<button class="close" data-close>Return to the book</button><div class="leaf" style="opacity:1;transform:none;margin:0 auto;max-width:540px"><h2 class="hw" style="color:var(--graphite)">${esc(raw)}</h2><p class="gist">Not in this dictionary.</p>${sg.length?`<p class="kin">Perhaps</p><p class="missing-sugg">${sg.map(s=>`<button data-act="try" data-w="${esc(s)}" data-c="${esc(context)}">${esc(s)}</button>`).join("")}</p>`:`<p class="kin">Check the spelling, or try the word's plain form.</p>`}</div>`);return}
   const b=book();
   const prior=S.words.find(w=>w.word===e.lemma);
-  if(prior){ // an echo: you've met this word before, so it hasn't stuck yet
-    prior.echoes=prior.echoes||[];prior.echoes.push({bookId:b.id,chapter:b.chapter,page:page?+page:null,context,at:now()});
-    prior.strength=Math.max(0,prior.strength-1);prior.due=now()+DAY;prior.known=false;prior.lastMet=now();
-    if(context&&!prior.context){prior.context=context;prior.typed=raw.toLowerCase()}
-    save();freshId=prior.id;renderGallery(prior.id,true);hint("You've met this one before. It's back in the gallery.");return;
+  if(prior){ // met before: show it at once; if it was another sitting, it hasn't stuck yet
+    const otherSitting=now()-(prior.lastMet||prior.added)>SESSION_GAP;
+    if(otherSitting){prior.echoes=prior.echoes||[];prior.echoes.push({bookId:b.id,at:now(),context});prior.strength=Math.max(0,prior.strength-1);prior.due=now()+DAY}
+    prior.known=false;prior.lastMet=now();if(context&&!prior.context){prior.context=context;prior.typed=clean(raw);prior.pick=pickSense(prior.senses,context,prior.word)}
+    save();freshId=prior.id;renderGallery(prior.id,true);hint(otherSitting?"You've met this one before. Here it is again.":"Already on this page.");return;
   }
-  const w={id:uid(),bookId:b.id,word:e.lemma,typed:raw.toLowerCase(),say:e.say,senses:e.senses,pick:pickSense(e.senses,context,e.lemma),context:context||"",page:page?+page:null,chapter:b.chapter,strength:0,added:now(),due:now()+DAY,known:false,echoes:[],note:"",veiled:!!(later||S.prefs.guess),later:!!later};
-  S.words.push(w);save();freshId=w.id;
-  if(later){renderGallery(null);hint(`“${w.word}” is pencilled in for the end of the chapter.`)}else renderGallery(w.id,true);
-  renderHead();
+  const w={id:uid(),bookId:b.id,word:e.lemma,typed:clean(raw),say:e.say,senses:e.senses,pick:pickSense(e.senses,context,e.lemma),context:context||"",strength:0,added:now(),due:now()+DAY,known:false,echoes:[],note:"",owns:[]};
+  S.words.push(w);save();freshId=w.id;renderGallery(w.id,true);renderHead();
 }
 
-// ===== remembering =====
-const dueWords=()=>S.words.filter(w=>!w.known&&!w.veiled&&w.senses&&w.senses.length&&w.due<=now());
-function schedule(w,remembered){
-  w.strength=remembered?Math.min(5,w.strength+1):Math.max(0,w.strength-1);
-  w.due=now()+(remembered?Math.max(1,INTERVALS[w.strength])*DAY:HOUR);save();
+// ===== before you read: last sitting's words, meanings showing (no quiz) =====
+function maybePrime(){
+  if(!S.prefs.prime||!book())return;
+  if(now()-(lastVisit||0)<3*HOUR||now()-(S.lastPrime||0)<3*HOUR)return;
+  const ss=sessions(S.words.filter(w=>w.bookId===book().id&&usable(w)&&!w.known));const last=ss[ss.length-1];
+  if(!last||now()-last.end<3*HOUR)return;
+  const ws=last.words.slice(-6);S.lastPrime=now();save();
+  const due=dueWords().length;
+  $("slip").innerHTML=`<div class="sc">${esc(sessionLabel(last.start))}, in ${esc(book().title)}</div>
+    <p style="font-style:italic;color:var(--ink-2);margin:8px 0 0;font-size:17px">The words you met last time, in case they turn up again.</p>
+    <ul class="prime">${ws.map(w=>`<li><b style="color:${inkColor(w)}">${esc(w.word)}</b>${esc(w.senses[w.pick][1])}</li>`).join("")}</ul>
+    <div class="center"><button class="txtbtn" data-act="slipclose">Begin reading</button>${due?`<button class="txtbtn dim" data-act="slip-revisit">Revisit ${due} words</button>`:""}</div>`;
+  setTimeout(()=>{$("veil").classList.add("on");$("slip").classList.add("on")},700);
 }
-const sameWord=(typed,w)=>{const t=clean(typed);return !!t&&(t===w.word||forms(t).includes(w.word)||t===(w.typed||""))};
-function clozeHTML(w,revealed){
-  const src=w.context||(w.senses[w.pick][2].find(e=>e)||[])[0];
-  const gapIn=revealed?esc(w.word):`<span class="ltr">${esc(w.word[0])}${"·".repeat(Math.max(2,w.word.length-1))}</span>`;
-  const re=new RegExp(`\\b${stemRe(w)}[a-z]*`,"i");
-  if(src&&re.test(src))return esc(src).replace(re,`<span class="gap">${gapIn}</span>`);
-  return `<span style="font-style:normal">${esc(w.senses[w.pick][1])}</span><br><span class="gap">${gapIn}</span>`;
-}
-function choicesFor(w){const pool=[...new Set(S.words.filter(x=>x.id!==w.id&&x.senses&&x.senses.length).map(x=>x.word))];if(pool.length<2)return null;return [w.word,...pool.sort(()=>Math.random()-.5).slice(0,2)].sort(()=>Math.random()-.5)}
-// a ladder of difficulty: recognise → recall → use
-function modeFor(w,allowUse){if(allowUse&&w.strength>=4)return"use";if(w.strength>=2)return"recall";return choicesFor(w)?"choice":"reveal"}
-function newItem(st,w,label,allowUse){Object.assign(st,{revealed:false,verdict:null,label,mode:modeFor(w,allowUse),choices:null,typed:""});if(st.mode==="choice")st.choices=choicesFor(w)}
-function slipBody(w,st){
-  let h=`<div class="sc">${st.label}</div>`;
-  if(!st.revealed){
-    if(st.mode==="choice")h+=`<p class="q">${clozeHTML(w,false)}</p><div class="choices">${st.choices.map(c=>`<button data-act="choose" data-v="${esc(c)}">${esc(c)}</button>`).join("")}</div><div class="row"><button class="txtbtn dim" data-act="reveal">I don't know</button></div>`;
-    else if(st.mode==="reveal")h+=`<p class="q">${clozeHTML(w,false)}</p><div class="row"><button class="txtbtn" data-act="reveal">Reveal</button></div>`;
-    else if(st.mode==="recall")h+=`<p class="q">${esc(w.senses[w.pick][1].charAt(0).toUpperCase()+w.senses[w.pick][1].slice(1))}.<br><span style="font-size:16px;color:var(--graphite)">${w.word.length} letters, beginning with <b style="font-style:normal">${esc(w.word[0])}</b></span></p>
-      <form class="typed" data-form="recall"><input id="recallIn" aria-label="The word" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done"><button class="txtbtn">Check</button></form><div class="row"><button class="txtbtn dim" data-act="reveal">Show me</button></div>`;
-    else h+=`<p class="q">Write a line of your own with <b style="font-family:var(--f-display);font-style:normal">${esc(w.word)}</b>, <span style="color:var(--ink-2)">${esc(w.senses[w.pick][1])}</span>.</p>
-      <textarea id="useIn" aria-label="Your sentence" placeholder="about your day, someone you know, anything"></textarea><div class="row"><button class="txtbtn" data-act="keepuse">Keep it on the leaf</button><button class="txtbtn dim" data-act="mark" data-v="1">Skip</button></div>`;
-  }else{
-    const s=w.senses[w.pick];
-    h+=`<p class="q" style="margin-bottom:6px">${st.mode==="use"?`<i>${esc(w.own||"")}</i>`:clozeHTML(w,true)}</p><div class="ans" style="color:${inkColor(w)}">${esc(w.word)}</div><p class="gl">${esc(s[1])}.</p>${w.note?`<span class="hand">${esc(w.note)}</span>`:""}`;
-    if(st.mode==="recall"&&st.typed)h+=`<p class="gl" style="font-style:italic">${st.verdict?"Exactly.":`You wrote “${esc(st.typed)}”.`}</p>`;
-    h+=st.verdict==null?`<div class="row"><button class="txtbtn" data-act="mark" data-v="1">I remembered</button><button class="txtbtn dim" data-act="mark" data-v="0">Not yet</button></div>`
-      :`<div class="row"><button class="txtbtn" data-act="slipnext">${st.verdict?"Inked a little darker":"It will come back soon"} &nbsp;→</button></div>`;
-  }
-  return h;
-}
-function slipAction(st,a,v){
-  const w=byId(st.queue[st.i]);touch();
-  if(a==="choose"){st.revealed=true;st.verdict=v===w.word;schedule(w,st.verdict)}
-  if(a==="reveal")st.revealed=true;
-  if(a==="recall"){st.typed=v;st.revealed=true;st.verdict=sameWord(v,w);schedule(w,st.verdict)}
-  if(a==="mark"){st.verdict=v==="1";if(st.mode==="use"&&!st.revealed)st.revealed=true;schedule(w,st.verdict)}
-  if(a==="keepuse"){const t=v.trim();if(!t)return;w.own=t;st.revealed=true;st.verdict=true;schedule(w,true)}
-  if(st.verdict&&st.kept!=null&&(a!=="reveal"))st.kept++;
-}
-// The Return: at the start of a reading session, at most two words rise on a slip
-let slipState=null;
-function maybeReturn(){
-  if(!S.prefs.returns)return;
-  const fresh=now()-(sessionStart||0)>30*60e3&&now()-(S.lastSlip||0)>30*60e3;
-  const due=dueWords().filter(w=>now()-(w.lastMet||w.added)>HOUR);
-  if(!fresh||!due.length)return;
-  const qs=due.sort((a,b)=>a.due-b.due).slice(0,2);
-  slipState={kind:"return",queue:qs.map(w=>w.id),i:0};newItem(slipState,qs[0],"Before you read on",false);
-  S.lastSlip=now();save();
-  setTimeout(()=>showSlip(),900);
-}
-function showSlip(){drawSlip();$("veil").classList.add("on");$("slip").classList.add("on")}
-function drawSlip(){
-  const st=slipState;if(!st)return;
-  if(st.kind==="chapter")return drawChapterEnd();
-  const w=byId(st.queue[st.i]);$("slip").innerHTML=slipBody(w,st)+(st.revealed?"":`<div class="row"><button class="sc" data-act="slipclose" style="min-height:40px">Not now</button></div>`);
-  if(st.mode==="recall"&&!st.revealed)setTimeout(()=>$("recallIn")?.focus(),350);
-}
-function closeSlip(){$("slip").classList.remove("on");$("veil").classList.remove("on");slipState=null;renderHead();renderGallery(galleryFocus())}
-const galleryFocus=()=>{const c=$("gallery").querySelector(".leaf.cur");return c?.dataset.id};
-// Chapter's end: a natural pause. Words from the chapter, meanings folded; pencilled words wait here.
-function chapterEnd(ch){
-  const b=book();const ws=S.words.filter(w=>w.bookId===b.id&&w.chapter===ch&&!w.known&&w.senses&&w.senses.length);
-  if(!ws.length)return false;
-  slipState={kind:"chapter",ch,ids:ws.map(w=>w.id),shown:{}};showSlip();return true;
-}
-function drawChapterEnd(){
-  const st=slipState;const ws=st.ids.map(byId).filter(Boolean);
-  const pencilled=ws.filter(w=>w.veiled).length;
-  $("slip").innerHTML=`<div class="sc">End of chapter ${roman(st.ch)}</div>
-   <p class="q" style="font-size:18px;margin:10px 0 4px">${pencilled?`${pencilled} pencilled word${pencilled>1?"s":""} waiting. Tap a word to see if its meaning comes back.`:"Before you turn the page: tap a word to see if its meaning comes back."}</p>
-   <ul class="chend">${ws.map(w=>`<li><button data-act="${w.veiled?"gotoleaf":"peek"}" data-id="${w.id}" style="color:${w.veiled?"var(--graphite)":inkColor(w)}">${esc(w.word)}</button><span class="m${st.shown[w.id]?" shown":""}">${w.veiled?"pencilled · guess, then lift the veil":st.shown[w.id]?esc(w.senses[w.pick][1]):"· · ·"}</span></li>`).join("")}</ul>
-   <div class="row"><button class="txtbtn" data-act="slipclose">Read on</button></div>`;
-}
+function closeSlip(){$("slip").classList.remove("on");$("veil").classList.remove("on")}
 
-// Revisit: a longer round, still quiet
+// ===== Revisit: meaning first, then the word in new places, then its company, then your own writing =====
+const dueWords=()=>S.words.filter(w=>!w.known&&usable(w)&&w.due<=now());
+function schedule(w,q){ // q: 2 clear, 1 hazy, 0 forgot
+  if(q===2){w.strength=Math.min(5,w.strength+1);w.due=now()+Math.max(1,INTERVALS[w.strength])*DAY}
+  else if(q===1)w.due=now()+DAY;
+  else{w.strength=Math.max(0,w.strength-1);w.due=now()+HOUR}
+  w.lastSeen=now();save();
+}
+const wordRe=w=>new RegExp(`\\b${w.word.slice(0,Math.max(4,w.word.length-2))}[a-z]*`,"i");
+function freshContext(w){ // a sentence from somewhere other than your book
+  for(const s of [w.senses[w.pick],...w.senses])for(const e of s[2])if(wordRe(w).test(e[0])&&e[0]!==w.context)return e;
+  return null;
+}
+const others=(w,n)=>[...new Set(S.words.filter(x=>x.id!==w.id&&usable(x)).map(x=>x.word))].sort(()=>Math.random()-.5).slice(0,n);
+const kinSyn=w=>w.senses[w.pick][3].filter(k=>k.slice(0,5)!==w.word.slice(0,5)&&!S.words.some(x=>x.word===k));
+function kindFor(w){
+  const s=w.senses[w.pick];
+  if(w.strength>=4)return"write";
+  if(w.strength===3&&kinSyn(w).length&&others(w,2).length>=2)return"company";
+  if(w.strength>=1&&freshContext(w)&&others(w,2).length>=2)return"elsewhere";
+  return"meaning";
+}
+function makeCard(w,forced){
+  const kind=forced||kindFor(w);const c={id:w.id,kind,done:false,q:null};
+  if(kind==="elsewhere"){c.ctx=freshContext(w);c.choices=[w.word,...others(w,2)].sort(()=>Math.random()-.5)}
+  if(kind==="company"){const syn=kinSyn(w);c.answer=syn[Math.floor(Math.random()*syn.length)].replace(/-/g," ");c.choices=[c.answer,...others(w,2).filter(x=>x!==c.answer)].sort(()=>Math.random()-.5)}
+  return c;
+}
 let rv=null;
 function startRevisit(){
-  let pool=dueWords();
-  if(pool.length<3)pool=pool.concat(S.words.filter(w=>!w.known&&!w.veiled&&w.senses&&w.senses.length&&!pool.includes(w)).sort((a,b)=>a.strength-b.strength)).slice(0,Math.max(3,pool.length));
-  pool=pool.slice(0,6).sort(()=>Math.random()-.5); // interleave books and chapters
+  let pool=dueWords().sort((a,b)=>a.due-b.due);
+  if(pool.length<4)pool=pool.concat(S.words.filter(w=>!w.known&&usable(w)&&!pool.includes(w)).sort((a,b)=>(a.lastSeen||0)-(b.lastSeen||0)||a.strength-b.strength)).slice(0,4);
+  pool=pool.slice(0,7).sort(()=>Math.random()-.5);
   if(!pool.length){openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Revisit</h1><div class="orn-c">⁂</div><p class="psub">Nothing to revisit yet. Words come back here a day after you meet them.</p>`,"revisit");return}
-  rv={kind:"revisit",queue:pool.map(w=>w.id),i:0,kept:0};newItem(rv,pool[0],`1 of ${pool.length}`,true);drawRv();
+  rv={cards:pool.map(w=>makeCard(w)),i:0,before:Object.fromEntries(pool.map(w=>[w.id,w.strength])),retried:new Set()};drawRv();
 }
-function nextRv(){rv.i++;if(rv.i<rv.queue.length)newItem(rv,byId(rv.queue[rv.i]),`${rv.i+1} of ${rv.queue.length}`,true);drawRv()}
+function cardHTML(c){
+  const w=byId(c.id),s=w.senses[w.pick];
+  const kin=s[3].length?`<p class="x">Kindred: <i>${s[3].slice(0,4).map(k=>esc(k.replace(/-/g," "))).join(", ")}</i></p>`:"";
+  const reveal=`<div class="reveal"><div class="big" style="color:${inkColor(w)};font-size:calc(34px*var(--s))">${esc(w.word)}</div><p class="m">${esc(cap1(s[1]))}.</p>${w.context?`<p class="x"><i>${markWord(w.context,w)}</i></p>`:""}${kin}${w.note?`<span class="hand">${esc(w.note)}</span>`:""}</div>`;
+  const rate=`<div class="rate"><button class="txtbtn" data-act="rate" data-v="2">Clear</button><button class="txtbtn dim" data-act="rate" data-v="1">Hazy</button><button class="txtbtn dim" data-act="rate" data-v="0">Forgot</button></div>`;
+  const next=`<div class="rate"><button class="txtbtn" data-act="rvnext">${rv.i+1<rv.cards.length?"Next":"Finish"} &nbsp;→</button></div>`;
+  let h=`<div class="sc">${{meaning:"What it means",elsewhere:"Met elsewhere",company:"The company it keeps",write:"In your own hand"}[c.kind]}</div>`;
+  if(c.kind==="meaning"){
+    h+=`<div class="big" style="color:${inkColor(w)}">${esc(w.word)}</div>${w.context?`<p class="q">${markWord(w.context,w)}</p>`:`<p class="ask"><i>${POSN[s[0]]||s[0]}</i></p>`}`;
+    h+=!c.done?`<p class="ask">What does it mean${w.context?" here":""}? Say it to yourself, then look.</p><div class="rate"><button class="txtbtn" data-act="show">Show the meaning</button></div>`
+      :`<div class="reveal"><p class="m">${esc(cap1(s[1]))}.</p>${kin}${w.note?`<span class="hand">${esc(w.note)}</span>`:""}</div>${rate}`;
+  }else if(c.kind==="elsewhere"){
+    const filled=esc(c.ctx[0]).replace(wordRe(w),`<span class="gap">${c.done?esc(w.word):`<span class="ltr">···</span>`}</span>`);
+    h+=`<p class="q">“${filled}”${c.ctx[1]?`<span class="by">${esc(c.ctx[1])}</span>`:""}</p>`;
+    h+=!c.done?`<p class="ask">One of your words, in someone else's sentence.</p><div class="choices">${c.choices.map(x=>`<button data-act="pickc" data-v="${esc(x)}">${esc(x)}</button>`).join("")}</div>`
+      :`<div class="choices">${c.choices.map(x=>`<button disabled class="${x===w.word?"r":x===c.picked?"x":""}">${esc(x)}</button>`).join("")}</div>${reveal}${next}`;
+  }else if(c.kind==="company"){
+    h+=`<div class="big" style="color:${inkColor(w)}">${esc(w.word)}</div><p class="ask">Which is nearest in meaning?</p>`;
+    h+=`<div class="choices">${c.choices.map(x=>`<button ${c.done?"disabled":""} data-act="pickc" data-v="${esc(x)}" class="${c.done?(x===c.answer?"r":x===c.picked?"x":""):""}">${esc(x)}</button>`).join("")}</div>`;
+    if(c.done)h+=`<div class="reveal"><p class="m">${esc(cap1(s[1]))}.</p><p class="x">It keeps company with <i>${s[3].map(k=>esc(k.replace(/-/g," "))).join(", ")}</i>.</p>${w.context?`<p class="x"><i>${markWord(w.context,w)}</i></p>`:""}</div>${next}`;
+  }else{
+    h+=`<div class="big" style="color:${inkColor(w)}">${esc(w.word)}</div><p class="ask">${esc(cap1(s[1]))}. Write a line of your own with it: something from your day, or a sentence you might write.</p>`;
+    h+=!c.done?`<textarea id="useIn" aria-label="Your sentence" placeholder="in your own words"></textarea><div class="rate"><button class="txtbtn" data-act="keep">Keep it</button><button class="txtbtn dim" data-act="rate" data-v="1">Not today</button></div>`
+      :`<div class="reveal"><span class="hand">${esc(c.text||"")}</span>${w.context?`<p class="x">Beside the book's: <i>${markWord(w.context,w)}</i></p>`:""}</div><div class="rate"><button class="txtbtn" data-act="rate" data-v="2">Felt natural</button><button class="txtbtn dim" data-act="rate" data-v="1">Felt forced</button></div>`;
+  }
+  return `<div class="card">${h}</div>`;
+}
 function drawRv(){
-  if(rv.i>=rv.queue.length){openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Revisit</h1><div class="orn-c">⁂</div><p class="psub" style="margin-top:0">${rv.kept} of ${rv.queue.length} came back to you.<br>The rest will find you again, a little sooner.</p><div class="row" style="display:flex;justify-content:center"><button class="txtbtn" data-close>Return to the book</button></div>`,"revisit");return}
-  const w=byId(rv.queue[rv.i]);
-  openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Revisit</h1><p class="psub">Words from your margins, returning.</p><div class="revisit"><div class="slip on turn">${slipBody(w,rv)}</div></div>`,"revisit");
-  if(rv.mode==="recall"&&!rv.revealed)setTimeout(()=>$("recallIn")?.focus(),300);
+  if(rv.i>=rv.cards.length)return drawRvEnd();
+  openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Revisit</h1><p class="psub">${rv.i+1} of ${rv.cards.length}</p>${cardHTML(rv.cards[rv.i])}`,"revisit");
+  if(rv.cards[rv.i].kind==="write"&&!rv.cards[rv.i].done)setTimeout(()=>$("useIn")?.focus(),300);
 }
-const activeSt=()=>pageKind==="revisit"?rv:slipState;
-const redraw=st=>st===rv?drawRv():drawSlip();
+function drawRvEnd(){
+  const ids=[...new Set(rv.cards.map(c=>c.id))].filter(byId);const grew=ids.filter(id=>byId(id).strength>rv.before[id]).length;
+  openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Revisit</h1><p class="psub">${grew?`${grew} word${grew>1?"s":""} inked a little darker.`:"These will come back again soon."}</p>
+    <ul class="endlist">${ids.map(id=>{const w=byId(id);const d=w.strength-rv.before[id];return `<li><span class="w" data-to="${inkColor(w)}" style="color:${inkFor(rv.before[id])}">${esc(w.word)}</span><span class="n">${d>0?"darker":d<0?"back soon":"returning"}</span></li>`}).join("")}</ul>
+    <div class="orn-c">⁂</div><div class="center"><button class="txtbtn" data-close>Return to the book</button></div>`,"revisit-end");
+  setTimeout(()=>document.querySelectorAll(".endlist .w").forEach(el=>el.style.color=el.dataset.to),500);
+}
+function rvAct(a,v){
+  const c=rv.cards[rv.i],w=byId(c.id);touch();
+  const retry=()=>{if(!rv.retried.has(w.id)){rv.retried.add(w.id);rv.cards.push(makeCard(w,"meaning"))}};
+  if(a==="show")c.done=true;
+  if(a==="rate"){c.q=+v;c.done=true;schedule(w,c.q);if(c.q===0)retry();rv.i++;return drawRv()}
+  if(a==="pickc"){c.picked=v;c.done=true;const ok=v===(c.kind==="company"?c.answer:w.word);c.q=ok?2:0;schedule(w,c.q);if(!ok)retry()}
+  if(a==="keep"){const t=$("useIn").value.trim();if(!t)return;c.text=t;c.done=true;w.owns=[...(w.owns||[]),t].slice(-3);save()}
+  if(a==="rvnext"){rv.i++;return drawRv()}
+  drawRv();
+}
 
 // ===== pages =====
-let pageKind=null;
-function openPage(html,kind){pageKind=kind||null;$("pageInner").innerHTML=html;const p=$("page");if(!p.classList.contains("on")){p.scrollTop=0;p.classList.add("on")}}
+let pageKind=null,leafBack="book";
+function openPage(html,kind){pageKind=kind||null;$("pageInner").innerHTML=html;const p=$("page");if(!p.classList.contains("on"))p.classList.add("on");p.scrollTop=0}
 function closePage(){$("page").classList.remove("on");pageKind=null;rv=null;renderHead();renderGallery(galleryFocus())}
+const galleryFocus=()=>$("gallery").querySelector(".leaf.cur")?.dataset.id;
 function pageContents(){
-  const b=book(),due=dueWords().length,all=S.words.length;
+  const b=book(),due=dueWords().length;
   openPage(`<button class="close" data-close>Return to the book</button>
    <h1 class="ptitle">Contents</h1><p class="psub">${esc(b.title)}${b.author?", "+esc(b.author):""}</p>
    <ul class="toc">
     <li><button data-close><span class="tn">The Gallery</span><span class="lead"></span><span class="tv">${galleryWords().length} leaves</span></button></li>
-    <li><button data-go="revisit"><span class="tn">Revisit</span><span class="lead"></span><span class="tv">${due?due+" returning":"a quiet round"}</span></button></li>
-    <li><button data-go="index"><span class="tn">Index</span><span class="lead"></span><span class="tv">${all} words</span></button></li>
-    <li><button data-go="commonplace"><span class="tn">Commonplace Book</span><span class="lead"></span><span class="tv">${esc(b.title)}</span></button></li>
+    <li><button data-go="book"><span class="tn">This Book's Words</span><span class="lead"></span><span class="tv">${S.words.filter(w=>w.bookId===b.id).length} words</span></button></li>
+    <li><button data-go="revisit"><span class="tn">Revisit</span><span class="lead"></span><span class="tv">${due?due+" ready":"a quiet round"}</span></button></li>
+    <li><button data-go="index"><span class="tn">Index</span><span class="lead"></span><span class="tv">every book</span></button></li>
     <li><button data-go="shelf"><span class="tn">The Shelf</span><span class="lead"></span><span class="tv">${S.books.length} book${S.books.length>1?"s":""}</span></button></li>
     <li><button data-go="prefs"><span class="tn">Preferences</span><span class="lead"></span><span class="tv">how it behaves</span></button></li>
+    <li><span><span class="tn">The Writing Desk</span><span class="lead"></span><span class="tv">in a later edition</span></span></li>
    </ul><div class="orn-c">❦</div>
    <p class="psub" style="font-size:15px">Definitions from WordNet, Princeton University. Pronunciations from the CMU Pronouncing Dictionary.${S.words.some(w=>w.sample)?`<br>The Middlemarch words are examples. <button class="txtbtn" data-act="reset" style="font-size:inherit;letter-spacing:0;text-transform:none;text-decoration:underline;min-height:0">Begin with an empty margin</button>`:""}</p>`,"contents");
 }
+function pageBook(){
+  const b=book();const ws=S.words.filter(w=>w.bookId===b.id&&usable(w));
+  const ss=sessions(ws).reverse();
+  openPage(`<button class="close" data-close>Return to the book</button>
+   <h1 class="ptitle" style="font-style:italic">${esc(b.title)}</h1><p class="psub">${b.author?esc(b.author)+" · ":""}${ws.length} word${ws.length===1?"":"s"}</p>
+   ${ss.map(s=>`<p class="sc sess">${esc(sessionLabel(s.start))}</p>`+s.words.map(w=>{const x=w.senses[w.pick];return `<button class="bk-e" data-act="open" data-id="${w.id}"><span class="w" style="color:${inkColor(w)}">${esc(w.word)}</span> <i>${x[0]}.</i> ${esc(x[1])}.${w.context?`<span class="c">${markWord(w.context,w)}</span>`:""}${w.note?`<span class="hand">${esc(w.note)}</span>`:""}</button>`}).join("")).join("")||`<p class="psub">The words you meet in this book will gather here, sitting by sitting.</p>`}
+   <div class="orn-c">❦</div><div class="center">${ws.length?`<button class="txtbtn" data-act="copylist">Copy as a list</button>`:""}<button class="txtbtn dim" data-go="shelf">Another book</button></div>
+   <textarea id="copyArea" class="paste" style="display:none;min-height:140px;margin-top:12px" readonly aria-label="The list"></textarea>`,"book");
+}
 let idxQ="";
 function pageIndex(){
-  const q=idxQ.toLowerCase();const ws=S.words.filter(w=>w.senses&&w.senses.length&&(!q||w.word.includes(q)||(w.senses[w.pick]||[])[1]?.includes(q)||(w.note||"").toLowerCase().includes(q))).sort((a,b)=>a.word.localeCompare(b.word));
+  const q=idxQ.toLowerCase();const ws=S.words.filter(w=>usable(w)&&(!q||w.word.includes(q)||w.senses[w.pick][1].includes(q)||(w.note||"").toLowerCase().includes(q))).sort((a,b)=>a.word.localeCompare(b.word));
   const groups={};ws.forEach(w=>(groups[w.word[0].toUpperCase()]??=[]).push(w));
-  const body=Object.keys(groups).map(L=>`<h3>${L}</h3>`+groups[L].map(w=>{const s=w.senses[w.pick];const bk=S.books.find(b=>b.id===w.bookId);return `<button class="e${w.known?" known":""}" data-act="open" data-id="${w.id}"><b>${esc(w.word)}</b>, <i>${s[0]}.</i> <span class="m">${w.veiled?"pencilled in":esc(s[1])+"."}</span> <span class="s">${esc(bk?.title||"")}, ${roman(w.chapter||1)}${w.known?" · known":""}</span></button>`}).join("")).join("");
-  if(pageKind==="index"){$("idxBody").innerHTML=body||`<p class="psub">Nothing matches.</p>`;return}
-  openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Index</h1><p class="psub">Every word in your margins, from every book.</p>
+  const body=Object.keys(groups).map(L=>`<h3>${L}</h3>`+groups[L].map(w=>{const s=w.senses[w.pick];const bk=S.books.find(b=>b.id===w.bookId);return `<button class="e" data-act="open" data-id="${w.id}"><b style="color:${inkColor(w)}">${esc(w.word)}</b>, <i>${s[0]}.</i> <span class="m">${esc(s[1])}.</span> <span class="s">${esc(bk?.title||"")}${w.known?" · known":""}</span></button>`}).join("")).join("");
+  if(pageKind==="index"&&$("idxBody")){$("idxBody").innerHTML=body||`<p class="psub">Nothing matches.</p>`;return}
+  openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Index</h1><p class="psub">Every word, from every book.</p>
     <input class="search" id="idxq" placeholder="find a word, a meaning or a note" value="${esc(idxQ)}" aria-label="Search the index"><div class="idx" id="idxBody">${body||`<p class="psub">Nothing yet.</p>`}</div>`,"index");
-}
-function pageCommonplace(){
-  const b=book();const ws=S.words.filter(w=>w.bookId===b.id&&w.senses&&w.senses.length&&!w.veiled).sort((a,c)=>(a.chapter-c.chapter)||((a.page||0)-(c.page||0)));
-  const chs={};ws.forEach(w=>(chs[w.chapter]??=[]).push(w));
-  const fmt=d=>new Date(d).toLocaleDateString(undefined,{day:"numeric",month:"long"});
-  openPage(`<button class="close" data-close>Return to the book</button>
-   <p class="sc" style="text-align:center;margin:0 0 10px">A commonplace book</p>
-   <h1 class="ptitle" style="font-style:italic">${esc(b.title)}</h1><p class="psub">${b.author?"after "+esc(b.author):""}</p>
-   ${Object.keys(chs).sort((a,c)=>a-c).map(c=>`<p class="sc cp-ch">Chapter ${roman(+c)}</p>`+chs[c].map(w=>{const s=w.senses[w.pick];return `<p class="cp-e"><span class="w">${esc(w.word)}</span> <i>${s[0]}.</i> ${esc(s[1])}.${w.context?`<span class="c">${markWord(w.context,w)}${w.page?` <span style="font-style:normal;color:var(--graphite)">p. ${w.page}</span>`:""}</span>`:""}${w.note?`<span class="hand">${esc(w.note)}</span>`:""}</p>`}).join("")).join("")||`<p class="psub">The words you gather from this book will be set here, chapter by chapter.</p>`}
-   ${ws.length?`<div class="orn-c">❦</div><p class="colophon">${ws.length} word${ws.length>1?"s":""} gathered between ${fmt(Math.min(...ws.map(w=>w.added)))} and ${fmt(Math.max(...ws.map(w=>w.added)))}.</p>`:""}`,"commonplace");
 }
 function pageShelf(){
   openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">The Shelf</h1><p class="psub">Choose the book you're reading.</p>
-   <div class="shelf">${S.books.map(b=>`<button class="b${b.id===S.active?" cur":""}" data-act="setbook" data-id="${b.id}"><span class="t">${esc(b.title)}</span><span class="n">${esc(b.author||"")} · ${S.words.filter(w=>w.bookId===b.id).length}</span></button>`).join("")}</div>
-   <form class="newbook" id="nb" autocomplete="off"><input id="nbt" placeholder="a new book" aria-label="Title" required><input id="nba" placeholder="its author" aria-label="Author"><button class="txtbtn">Place on shelf</button></form>`,"shelf");
+   <div class="shelf">${S.books.map(b=>`<button class="b${b.id===S.active?" cur":""}" data-act="setbook" data-id="${b.id}"><span class="t">${esc(b.title)}</span><span class="n">${S.words.filter(w=>w.bookId===b.id).length} words</span></button>`).join("")}</div>
+   <form class="field" id="nb" autocomplete="off"><input id="nbt" placeholder="a new book's title" aria-label="Title" required><button class="txtbtn">Place on shelf</button></form>
+   <div class="orn-c">❦</div><div class="center"><button class="txtbtn" data-go="import">Bring in a list from Notes</button></div>`,"shelf");
+}
+function pageImport(){
+  openPage(`<button class="close" data-go="shelf">Back to the shelf</button><h1 class="ptitle">From your notes</h1>
+   <p class="psub">Paste a note the way you keep them: the book's title on the first line, then one word per line. Anything after a dash is ignored.</p>
+   <textarea class="paste" id="imp" aria-label="Your note" placeholder="The Remains of the Day&#10;banter&#10;dignity&#10;indiscretion"></textarea>
+   <div class="center" style="margin-top:10px"><button class="txtbtn" data-act="doimport">Set these words</button></div><p class="psub" id="impMsg" style="margin-top:14px"></p>`,"import");
+  setTimeout(()=>$("imp")?.focus(),400);
+}
+async function doImport(){
+  const lines=$("imp").value.split(/\r?\n/).map(l=>l.replace(/^\s*(?:[-*•–—]|\d+[.)])\s*/,"").replace(/^#+\s*/,"").trim()).filter(Boolean);
+  if(lines.length<2){$("impMsg").textContent="Put the book's title on the first line and at least one word below it.";return}
+  const title=lines[0];let b=S.books.find(x=>x.title.toLowerCase()===title.toLowerCase());
+  if(!b){b={id:uid(),title,author:""};S.books.push(b)}
+  $("impMsg").textContent="Setting the words…";
+  const missed=[];let n=0,t=now()-lines.length*MIN;
+  for(const raw of lines.slice(1)){
+    const word=raw.split(/\s+[-–—]\s+|\s*[:=]\s*/)[0].trim();const e=await findEntry(word);
+    if(!e){missed.push(word);continue}
+    if(S.words.some(w=>w.word===e.lemma&&w.bookId===b.id))continue;
+    S.words.push({id:uid(),bookId:b.id,word:e.lemma,typed:clean(word),say:e.say,senses:e.senses,pick:0,context:"",strength:0,added:t+=MIN,due:now()+DAY,known:false,echoes:[],note:"",owns:[]});n++;
+  }
+  S.active=b.id;save();
+  const fixes=[];for(const m of missed){const f=(await fuzzy(clean(m),1))[0];fixes.push([m,f])}
+  $("impMsg").innerHTML=`${n} word${n===1?"":"s"} set in <i>${esc(b.title)}</i>.${fixes.length?`<br>${fixes.map(([m,f])=>f?`<span style="display:inline-block">“${esc(m)}” — did you mean <button class="txtbtn" style="letter-spacing:0;text-transform:none;font-size:18px;font-style:italic;min-height:36px" data-act="impfix" data-w="${esc(f)}">${esc(f)}</button>?</span>`:`“${esc(m)}” isn't in the dictionary.`).join("<br>")}`:""}<br><button class="txtbtn" data-close>Open the book</button>`;
 }
 function pagePrefs(){
   const P=S.prefs,t=(k,b,s)=>`<div class="p"><div><b>${b}</b><span>${s}</span></div><button data-act="pref" data-k="${k}" aria-pressed="${!!P[k]}">${P[k]?"On":"Off"}</button></div>`;
   openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Preferences</h1><p class="psub">Margin should be as quiet as you want it.</p>
    <div class="prefs">
-    ${t("returns","Words return when I open the book","At most two, at the start of a reading session. Otherwise they wait in Revisit.")}
-    ${t("guess","Guess before the meaning","Each new word arrives veiled, so you can guess from the sentence first. Guessing first helps a word stay.")}
+    ${t("prime","Before I read, show last time's words","When you come back to a book, the words from your last sitting are shown with their meanings, in case they turn up again. No questions.")}
     ${t("awake","Keep the screen awake","For when the phone lies open beside a paper book.")}
     <div class="p"><div><b>Size of type</b><span>Larger or smaller text on the leaves.</span></div><span style="display:flex;gap:4px"><button data-act="scale" data-v="-1" aria-label="Smaller type" style="min-width:44px;text-align:center;font-size:15px;letter-spacing:0;text-transform:none">A</button><button data-act="scale" data-v="1" aria-label="Larger type" style="min-width:44px;text-align:center;font-size:22px;letter-spacing:0;text-transform:none">A</button></span></div>
    </div>`,"prefs");
 }
-function openLeaf(id){const w=byId(id);openPage(`<button class="close" data-go="index">Back to the index</button><div class="modal">${leafHTML(w,0,1,false)}</div>`,"leaf")}
-const refresh=id=>pageKind==="leaf"?openLeaf(id):renderGallery(id);
+function openLeaf(id,back){
+  leafBack=back||(pageKind==="index"?"index":"book");const w=byId(id);
+  openPage(`<button class="close" data-go="${leafBack}">Back</button><div style="max-width:540px;margin:0 auto">${leafHTML(w,0,1,false).replace('class="leaf','style="opacity:1;transform:none;min-height:60vh" class="leaf')}</div>`,"leaf");
+}
+const refresh=id=>pageKind==="leaf"?openLeaf(id,leafBack):renderGallery(id);
 
 // ===== keep the page awake (optional) =====
 let wakeLock=null;
-async function syncWake(){try{if(S.prefs.awake&&document.visibilityState==="visible"){wakeLock=await navigator.wakeLock?.request("screen")}else{await wakeLock?.release();wakeLock=null}}catch(e){wakeLock=null}}
+async function syncWake(){try{if(S.prefs.awake&&document.visibilityState==="visible")wakeLock=await navigator.wakeLock?.request("screen");else{await wakeLock?.release();wakeLock=null}}catch(e){wakeLock=null}}
 document.addEventListener("visibilitychange",syncWake);
 
 // ===== events =====
-document.addEventListener("click",e=>{
+document.addEventListener("click",async e=>{
   const t=e.target.closest("[data-go],[data-act],[data-close]");if(!t)return;
   if(t.hasAttribute("data-close")){closePage();return}
   const go=t.dataset.go;
-  if(go==="contents")return pageContents();
-  if(go==="index")return pageIndex();
-  if(go==="commonplace")return pageCommonplace();
-  if(go==="shelf")return pageShelf();
-  if(go==="prefs")return pagePrefs();
-  if(go==="revisit")return startRevisit();
-  const a=t.dataset.act,id=t.dataset.id,b=book();
-  if(["choose","reveal","mark"].includes(a)){const st=activeSt();slipAction(st,a,t.dataset.v);return redraw(st)}
-  if(a==="keepuse"){const st=activeSt();slipAction(st,a,$("useIn").value);return redraw(st)}
-  if(a==="slipnext"){if(pageKind==="revisit")return nextRv();slipState.i++;if(slipState.i>=slipState.queue.length)return closeSlip();newItem(slipState,byId(slipState.queue[slipState.i]),"And one more",false);return drawSlip()}
-  if(a==="slipclose")return closeSlip();
-  if(a==="peek"){slipState.shown[id]=true;byId(id).lastMet=byId(id).lastMet||byId(id).added;return drawChapterEnd()}
-  if(a==="gotoleaf"){$("slip").classList.remove("on");$("veil").classList.remove("on");slipState=null;renderGallery(id,true);setTimeout(()=>$("gallery").querySelector(`[data-id="${id}"] .guess`)?.focus(),500);return}
-  if(a==="ch-"){b.chapter=Math.max(1,b.chapter-1);save();return renderHead()}
-  if(a==="ch+"){const old=b.chapter;b.chapter++;save();renderHead();touch();if(!chapterEnd(old))hint(`New words will be filed under chapter ${roman(b.chapter)}.`);return}
-  if(a==="sense"){const w=byId(id);w.pick=+t.dataset.k;save();return refresh(id)}
-  if(a==="unveil"){const w=byId(id);const g=document.querySelector(`.guess[data-id="${id}"]`);w.guess=(g?.value||"").trim();w.veiled=false;w.later=false;w.due=now()+DAY;save();freshId=id;touch();return refresh(id)}
-  if(a==="note"){noting=id;return refresh(id)}
-  if(a==="known"){const w=byId(id);w.known=!w.known;save();if(pageKind==="leaf")return openLeaf(id);hint(`“${w.word}” is pressed into the index.`,()=>{w.known=false;save();renderGallery(id)});return renderGallery()}
-  if(a==="del"){const i=S.words.findIndex(x=>x.id===id);const [w]=S.words.splice(i,1);save();hint(`“${w.word}” removed.`,()=>{S.words.splice(i,0,w);save();renderGallery(w.id)});if(pageKind==="leaf")return pageIndex();return renderGallery()}
-  if(a==="undo"){const f=undoFn;undoFn=null;$("hint").textContent="";f?.();return}
-  if(a==="open")return openLeaf(id);
-  if(a==="try"){closePage();return lookup(t.dataset.w,t.dataset.c||"",t.dataset.p||"")}
-  if(a==="setbook"){S.active=id;save();closePage();return}
-  if(a==="reset"){S.words=S.words.filter(w=>!w.sample);save();closePage();return}
-  if(a==="pref"){S.prefs[t.dataset.k]=!S.prefs[t.dataset.k];save();syncWake();return pagePrefs()}
-  if(a==="scale"){S.prefs.scale=Math.round(Math.min(1.3,Math.max(.9,S.prefs.scale+ +t.dataset.v*.1))*10)/10;save();renderHead();return}
+  if(go){closeSlip();({contents:pageContents,book:pageBook,index:pageIndex,shelf:pageShelf,prefs:pagePrefs,revisit:startRevisit,import:pageImport})[go]?.();return}
+  const a=t.dataset.act,id=t.dataset.id;
+  if(["show","rate","pickc","keep","rvnext"].includes(a))return rvAct(a,t.dataset.v);
+  switch(a){
+   case"pick":clearWriter();$("q").blur();return lookup(t.dataset.w,"");
+   case"choose-word":{const s=$("chooser").dataset.sentence||"";clearWriter();return lookup(t.dataset.w,s)}
+   case"slipclose":return closeSlip();
+   case"slip-revisit":closeSlip();return startRevisit();
+   case"sense":{const w=byId(id);w.pick=+t.dataset.k;save();return refresh(id)}
+   case"note":noting=id;return refresh(id);
+   case"known":{const w=byId(id);w.known=!w.known;save();if(pageKind==="leaf")return openLeaf(id,leafBack);hint(`“${w.word}” is pressed into the index.`,()=>{w.known=false;save();renderGallery(id)});return renderGallery()}
+   case"del":{const i=S.words.findIndex(x=>x.id===id);const [w]=S.words.splice(i,1);save();hint(`“${w.word}” removed.`,()=>{S.words.splice(i,0,w);save();renderGallery(w.id)});if(pageKind==="leaf")return leafBack==="index"?pageIndex():pageBook();return renderGallery()}
+   case"undo":{const f=undoFn;undoFn=null;$("hint").textContent="";return f?.()}
+   case"open":return openLeaf(id);
+   case"try":closePage();return lookup(t.dataset.w,t.dataset.c||"");
+   case"setbook":S.active=id;save();closePage();return;
+   case"reset":S.words=S.words.filter(w=>!w.sample);save();closePage();return;
+   case"pref":S.prefs[t.dataset.k]=!S.prefs[t.dataset.k];save();syncWake();return pagePrefs();
+   case"scale":S.prefs.scale=Math.round(Math.min(1.3,Math.max(.9,S.prefs.scale+ +t.dataset.v*.1))*10)/10;save();renderHead();return;
+   case"doimport":return doImport();
+   case"impfix":{const e2=await findEntry(t.dataset.w);if(e2&&!S.words.some(w=>w.word===e2.lemma&&w.bookId===S.active)){S.words.push({id:uid(),bookId:S.active,word:e2.lemma,typed:e2.lemma,say:e2.say,senses:e2.senses,pick:0,context:"",strength:0,added:now(),due:now()+DAY,known:false,echoes:[],note:"",owns:[]});save()}t.outerHTML=`<i>${esc(t.dataset.w)}</i>, added`;return}
+   case"copylist":{const b=book();const txt=[b.title,...S.words.filter(w=>w.bookId===b.id&&usable(w)).sort((x,y)=>x.added-y.added).map(w=>w.word)].join("\n");
+     try{await navigator.clipboard.writeText(txt);t.textContent="Copied"}catch(err){const ta=$("copyArea");ta.style.display="block";ta.value=txt;ta.focus();ta.select();t.textContent="Select and copy"}return}
+  }
 });
-function submitLookup(later){const q=$("q").value,c=$("ctx").value.trim(),p=$("pg").value.trim();if(!q.trim())return;$("q").value="";$("ctx").value="";$("pg").value="";$("writer").classList.remove("open");document.activeElement?.blur();lookup(q,c,p,later)}
-$("cap").addEventListener("submit",e=>{e.preventDefault();submitLookup(false)});
-$("later").addEventListener("click",()=>submitLookup(true));
-$("q").addEventListener("focus",()=>$("writer").classList.add("open"));
-document.addEventListener("pointerdown",e=>{if(!e.target.closest(".writer"))$("writer").classList.remove("open")});
-document.addEventListener("submit",e=>{
-  if(e.target.id==="nb"){e.preventDefault();const t=$("nbt").value.trim();if(!t)return;const nb={id:uid(),title:t,author:$("nba").value.trim(),chapter:1};S.books.push(nb);S.active=nb.id;save();closePage();return}
-  if(e.target.dataset.form==="recall"){e.preventDefault();const st=activeSt();const v=$("recallIn").value;if(!v.trim())return;slipAction(st,"recall",v);redraw(st)}
-});
+$("cap").addEventListener("submit",e=>{e.preventDefault();submitLine()});
+$("q").addEventListener("input",()=>{clearTimeout(suggT);suggT=setTimeout(updateSugg,70)});
+$("q").addEventListener("paste",e=>{const t=(e.clipboardData||window.clipboardData)?.getData("text")||"";if(words(t).length>2){e.preventDefault();$("q").value="";showChooser(t.trim().replace(/\s+/g," "));$("q").blur()}});
+document.addEventListener("submit",e=>{if(e.target.id==="nb"){e.preventDefault();const t=$("nbt").value.trim();if(!t)return;const nb={id:uid(),title:t,author:""};S.books.push(nb);S.active=nb.id;save();closePage();setTimeout(()=>$("q").focus(),300)}});
 document.addEventListener("input",e=>{if(e.target.id==="idxq"){idxQ=e.target.value;pageIndex()}});
 document.addEventListener("focusout",e=>{if(e.target.classList?.contains("notearea")){const w=byId(e.target.dataset.id);if(w){w.note=e.target.value.trim();save()}noting=null;setTimeout(()=>refresh(w?.id),0)}});
 document.addEventListener("keydown",e=>{
-  if(e.target.classList?.contains("guess")&&e.key==="Enter"){e.preventDefault();document.querySelector(`[data-act="unveil"][data-id="${e.target.dataset.id}"]`)?.click();return}
   if(e.target.classList?.contains("notearea")&&e.key==="Enter"&&!e.shiftKey){e.preventDefault();e.target.blur();return}
   const typing=/INPUT|TEXTAREA/.test(document.activeElement?.tagName);
-  if(e.key==="Escape"){if(slipState)return closeSlip();if(pageKind)return closePage();document.activeElement?.blur()}
-  if(typing||pageKind||slipState||e.metaKey||e.ctrlKey||e.altKey)return;
+  if(e.key==="Escape"){if($("slip").classList.contains("on"))return closeSlip();if(pageKind)return closePage();clearWriter();document.activeElement?.blur();return}
+  if(typing||pageKind||$("slip").classList.contains("on")||e.metaKey||e.ctrlKey||e.altKey)return;
   const g=$("gallery");
   if(e.key==="ArrowRight"||e.key==="ArrowLeft"){e.preventDefault();g.scrollBy({left:(e.key==="ArrowRight"?1:-1)*g.querySelector(".leaf").offsetWidth,behavior:"smooth"})}
-  else if(/^[a-zA-Z]$/.test(e.key)&&(document.activeElement===document.body||!document.activeElement))$("q").focus();
+  else if(/^[a-zA-Z]$/.test(e.key))$("q").focus();
 });
 $("veil").addEventListener("click",closeSlip);
-// pinch the gallery closed to see the Index
 let pinch0=0;const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
 $("gallery").addEventListener("touchstart",e=>{if(e.touches.length===2)pinch0=dist(e.touches)},{passive:true});
-$("gallery").addEventListener("touchmove",e=>{if(e.touches.length===2&&pinch0&&dist(e.touches)<pinch0*.6){pinch0=0;pageContents()}},{passive:true});
+$("gallery").addEventListener("touchmove",e=>{if(e.touches.length===2&&pinch0&&dist(e.touches)<pinch0*.6){pinch0=0;pageBook()}},{passive:true});
 
 // ===== boot =====
 (async()=>{
   renderHead();renderGallery();syncWake();
   const pending=S.words.filter(w=>!w.senses);
   if(pending.length){await Promise.all(pending.map(hydrate));save();renderGallery();renderHead()}
-  maybeReturn();touch();
+  maybePrime();
+  if(!$("slip").classList.contains("on")&&matchMedia("(hover:hover)").matches)$("q").focus();
+  touch();
 })();
 </script>

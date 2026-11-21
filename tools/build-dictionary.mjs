@@ -10,7 +10,8 @@ for(const p of Object.keys(POS)){
     const n=parseInt(f[3],16);const words=[];for(let i=0;i<n;i++)words.push(f[4+i*2].replace(/\(.*\)$/,'').replace(/_/g,' '));
     const g=(gl||'').trim();const exs=[...g.matchAll(/"([^"]+)"(\s*-\s*([^;"]+))?/g)].map(m=>m[3]?[m[1],m[3].trim()]:[m[1]]);
     let def=g.replace(/;?\s*"[^"]*"(\s*-\s*[^;"]+)?/g,'').replace(/[;\s]+$/,'').trim();
-    syn[p+f[0]]={def,exs,words};
+    const raw=[];for(let i=0;i<n;i++)raw.push(f[4+i*2].replace(/\(.*\)$/,''));
+    syn[p+f[0]]={def,exs,words,raw};
   }
 }
 const vowels=new Set(['AA','AE','AH','AO','AW','AY','EH','ER','EY','IH','IY','OW','OY','UH','UW']);
@@ -34,16 +35,17 @@ for(const p of Object.keys(POS)){
     if(!line||line[0]===' ')continue;const f=line.split(' ');const w=f[0];
     if(!/^[a-z][a-z'-]*[a-z]$/.test(w))continue;
     const sc=+f[2],pc=+f[3];const tag=+f[5+pc];const offs=f.slice(6+pc,6+pc+sc);
-    (lem[w]??=[]);const grp=[];for(const o of offs.slice(0,4)){const s=syn[p+o];if(!s)continue;
+    (lem[w]??=[]);const grp=[];let caps=0,tot=0;for(const o of offs){const s0=syn[p+o];if(s0){tot++;const m=s0.raw.find(x=>x.toLowerCase()===w);if(m&&m[0]!==m[0].toLowerCase())caps++}}
+    for(const o of offs.slice(0,4)){const s=syn[p+o];if(!s)continue;
       grp.push([POS[p],s.def,s.exs.slice(0,2),s.words.filter(x=>x!==w&&!x.includes(' ')).slice(0,4)]);}
-    lem[w].push({tag,grp});
+    lem[w].push({tag,grp,proper:tot>0&&caps===tot});
   }
 }
 const shards=Object.create(null);let n=0;
 for(const [w,gs] of Object.entries(lem)){const senses=gs.sort((a,b)=>b.tag-a.tag||b.grp.length-a.grp.length).flatMap(g=>g.grp);if(!senses.length)continue;
   // order: keep pos groups but first-sense of each pos up front; cap 6
   const pr=Object.hasOwn(cmu,w)&&/^[A-Z0-9 ]+$/.test(cmu[w])?cmu[w]:null;const say=pr?respell(pr):null;
-  (shards[w[0]]??=Object.create(null))[w]=[say,senses.slice(0,6)];n++;
+  const proper=gs.every(g=>g.proper);(shards[w[0]]??=Object.create(null))[w]=proper?[say,senses.slice(0,6),1]:[say,senses.slice(0,6)];n++;
 }
 fs.mkdirSync(OUT,{recursive:true});
 for(const [k,v] of Object.entries(shards))fs.writeFileSync(`${OUT}/${k}.json`,JSON.stringify(v));
