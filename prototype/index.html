@@ -1,0 +1,438 @@
+<title>Margin</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: phone = one column + bottom tab bar; iPad/desktop = sidebar + reading column + chapter column.
+   Concept: a pencil and a highlighter in the margin of a book. */
+:root{
+  --paper:#F5F5F1; --sheet:#FFFFFF; --ink:#1E222A; --ink-2:#5B6170; --ink-3:#9097A3;
+  --rule:#E3E4DE; --marker:#F4DA4A; --marker-soft:#FBF0B4; --pencil:#2E4FB0; --pencil-soft:#E7ECFA;
+  --good:#2E7D4F; --warn:#B26A00; --bad:#B23A3A;
+  --f-word:"Literata",Georgia,"Times New Roman",serif;
+  --f-ui:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131519; --sheet:#1C1F25; --ink:#ECEDEF; --ink-2:#A6ABB5; --ink-3:#6E7480;
+  --rule:#2A2E36; --marker:#C9AF2C; --marker-soft:#3A3416; --pencil:#8FA8F5; --pencil-soft:#1F2740;
+  --good:#6CC08F; --warn:#E0A54A; --bad:#E07B7B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#131519; --sheet:#1C1F25; --ink:#ECEDEF; --ink-2:#A6ABB5; --ink-3:#6E7480;
+  --rule:#2A2E36; --marker:#C9AF2C; --marker-soft:#3A3416; --pencil:#8FA8F5; --pencil-soft:#1F2740;
+  --good:#6CC08F; --warn:#E0A54A; --bad:#E07B7B; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--pencil);outline-offset:2px;border-radius:6px}
+.app{display:flex;min-height:100%}
+/* sidebar (iPad) */
+.side{display:none}
+.main{flex:1;min-width:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 96px}
+.wrap{max-width:640px;margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:6px 14px}
+.book{min-width:0}
+.book .t{font-family:var(--f-word);font-weight:600;font-size:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.book .a{color:var(--ink-2);font-size:13px}
+.chap{display:flex;align-items:center;gap:2px;background:var(--sheet);border:1px solid var(--rule);border-radius:999px;padding:3px;flex-shrink:0}
+.chap button{border:0;background:none;width:30px;height:30px;border-radius:999px;color:var(--ink-2);font-size:16px}
+.chap button:hover{background:var(--paper)}
+.chap span{font-size:13px;font-weight:600;min-width:52px;text-align:center;font-variant-numeric:tabular-nums}
+/* capture */
+.capture{background:var(--sheet);border:1px solid var(--rule);border-radius:var(--r);padding:6px 6px 6px 14px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 0 var(--rule)}
+.capture input{flex:1;min-width:0;border:0;background:none;outline:none;font-family:var(--f-word);font-size:20px;padding:8px 0}
+.capture input::placeholder{color:var(--ink-3)}
+.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:600;font-size:14px;background:var(--pencil);color:var(--sheet)}
+.btn.ghost{background:none;color:var(--ink-2);border:1px solid var(--rule)}
+.btn.soft{background:var(--pencil-soft);color:var(--pencil)}
+.btn:disabled{opacity:.5;cursor:default}
+.more{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.more textarea,.more input{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:8px 10px;font-size:14px;outline:none}
+.more textarea{flex:1 1 260px;min-width:0;resize:none;height:42px;font-family:var(--f-word);font-style:italic}
+.more input{width:84px}
+.linkish{background:none;border:0;color:var(--ink-3);font-size:13px;padding:6px 2px}
+.linkish:hover{color:var(--pencil)}
+/* card */
+.card{background:var(--sheet);border:1px solid var(--rule);border-radius:var(--r);padding:18px 18px 14px;margin-top:14px;animation:rise .25s ease-out}
+@keyframes rise{from{transform:translateY(6px);opacity:.4}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.card{animation:none}}
+.w{font-family:var(--f-word);font-size:34px;font-weight:600;line-height:1.1;display:inline;background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker) 92%,transparent 92%);padding:0 3px;margin-left:-3px}
+.meta{color:var(--ink-2);font-size:13px;margin-top:6px;display:flex;gap:10px;flex-wrap:wrap}
+.meta i{font-family:var(--f-word)}
+.gist{font-family:var(--f-word);font-size:21px;line-height:1.3;margin:14px 0 4px;text-wrap:balance}
+.def{color:var(--ink-2);font-size:14px}
+.rows{display:grid;gap:10px;margin-top:14px;border-top:1px solid var(--rule);padding-top:12px}
+.row{display:grid;grid-template-columns:78px 1fr;gap:10px;font-size:14px}
+.row .k{color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:.08em;padding-top:2px}
+.row .v{min-width:0}
+.row .v.qt{font-family:var(--f-word);font-style:italic}
+.row mark{background:var(--marker-soft);color:inherit;padding:0 2px;border-radius:2px}
+.cardfoot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:8px;flex-wrap:wrap}
+.dots{display:inline-flex;gap:3px;vertical-align:middle}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--rule)}
+.dots i.on{background:var(--pencil)}
+.loading .gist,.loading .def{color:transparent;background:var(--paper);border-radius:6px}
+.err{color:var(--bad);font-size:14px;margin-top:10px}
+/* chapter list */
+.sect{margin-top:26px}
+.sect h3{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);font-weight:600;margin:0 0 6px;display:flex;justify-content:space-between}
+.list{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.li{border-bottom:1px solid var(--rule)}
+.li>button{width:100%;text-align:left;background:none;border:0;padding:11px 2px;display:flex;align-items:baseline;gap:10px}
+.li .lw{font-family:var(--f-word);font-weight:600;font-size:17px;flex-shrink:0}
+.li .lg{color:var(--ink-2);font-size:14px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .lp{color:var(--ink-3);font-size:12px;font-variant-numeric:tabular-nums}
+.li .card{margin:0 0 12px}
+.fold{width:100%;background:none;border:1px dashed var(--rule);border-radius:10px;padding:10px;color:var(--ink-2);font-size:13px;margin-top:8px}
+.empty{color:var(--ink-3);font-size:14px;padding:14px 2px}
+/* practice */
+.hero{background:var(--sheet);border:1px solid var(--rule);border-radius:var(--r);padding:20px}
+.hero h2{font-family:var(--f-word);font-weight:600;font-size:26px;margin:0 0 4px;text-wrap:balance}
+.hero p{color:var(--ink-2);margin:0 0 16px}
+.stats{display:flex;gap:22px;margin:14px 0 18px;flex-wrap:wrap}
+.stat b{display:block;font-family:var(--f-word);font-size:26px;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--ink-3)}
+.bar{height:4px;background:var(--rule);border-radius:4px;overflow:hidden;margin:4px 0 18px}
+.bar>i{display:block;height:100%;background:var(--pencil);transition:width .3s}
+.q,.hero{max-width:680px}
+.q{background:var(--sheet);border:1px solid var(--rule);border-radius:var(--r);padding:22px 18px}
+.q .mode{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);font-weight:600}
+.q .prompt{font-family:var(--f-word);font-size:22px;line-height:1.35;margin:10px 0 18px;text-wrap:balance}
+.q .blank{display:inline-block;min-width:90px;border-bottom:2px solid var(--ink);margin:0 2px}
+.choices{display:grid;gap:8px}
+.choice{text-align:left;background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:13px 14px;font-family:var(--f-word);font-size:18px}
+.choice:hover{border-color:var(--pencil)}
+.choice.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 12%,var(--sheet))}
+.choice.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--sheet))}
+.grade{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.grade button{border:1px solid var(--rule);background:var(--paper);border-radius:12px;padding:12px 4px;font-weight:600;font-size:14px}
+.grade button small{display:block;font-weight:400;color:var(--ink-3);font-size:11px}
+.reveal{margin-top:14px;padding-top:14px;border-top:1px solid var(--rule)}
+.q textarea{width:100%;background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:12px;font-family:var(--f-word);font-size:17px;resize:vertical;min-height:84px;outline:none}
+.fb{font-size:14px;margin-top:12px;padding:12px;border-radius:10px;background:var(--pencil-soft)}
+.typein{display:flex;gap:8px}
+.typein input{flex:1;min-width:0;background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:12px;font-family:var(--f-word);font-size:18px;outline:none}
+/* bank */
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.chip{border:1px solid var(--rule);background:var(--sheet);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--ink-2)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--sheet);border-color:var(--ink)}
+.search{width:100%;background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:10px 12px;margin-bottom:10px;outline:none}
+.h1{font-family:var(--f-word);font-weight:600;font-size:26px;margin:6px 0 14px}
+/* tab bar (phone) */
+.tabs{position:fixed;left:0;right:0;bottom:0;background:color-mix(in srgb,var(--sheet) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--rule);display:flex;justify-content:space-around;padding:6px max(16px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:5}
+.tab{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--ink-3);padding:6px 14px;position:relative}
+.tab svg{width:22px;height:22px}
+.tab[aria-current="page"]{color:var(--pencil)}
+.badge{position:absolute;top:2px;right:8px;background:var(--pencil);color:var(--sheet);font-size:10px;font-weight:600;border-radius:999px;padding:0 5px;min-width:16px;text-align:center}
+.note{font-size:12px;color:var(--ink-3);margin-top:24px;text-align:center}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.sheet>div{background:var(--sheet);width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:20px max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.sheet h4{margin:0 0 12px;font-family:var(--f-word);font-size:20px}
+.booklist{display:grid;gap:6px;margin-bottom:14px}
+.booklist button{text-align:left;border:1px solid var(--rule);background:var(--paper);border-radius:12px;padding:10px 12px}
+.booklist button[aria-current="true"]{border-color:var(--pencil)}
+.newbook{display:flex;gap:8px;flex-wrap:wrap}
+.newbook input{flex:1 1 140px;min-width:0;border:1px solid var(--rule);background:var(--paper);border-radius:10px;padding:10px}
+.cols{display:block}
+/* iPad / desktop */
+@media (min-width:900px){
+  .tabs{display:none}
+  .side{display:flex;flex-direction:column;gap:4px;width:230px;flex-shrink:0;border-right:1px solid var(--rule);padding:18px 12px;position:sticky;top:0;height:100vh;background:var(--sheet)}
+  .side .logo{font-family:var(--f-word);font-weight:600;font-size:22px;padding:4px 10px 16px}
+  .side .logo span{background:linear-gradient(transparent 60%,var(--marker) 60%)}
+  .side .nav{background:none;border:0;text-align:left;padding:9px 10px;border-radius:10px;color:var(--ink-2);display:flex;justify-content:space-between;align-items:center}
+  .side .nav[aria-current="page"]{background:var(--pencil-soft);color:var(--pencil);font-weight:600}
+  .side .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);padding:18px 10px 6px}
+  .side .bk{background:none;border:0;text-align:left;padding:7px 10px;border-radius:8px;font-family:var(--f-word);font-size:14px;color:var(--ink-2)}
+  .side .bk[aria-current="true"]{color:var(--ink);font-weight:600}
+  .main{padding-block:20px 40px}
+  .wrap{max-width:1040px}
+  .cols.read{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:32px;align-items:start}
+  .cols.read .sect:first-child{margin-top:0}
+  .cols.read>div:last-child{position:sticky;top:20px}
+}
+</style>
+
+<div class="app">
+  <nav class="side" id="side" aria-label="Main"></nav>
+  <main class="main"><div class="wrap" id="view"></div></main>
+</div>
+<nav class="tabs" id="tabs" aria-label="Tabs"></nav>
+<div id="sheet"></div>
+
+<script>
+// ---------- data ----------
+const DAY=864e5, now=()=>Date.now();
+const INTERVALS=[0,1,3,7,16,35]; // days per strength level
+const SEED_BOOK={id:"b1",title:"Middlemarch",author:"George Eliot",chapter:7};
+const seedWords=[
+ ["ardent","/ˈɑː.dənt/","adj.","Burning with eager passion","Very enthusiastic or passionate about something.","Picture a candle held too close: warm, bright, a little dangerous.","Latin ardere, “to burn” (same root as arson).","She was ardent about rebuilding the cottages.","Dorothea's ardent wish to do some great good.",9,1,3],
+ ["sanguine","/ˈsæŋ.ɡwɪn/","adj.","Cheerfully hopeful, even when it's bad","Optimistic, especially in a difficult situation.","Rosy cheeks: medieval doctors said too much blood made you cheerful.","Latin sanguis, “blood”.","He remained sanguine about the harvest.","Mr. Brooke was sanguine about his chances at the election.",22,2,2],
+ ["quixotic","/kwɪkˈsɒt.ɪk/","adj.","Noble but wildly impractical","Exceedingly idealistic; unrealistic and impractical.","A knight on a thin horse charging a windmill.","From Don Quixote, Cervantes' dreamy knight.","Her quixotic plan to house every tenant for free.","Her neighbours thought the scheme quixotic.",31,3,1],
+ ["provincial","/prəˈvɪn.ʃəl/","adj.","Narrow-minded, small-town","Of the provinces; unsophisticated or narrow in outlook.","A town map that ends at its own edge.","Latin provincia, a territory outside Rome.","Lydgate found the town's medicine provincial.","The provincial gossip of the town.",64,4,4],
+ ["taciturn","/ˈtæs.ɪ.tɜːn/","adj.","Says very little, on purpose","Reserved or uncommunicative in speech.","A locked mouth with the key thrown away.","Latin tacitus, “silent” (as in tacit).","Caleb was taciturn at dinner.","A taciturn man who disliked idle talk.",88,5,0],
+ ["obdurate","/ˈɒb.dʒə.rət/","adj.","Stubbornly refusing to change","Unmoved by persuasion or feeling.","Trying to bend an iron bar with your hands.","Latin ob- + durus, “hard” (as in durable).","He was obdurate about the will.","Old Featherstone remained obdurate.",102,6,1],
+ ["parsimony","/ˈpɑː.sɪ.mə.ni/","n.","Extreme reluctance to spend","Unusual or excessive carefulness with money.","Counting the matches before lighting the fire.","Latin parcere, “to spare”.","The household was run with parsimony.","His parsimony was the talk of the parish.",118,7,0],
+ ["ebullient","/ɪˈbʊl.i.ənt/","adj.","Bubbling over with energy","Cheerful and full of energy.","A pot boiling over with laughter.","Latin ebullire, “to boil out”.","Fred came in ebullient after the race.","Fred, ebullient after his good fortune.",124,7,0],
+];
+const seed=()=>({books:[SEED_BOOK],active:"b1",words:seedWords.map((r,i)=>({id:"w"+i,bookId:"b1",word:r[0],ipa:r[1],pos:r[2],gist:r[3],def:r[4],hook:r[5],root:r[6],example:r[7],context:r[8],page:r[9],chapter:r[10],strength:r[11],due:now()-(i%3===0?DAY:-(i+1)*DAY),added:now()-(8-i)*DAY*2,known:false,sample:true}))});
+let S;
+try{S=JSON.parse(localStorage.getItem("margin.v1"))}catch(e){}
+if(!S||!S.words)S=seed();
+const save=()=>{try{localStorage.setItem("margin.v1",JSON.stringify(S))}catch(e){}};
+const book=()=>S.books.find(b=>b.id===S.active)||S.books[0];
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+
+let UI={tab:"read",fresh:null,openId:null,showOld:false,more:false,bankBook:"all",bankQ:"",lookupErr:"",busy:false,session:null};
+let sample=null;
+(async()=>{try{sample=await window.claude?.use?.("sample")}catch(e){} render()})();
+
+// ---------- lookup ----------
+async function lookup(word,context,page){
+  word=word.trim(); if(!word)return;
+  const b=book();
+  const existing=S.words.find(w=>w.bookId===b.id&&w.word.toLowerCase()===word.toLowerCase());
+  if(existing){UI.fresh=existing.id;UI.lookupErr="";render();return}
+  if(!sample){UI.lookupErr="Live definitions need the Claude viewer. Open this page in claude.ai to look up new words.";render();return}
+  UI.busy=true;UI.lookupErr="";UI.pending=word;render();
+  const prompt=`You are the dictionary inside a reading app. A reader is reading "${b.title}" by ${b.author}${b.chapter?`, chapter ${b.chapter}`:""} and looked up: "${word}".
+${context?`The sentence they were reading: "${context}". Pick the sense that fits this sentence.`:"Pick the sense most likely in this book."}
+Return ONLY JSON with these keys:
+"word": the headword (base form, lowercase unless proper),
+"ipa": IPA pronunciation in slashes,
+"pos": part of speech abbreviated (n., v., adj., adv., phr.),
+"gist": the meaning in 3-7 plain words, memorable, no jargon,
+"def": one clear sentence definition,
+"hook": one vivid mental image to remember it, max 16 words, concrete and sensory,
+"root": origin in max 12 words (language, root meaning, a familiar relative word if any),
+"example": a short natural modern sentence using the word, max 14 words.
+If it is not a real word, return {"error":"short reason"}.`;
+  try{
+    const r=await sample.json(prompt,{modelTier:"quick"});
+    if(r.error)throw{message:r.error};
+    const w={id:uid(),bookId:b.id,word:r.word||word,ipa:r.ipa||"",pos:r.pos||"",gist:r.gist||"",def:r.def||"",hook:r.hook||"",root:r.root||"",example:r.example||"",context:context||"",page:page?+page:null,chapter:b.chapter,strength:0,due:now()+DAY,added:now(),known:false};
+    S.words.push(w);save();UI.fresh=w.id;
+  }catch(e){UI.lookupErr=e.code==="not_granted"?"Definitions are turned off for this page. Allow Claude in the page's permissions to look up words.":e.code==="rate_limited"?"Too many lookups at once. Try again in a moment.":(e.message||"Couldn't look that up. Try again.")}
+  UI.busy=false;UI.pending=null;render();
+}
+
+// ---------- components ----------
+const dots=n=>`<span class="dots" title="Memory strength ${n}/5" aria-label="Memory strength ${n} of 5">${[1,2,3,4,5].map(i=>`<i class="${i<=n?"on":""}"></i>`).join("")}</span>`;
+function hiCtx(ctx,word){if(!ctx)return"";const e=esc(ctx);const stem=esc(word).slice(0,Math.max(4,word.length-2));return e.replace(new RegExp(`\\b(${stem}\\w*)`,"i"),"<mark>$1</mark>")}
+function card(w,full=true){
+  return `<article class="card">
+    <div><h2 class="w" style="margin:0">${esc(w.word)}</h2></div>
+    <div class="meta"><span>${esc(w.ipa)}</span><i>${esc(w.pos)}</i>${w.page?`<span>p. ${w.page}</span>`:""}${w.chapter?`<span>Ch. ${w.chapter}</span>`:""}</div>
+    <p class="gist">${esc(w.gist)}</p>
+    <p class="def" style="margin:0">${esc(w.def)}</p>
+    ${full?`<div class="rows">
+      ${w.context?`<div class="row"><div class="k">In the book</div><div class="v qt">“${hiCtx(w.context,w.word)}”</div></div>`:""}
+      <div class="row"><div class="k">Picture it</div><div class="v">${esc(w.hook)}</div></div>
+      <div class="row"><div class="k">Root</div><div class="v">${esc(w.root)}</div></div>
+      <div class="row"><div class="k">Example</div><div class="v qt">${esc(w.example)}</div></div>
+    </div>`:""}
+    <div class="cardfoot"><span style="font-size:12px;color:var(--ink-3)">${dots(w.strength)} ${w.known?"Known":"Learning"}</span>
+      <span style="display:flex;gap:6px">
+        <button class="btn ghost" data-act="known" data-id="${w.id}">${w.known?"Keep practicing":"I know this"}</button>
+        <button class="btn ghost" data-act="del" data-id="${w.id}" aria-label="Remove ${esc(w.word)}">Remove</button>
+      </span></div>
+  </article>`;
+}
+function rowItem(w){
+  const open=UI.openId===w.id;
+  return `<li class="li"><button data-act="toggle" data-id="${w.id}" aria-expanded="${open}"><span class="lw">${esc(w.word)}</span><span class="lg">${esc(w.gist)}</span>${w.page?`<span class="lp">p.${w.page}</span>`:""}</button>${open?card(w):""}</li>`;
+}
+const I={
+ read:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 5.5C5.5 4.5 9 4.5 12 6.5c3-2 6.5-2 9-1v13c-2.5-1-6-1-9 1-3-2-6.5-2-9-1z"/><path d="M12 6.5v13"/></svg>',
+ bank:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>',
+ practice:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="5"/></svg>'
+};
+const dueList=()=>S.words.filter(w=>!w.known&&w.due<=now());
+
+// ---------- views ----------
+function viewRead(){
+  const b=book();
+  const mine=S.words.filter(w=>w.bookId===b.id&&!w.known).sort((a,c)=>c.added-a.added);
+  const fresh=S.words.find(w=>w.id===UI.fresh);
+  const thisCh=mine.filter(w=>w.chapter===b.chapter&&w.id!==UI.fresh);
+  const older=mine.filter(w=>w.chapter!==b.chapter&&w.id!==UI.fresh);
+  const knownN=S.words.filter(w=>w.bookId===b.id&&w.known).length;
+  const byCh={};older.forEach(w=>(byCh[w.chapter]??=[]).push(w));
+  const chs=Object.keys(byCh).sort((a,c)=>c-a);
+  return `
+  <header class="topbar">
+    <button class="book" data-act="books" style="background:none;border:0;text-align:left;padding:0">
+      <div class="t">${esc(b.title)} <span style="color:var(--ink-3);font-size:14px">▾</span></div><div class="a">${esc(b.author)}</div></button>
+    <div class="chap" aria-label="Current chapter"><button data-act="ch-" aria-label="Previous chapter">‹</button><span>Ch. ${b.chapter}</span><button data-act="ch+" aria-label="Next chapter">›</button></div>
+  </header>
+  <div class="cols read">
+   <div>
+    <form class="capture" id="cap" autocomplete="off">
+      <input id="q" placeholder="Look up a word…" aria-label="Word to look up" autocapitalize="off" spellcheck="false" ${UI.busy?"disabled":""}>
+      <button class="btn" ${UI.busy?"disabled":""}>${UI.busy?"…":"Define"}</button>
+    </form>
+    ${UI.more?`<div class="more"><textarea id="ctx" placeholder="Paste the sentence (optional, picks the right meaning)"></textarea><input id="pg" inputmode="numeric" placeholder="Page"></div>`:`<button class="linkish" data-act="more">+ Add the sentence or page</button>`}
+    ${UI.lookupErr?`<p class="err">${esc(UI.lookupErr)}</p>`:""}
+    ${UI.busy?`<article class="card loading"><h2 class="w" style="margin:0">${esc(UI.pending)}</h2><p class="gist">Looking it up in context</p><p class="def">…</p></article>`:fresh?card(fresh):`<div class="card" style="color:var(--ink-2)"><p class="gist" style="margin-top:0">Type a word as you read.</p><p class="def" style="margin:0">You'll get the gist first, then a picture to remember it by. Older words fold away so the list stays quiet.</p></div>`}
+   </div>
+   <div>
+    <section class="sect"><h3><span>Chapter ${b.chapter}</span><span>${thisCh.length+(fresh&&fresh.chapter===b.chapter?1:0)} words</span></h3>
+      ${thisCh.length?`<ul class="list">${thisCh.map(rowItem).join("")}</ul>`:`<p class="empty">Nothing else from this chapter yet.</p>`}
+    </section>
+    ${chs.length?`<section class="sect"><h3><span>Earlier chapters</span><span>${older.length} words</span></h3>
+      ${UI.showOld?chs.map(c=>`<h3 style="margin-top:14px"><span>Ch. ${c}</span></h3><ul class="list">${byCh[c].map(rowItem).join("")}</ul>`).join("")+`<button class="fold" data-act="old">Fold earlier chapters</button>`
+      :`<button class="fold" data-act="old">Show ${older.length} words from chapters ${chs.slice(-1)[0]}–${chs[0]}</button>`}</section>`:""}
+    ${knownN?`<p class="note">${knownN} word${knownN>1?"s":""} marked known, hidden from this list.</p>`:""}
+   </div>
+  </div>`;
+}
+function viewBank(){
+  const q=UI.bankQ.toLowerCase();
+  let ws=S.words.filter(w=>(UI.bankBook==="all"||w.bookId===UI.bankBook)&&(!q||w.word.toLowerCase().includes(q)||w.gist.toLowerCase().includes(q))).sort((a,c)=>a.word.localeCompare(c.word));
+  return `<h1 class="h1">Word bank</h1>
+  <input class="search" id="bq" placeholder="Search words or meanings" value="${esc(UI.bankQ)}" aria-label="Search">
+  <div class="filters"><button class="chip" data-act="bb" data-id="all" aria-pressed="${UI.bankBook==="all"}">All books</button>${S.books.map(b=>`<button class="chip" data-act="bb" data-id="${b.id}" aria-pressed="${UI.bankBook===b.id}">${esc(b.title)}</button>`).join("")}</div>
+  ${ws.length?`<ul class="list">${ws.map(w=>{const open=UI.openId===w.id;return `<li class="li"><button data-act="toggle" data-id="${w.id}" aria-expanded="${open}"><span class="lw" style="${w.known?"color:var(--ink-3)":""}">${esc(w.word)}</span><span class="lg">${esc(w.gist)}</span>${dots(w.strength)}</button>${open?card(w):""}</li>`}).join("")}</ul>`:`<p class="empty">No words match.</p>`}
+  ${S.words.some(w=>w.sample)?`<p class="note">Middlemarch words are examples to try the app with. <button class="linkish" data-act="reset" style="text-decoration:underline">Start with an empty bank</button></p>`:""}`;
+}
+function viewPractice(){
+  const s=UI.session;
+  if(!s){
+    const due=dueList(),learning=S.words.filter(w=>!w.known).length,strong=S.words.filter(w=>w.strength>=4||w.known).length;
+    return `<h1 class="h1">Practice</h1><div class="hero">
+      <h2>${due.length?`${Math.min(due.length,7)} words are ready to come back`:"You're all caught up"}</h2>
+      <p>${due.length?"A short round, about two minutes. Words return just before you'd forget them.":"New words show up here a day after you look them up."}</p>
+      <div class="stats"><div class="stat"><b>${due.length}</b><span>due now</span></div><div class="stat"><b>${learning}</b><span>learning</span></div><div class="stat"><b>${strong}</b><span>remembered</span></div></div>
+      <button class="btn" data-act="start" ${S.words.filter(w=>!w.known).length<1?"disabled":""}>${due.length?"Start round":"Practice anyway"}</button>
+    </div>
+    <section class="sect"><h3><span>How a round works</span></h3>
+      <ul class="list">
+        <li class="li"><button disabled style="cursor:default"><span class="lw">Back in the book</span><span class="lg" style="white-space:normal">Your own sentence returns with a gap. Pick the word.</span></button></li>
+        <li class="li"><button disabled style="cursor:default"><span class="lw">Name it</span><span class="lg" style="white-space:normal">See the gist and type the word. Recall beats recognition.</span></button></li>
+        <li class="li"><button disabled style="cursor:default"><span class="lw">Use it</span><span class="lg" style="white-space:normal">Write one sentence of your own. Claude tells you if it lands.</span></button></li>
+      </ul></section>`;
+  }
+  if(s.i>=s.items.length){
+    const ok=s.results.filter(r=>r).length;
+    return `<h1 class="h1">Practice</h1><div class="hero"><h2>Round done</h2><p>${ok} of ${s.items.length} came back easily. The rest will return sooner.</p>
+      <ul class="list" style="margin-bottom:16px">${s.items.map((it,i)=>{const w=S.words.find(x=>x.id===it.id);return w?`<li class="li"><button disabled style="cursor:default"><span class="lw">${esc(w.word)}</span><span class="lg">${s.results[i]?"strengthened":"coming back soon"}</span>${dots(w.strength)}</button></li>`:""}).join("")}</ul>
+      <button class="btn" data-act="endround">Done</button></div>`;
+  }
+  const it=s.items[s.i],w=S.words.find(x=>x.id===it.id);
+  const pct=Math.round(s.i/s.items.length*100);
+  let body="";
+  if(it.mode==="context"){
+    const re=new RegExp(`\\b${esc(w.word).slice(0,Math.max(4,w.word.length-2))}\\w*`,"i");
+    const sent=esc(w.context||w.example).replace(re,'<span class="blank">'+(s.answered?esc(w.word):"&nbsp;")+'</span>');
+    body=`<div class="mode">Back in the book${w.page?` · p. ${w.page}`:""}</div><p class="prompt">“${sent}”</p>
+      <div class="choices">${it.choices.map(c=>{let cls="";if(s.answered){if(c===w.word)cls="right";else if(c===s.picked)cls="wrong"}return `<button class="choice ${cls}" data-act="pick" data-v="${esc(c)}" ${s.answered?"disabled":""}>${esc(c)}</button>`}).join("")}</div>
+      ${s.answered?`<div class="reveal"><p class="gist" style="margin:0 0 4px;font-size:18px">${esc(w.gist)}</p><p class="def" style="margin:0 0 14px">${esc(w.hook)}</p><button class="btn" data-act="next">Continue</button></div>`:""}`;
+  }else if(it.mode==="recall"){
+    body=`<div class="mode">Name it</div><p class="prompt">${esc(w.gist)}</p><p class="def" style="margin:-8px 0 16px">${esc(w.pos)} · ${w.word.length} letters · starts with “${esc(w.word[0])}”</p>
+      ${s.answered?`<div class="reveal" style="border:0;padding:0;margin:0"><h2 class="w" style="margin:0">${esc(w.word)}</h2>${s.typed?`<p class="def">You wrote “${esc(s.typed)}”${s.typed.toLowerCase()===w.word.toLowerCase()?" — exactly right.":"."}</p>`:""}<p class="def">${esc(w.hook)}</p>
+        <p class="def" style="margin-top:14px">How well did you know it?</p>
+        <div class="grade"><button data-act="g" data-v="0">Forgot<small>soon</small></button><button data-act="g" data-v="1">Hazy<small>in a day</small></button><button data-act="g" data-v="2">Knew it<small>in ${INTERVALS[Math.min(5,w.strength+1)]} days</small></button></div></div>`
+      :`<form class="typein" id="typein"><input id="ti" placeholder="Type the word" autocapitalize="off" spellcheck="false" aria-label="Your answer"><button class="btn">Check</button></form><button class="linkish" data-act="showans">Show me</button>`}`;
+  }else{
+    body=`<div class="mode">Use it</div><p class="prompt">Write a sentence with <span class="w" style="font-size:inherit">${esc(w.word)}</span></p><p class="def" style="margin:-8px 0 14px">${esc(w.gist)}. About your day, someone you know, anything.</p>
+      <textarea id="ua" placeholder="Your sentence" ${s.answered?"disabled":""}>${esc(s.typed||"")}</textarea>
+      ${s.fb?`<div class="fb">${esc(s.fb)}</div>`:""}
+      ${s.answered?`<div class="grade" style="grid-template-columns:1fr 1fr"><button data-act="g" data-v="1">Felt unsure</button><button data-act="g" data-v="2">Felt natural</button></div>`
+      :`<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn" data-act="usecheck" ${s.checking?"disabled":""}>${s.checking?"Reading…":sample?"Check my sentence":"Done"}</button><button class="btn ghost" data-act="g" data-v="1">Skip</button></div>`}`;
+  }
+  return `<div style="display:flex;justify-content:space-between;align-items:center"><h1 class="h1" style="margin-bottom:6px">Practice</h1><button class="linkish" data-act="endround">End round</button></div>
+    <div class="bar"><i style="width:${pct}%"></i></div><div class="q">${body}</div>`;
+}
+
+function startRound(){
+  let pool=dueList();
+  if(!pool.length)pool=S.words.filter(w=>!w.known).sort((a,c)=>a.strength-c.strength);
+  pool=pool.sort(()=>Math.random()-.5).slice(0,7);
+  const all=S.words.map(w=>w.word);
+  const items=pool.map((w,i)=>{
+    let mode=w.strength<=1?(i%2?"recall":"context"):(w.strength>=3&&i%3===0?"use":(i%2?"context":"recall"));
+    if(mode==="context"&&all.length<3)mode="recall";
+    const others=all.filter(x=>x!==w.word).sort(()=>Math.random()-.5).slice(0,2);
+    return {id:w.id,mode,choices:[w.word,...others].sort(()=>Math.random()-.5)};
+  });
+  UI.session={items,i:0,results:[],answered:false};
+}
+function grade(v){
+  const s=UI.session,w=S.words.find(x=>x.id===s.items[s.i].id);
+  if(v>=2)w.strength=Math.min(5,w.strength+1);else if(v===0)w.strength=Math.max(0,w.strength-1);
+  w.due=now()+(v===0?10*60e3:v===1?DAY:INTERVALS[w.strength]*DAY);
+  s.results.push(v>=2);save();
+  Object.assign(s,{i:s.i+1,answered:false,picked:null,typed:"",fb:"",checking:false});
+}
+
+// ---------- shell ----------
+function render(){
+  const due=dueList().length;
+  const tabs=[["read","Reading"],["bank","Words"],["practice","Practice"]];
+  document.getElementById("tabs").innerHTML=tabs.map(([k,l])=>`<button class="tab" data-tab="${k}" ${UI.tab===k?'aria-current="page"':""}>${I[k]}${l}${k==="practice"&&due?`<span class="badge">${due}</span>`:""}</button>`).join("");
+  document.getElementById("side").innerHTML=`<div class="logo"><span>Margin</span></div>`+tabs.map(([k,l])=>`<button class="nav" data-tab="${k}" ${UI.tab===k?'aria-current="page"':""}>${l}${k==="practice"&&due?`<span class="badge" style="position:static">${due}</span>`:""}</button>`).join("")
+   +`<div class="lbl">Books</div>`+S.books.map(b=>`<button class="bk" data-act="setbook" data-id="${b.id}" aria-current="${b.id===S.active}">${esc(b.title)}</button>`).join("")+`<button class="bk" data-act="books" style="color:var(--pencil)">+ Add a book</button>`;
+  const v=document.getElementById("view");
+  v.innerHTML=UI.tab==="read"?viewRead():UI.tab==="bank"?viewBank():viewPractice();
+  if(UI.tab==="read"&&!UI.busy&&matchMedia("(min-width:900px)").matches)document.getElementById("q")?.focus();
+  if(UI.tab==="practice")document.getElementById("ti")?.focus();
+}
+function sheetBooks(){
+  const el=document.getElementById("sheet");
+  el.innerHTML=`<div class="sheet" data-act="closesheet"><div role="dialog" aria-label="Books"><h4>What are you reading?</h4>
+   <div class="booklist">${S.books.map(b=>`<button data-act="setbook" data-id="${b.id}" aria-current="${b.id===S.active}"><b style="font-family:var(--f-word)">${esc(b.title)}</b> <span style="color:var(--ink-2);font-size:13px">${esc(b.author)} · ${S.words.filter(w=>w.bookId===b.id).length} words</span></button>`).join("")}</div>
+   <form class="newbook" id="nb"><input id="nbt" placeholder="Title" required><input id="nba" placeholder="Author"><button class="btn">Add</button></form></div></div>`;
+}
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-tab],[data-act]");if(!t)return;
+  if(t.dataset.tab){UI.tab=t.dataset.tab;UI.openId=null;render();scrollTo(0,0);return}
+  const a=t.dataset.act,id=t.dataset.id,b=book();
+  if(a==="closesheet"&&e.target!==t)return;
+  switch(a){
+   case"ch-":b.chapter=Math.max(1,b.chapter-1);UI.fresh=null;save();break;
+   case"ch+":b.chapter++;UI.fresh=null;save();break;
+   case"more":UI.more=true;break;
+   case"toggle":UI.openId=UI.openId===id?null:id;break;
+   case"old":UI.showOld=!UI.showOld;break;
+   case"known":{const w=S.words.find(x=>x.id===id);w.known=!w.known;if(UI.fresh===id&&w.known)UI.fresh=null;save();break}
+   case"del":S.words=S.words.filter(x=>x.id!==id);if(UI.fresh===id)UI.fresh=null;save();break;
+   case"bb":UI.bankBook=id;break;
+   case"reset":S.words=S.words.filter(w=>!w.sample);save();UI.fresh=null;break;
+   case"books":sheetBooks();return;
+   case"closesheet":document.getElementById("sheet").innerHTML="";return;
+   case"setbook":S.active=id;UI.fresh=null;save();document.getElementById("sheet").innerHTML="";UI.tab="read";break;
+   case"start":startRound();break;
+   case"endround":UI.session=null;break;
+   case"pick":{const s=UI.session,w=S.words.find(x=>x.id===s.items[s.i].id);s.picked=t.dataset.v;s.answered=true;s.correct=s.picked===w.word;break}
+   case"next":grade(UI.session.correct?2:0);break;
+   case"showans":UI.session.answered=true;break;
+   case"g":grade(+t.dataset.v);break;
+   case"usecheck":useCheck();return;
+  }
+  render();
+});
+document.addEventListener("submit",e=>{
+  e.preventDefault();
+  if(e.target.id==="cap"){const q=document.getElementById("q").value,c=document.getElementById("ctx")?.value||"",p=document.getElementById("pg")?.value||"";UI.more=false;lookup(q,c,p)}
+  if(e.target.id==="typein"){UI.session.typed=document.getElementById("ti").value.trim();UI.session.answered=true;render()}
+  if(e.target.id==="nb"){const t=document.getElementById("nbt").value.trim();if(!t)return;const nb={id:uid(),title:t,author:document.getElementById("nba").value.trim()||"",chapter:1};S.books.push(nb);S.active=nb.id;UI.fresh=null;save();document.getElementById("sheet").innerHTML="";UI.tab="read";render()}
+});
+document.addEventListener("input",e=>{if(e.target.id==="bq"){UI.bankQ=e.target.value;const pos=e.target.selectionStart;render();const n=document.getElementById("bq");n.focus();n.setSelectionRange(pos,pos)}});
+async function useCheck(){
+  const s=UI.session,w=S.words.find(x=>x.id===s.items[s.i].id);
+  s.typed=document.getElementById("ua").value.trim();
+  if(!s.typed){return}
+  if(!sample){s.answered=true;s.fb=`For reference: “${w.example}”`;render();return}
+  s.checking=true;render();
+  try{
+    const r=await sample(`A reader is practicing the word "${w.word}" (${w.pos}, meaning: ${w.def}). Their sentence: "${s.typed}".
+In at most 2 short, warm sentences: say whether the word is used correctly and naturally. If not, show a corrected version of THEIR sentence. No preamble, no praise inflation.`,{modelTier:"quick",cache:false});
+    s.fb=r.text.trim();
+  }catch(e){s.fb=`Couldn't check right now. For reference: “${w.example}”`}
+  s.checking=false;s.answered=true;render();
+}
+render();
+</script>
