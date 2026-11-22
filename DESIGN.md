@@ -28,7 +28,7 @@ Everything on screen should earn its place. What stays, because it *is* the expe
 5. **Your own marks**: a margin note in handwriting, your own sentences from Revisit.
 6. **A literary quotation**, when one exists. It costs nothing and it delights.
 
-Folded away under one quiet "kindred words · 2 other senses": synonyms and alternative senses. **The margin is right where the note lives**: under your sentence there's a faint pencilled line with a small ✎. Tap it, or anywhere on the blank paper below, and you are writing there in handwriting. It saves as you write; return or tapping away finishes. There's no button and no separate editing mode.
+Folded away under one quiet "kindred words · 2 other senses": synonyms and alternative senses. **Notes are rare, by design.** The North Star is to read more; learning words is what happens along the way. So a page never asks for a note. Instead, each leaf has a small folded corner: **dog-ear** a word that really catches you, and only then does a faint ✎ appear under your sentence for a line on *why* (optional). Dog-eared words get a small corner mark in the book's list and a *Dog-eared* filter, reach the "write your own line" step in Revisit sooner, and are gathered in Patterns with your reasons, so you can see what the words you love have in common.
 
 ## 2. Today's workflow, and where it hurts
 
