@@ -182,6 +182,7 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .prefs .p span{font-style:italic;color:var(--ink-2);font-size:15px}
 .prefs .p button{flex-shrink:0;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--graphite);min-height:44px;min-width:52px;text-align:right}
 .prefs .p button[aria-pressed="true"]{color:var(--accent)}
+.voicesel{display:block;margin-top:10px;width:100%;max-width:340px;font:inherit;font-size:16px;background:var(--leaf);color:var(--ink);border:1px solid var(--rule);border-radius:3px;padding:8px 10px}
 
 /* slips and revisit cards */
 .veil{position:fixed;inset:0;z-index:30;background:var(--veil);opacity:0;transition:opacity .5s;pointer-events:none}
@@ -453,10 +454,23 @@ function markWord(ctx,w){const e=esc(ctx),re=new RegExp(`\\b(${stemOf(w)}[a-z]*)
 function quoteFor(w){for(const s of [w.senses[w.pick],...w.senses]){const q=s&&s[2].find(e=>e[1]);if(q)return q}return null}
 function noteHTML(w){
   if(!w.fav&&!w.note)return"";
-  return `<div class="margin-note"><textarea class="notearea" data-id="${w.id}" rows="1" aria-label="Your note in the margin" placeholder="✎" enterkeyhint="done" autocapitalize="sentences">${esc(w.note||"")}</textarea></div>`;
+  return `<div class="margin-note"><textarea class="notearea" data-id="${w.id}" rows="1" aria-label="Your note in the margin" placeholder="why this word?" enterkeyhint="done" autocapitalize="sentences">${esc(w.note||"")}</textarea></div>`;
 }
 const PEN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.2-4.6L16.6 4a1.9 1.9 0 0 1 2.7 0l.7.7a1.9 1.9 0 0 1 0 2.7L8.6 18.8z"/><path d="M14.5 6.1l3.4 3.4"/></svg>',SPK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
 const canSpeak="speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined";
+let voices=[];
+const loadVoices=()=>{try{voices=speechSynthesis.getVoices().filter(v=>/^en([-_]|$)/i.test(v.lang))}catch(e){voices=[]}};
+if(canSpeak){loadVoices();try{speechSynthesis.addEventListener("voiceschanged",()=>{loadVoices();if(pageKind==="prefs")pagePrefs()})}catch(e){}}
+// the system's novelty and compact voices sound robotic; Premium, Enhanced and Natural voices sound human
+const voiceScore=v=>{const n=v.name.toLowerCase();let s=0;
+  if(/premium/.test(n))s+=70;if(/enhanced/.test(n))s+=60;if(/natural|neural/.test(n))s+=60;if(/siri/.test(n))s+=45;if(/google/.test(n))s+=30;
+  if(/\b(daniel|serena|kate|oliver|samantha|ava|allison|susan|karen|moira|tessa|martha|arthur|zoe|evan|nathan|joelle|noelle|stephanie|jamie)\b/.test(n))s+=12;
+  if(/en[-_]gb/i.test(v.lang))s+=4;if(v.localService)s+=2;
+  if(/compact|novelty|albert|bad news|bahh|bells|boing|bubbles|cellos|deranged|good news|hysterical|jester|organ|superstar|trinoids|whisper|wobble|zarvox|fred|junior|ralph|kathy|grandpa|grandma|eddy|flo|reed|rocko|sandy|shelley/.test(n))s-=100;return s};
+const rankedVoices=()=>voices.slice().sort((a,b)=>voiceScore(b)-voiceScore(a));
+const chosenVoice=()=>(S.prefs.voice&&voices.find(v=>v.name===S.prefs.voice))||rankedVoices()[0]||null;
+function speak(text,btn){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);const v=chosenVoice();if(v){u.voice=v;u.lang=v.lang}else u.lang="en-GB";u.rate=.9;
+  if(btn){btn.classList.add("on");u.onend=u.onerror=()=>btn.classList.remove("on")}speechSynthesis.speak(u)}catch(e){}}
 const sayHTML=w=>w.say?(canSpeak?`<button class="ph-btn" data-act="speak" data-w="${esc(w.word)}" aria-label="Hear ${esc(w.word)}">${esc(w.say)}${SPK}</button>`:`<span class="ph">${esc(w.say)}</span>`):"";
 function leafHTML(w,i,n,fresh){
   const foot=`<div class="foot">${n>1?`<button class="folio" data-go="book" title="All of this book's words">${i+1} of ${n}</button>`:"<span></span>"}<span class="acts">${usable(w)?`<button data-act="known" data-id="${w.id}">${w.known?"Keep":"Known"}</button>`:""}<button data-act="del" data-id="${w.id}">Remove</button></span></div>`;
@@ -896,6 +910,9 @@ function pagePrefs(){
    <div class="prefs">
     ${t("prime","Before I read, show last time's words","When you come back to a book, the words from your last sitting are shown with their meanings, in case they turn up again. No questions.")}
     ${t("awake","Keep the screen awake","For when the phone lies open beside a paper book.")}
+    ${canSpeak?`<div class="p"><div><b>Voice</b><span>${voices.length?"Used when you tap a pronunciation. Voices marked Enhanced or Premium sound most natural.":"Your device hasn't offered any voices yet."} On iPhone and iPad you can download better ones in Settings › Accessibility › Spoken Content › Voices › English.</span>
+      ${voices.length?`<select id="voiceSel" class="voicesel" aria-label="Voice">${rankedVoices().map(v=>`<option value="${esc(v.name)}" ${chosenVoice()?.name===v.name?"selected":""}>${esc(v.name)} · ${esc(v.lang)}</option>`).join("")}</select>`:""}</div>
+      <button data-act="trysay" aria-label="Hear the voice">Hear it</button></div>`:""}
     <div class="p"><div><b>Size of type</b><span>Larger or smaller text on the leaves.</span></div><span style="display:flex;gap:4px"><button data-act="scale" data-v="-1" aria-label="Smaller type" style="min-width:44px;text-align:center;font-size:15px;letter-spacing:0;text-transform:none">A</button><button data-act="scale" data-v="1" aria-label="Larger type" style="min-width:44px;text-align:center;font-size:22px;letter-spacing:0;text-transform:none">A</button></span></div>
    </div>`,"prefs");
 }
@@ -933,14 +950,19 @@ document.addEventListener("click",async e=>{
    case"reset":S.words=S.words.filter(w=>!w.sample);save();closePage();return;
    case"pref":S.prefs[t.dataset.k]=!S.prefs[t.dataset.k];save();syncWake();return pagePrefs();
    case"scale":S.prefs.scale=Math.round(Math.min(1.3,Math.max(.9,S.prefs.scale+ +t.dataset.v*.1))*10)/10;save();renderHead();return;
+   case"trysay":return speak("ebullient. Fred came in ebullient after his good fortune.",t);
    case"doimport":return doImport();
    case"importmore":return pageImport();
    case"switchbook":S.active=id;save();bookQ="";return pageBook(id);
    case"viewbook":bookQ="";return pageBook(id);
-   case"fav":{const w=byId(id);w.fav=!w.fav;save();if(pageKind==="leaf")openLeaf(id,leafBack);else renderGallery(id);
-     hint(w.fav?"Dog-eared. Add a line on why, if you like.":"Corner unfolded.");if(w.fav&&matchMedia("(hover:hover)").matches)setTimeout(()=>document.querySelector(`${pageKind==="leaf"?"#page":"#gallery"} .notearea[data-id="${id}"]`)?.focus({preventScroll:true}),350);return}
+   case"fav":{const w=byId(id);w.fav=!w.fav;
+     save();
+     if(pageKind==="leaf")openLeaf(id,leafBack);else renderGallery(id);
+     // focus in the same tap, so the keyboard opens on iPhone and iPad too
+     if(w.fav){const ta=document.querySelector(`${pageKind==="leaf"?"#page":"#gallery"} .notearea[data-id="${id}"]`);if(ta){ta.focus({preventScroll:true});ta.setSelectionRange(ta.value.length,ta.value.length)}}
+     return}
    case"newbook":{const f=$("nb");f.classList.add("on");$("nbt").focus();return}
-   case"speak":{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.dataset.w);u.lang="en-GB";u.rate=.82;t.classList.add("on");u.onend=u.onerror=()=>t.classList.remove("on");speechSynthesis.speak(u)}catch(err){}return}
+   case"speak":return speak(t.dataset.w,t);
    case"jumpsit":{const el=$("sit-"+t.dataset.k);if(el){el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"instant":"smooth",block:"start"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1600)}return}
    case"finish":{const b=viewBook();b.finished=now();if(S.active===b.id){const nx=reading()[0];if(nx)S.active=nx.id}save();return pageFinis(b.id)}
    case"reopen":{const b=viewBook();delete b.finished;S.active=b.id;save();return pageBook(b.id)}
@@ -959,7 +981,7 @@ $("q").addEventListener("input",()=>{clearTimeout(suggT);suggT=setTimeout(update
 $("q").addEventListener("paste",e=>{const t=(e.clipboardData||window.clipboardData)?.getData("text")||"";if(words(t).length>2){e.preventDefault();$("q").value="";showChooser(t.trim().replace(/\s+/g," "));$("q").blur()}});
 document.addEventListener("submit",e=>{if(e.target.id==="nb"){e.preventDefault();const t=$("nbt").value.trim();if(!t)return;const nb={id:uid(),title:t,author:""};S.books.push(nb);S.active=nb.id;save();closePage();setTimeout(()=>$("q").focus(),300)}});
 document.addEventListener("input",e=>{if(e.target.id==="idxq"){idxQ=e.target.value;pageIndex()}if(e.target.id==="bookq"){bookQ=e.target.value;$("bookBody").innerHTML=bookBody()}if(e.target.id==="imp"){clearTimeout(suggT);suggT=setTimeout(previewImport,150)}});
-document.addEventListener("change",e=>{if(e.target.id==="impMulti")previewImport()});
+document.addEventListener("change",e=>{if(e.target.id==="voiceSel"){S.prefs.voice=e.target.value;save();speak("lugubrious")}if(e.target.id==="impMulti")previewImport()});
 // the margin: write right where the note lives; saved as you write, nothing to confirm
 const fit=t=>{t.style.height="auto";t.style.height=t.scrollHeight+"px"};
 document.addEventListener("input",e=>{if(e.target.classList?.contains("notearea")){fit(e.target);const w=byId(e.target.dataset.id);if(w){w.note=e.target.value.trim();save()}}});

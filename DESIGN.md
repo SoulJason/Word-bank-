@@ -22,13 +22,13 @@ Two different moments, two different jobs:
 
 Everything on screen should earn its place. What stays, because it *is* the experience:
 1. **The word, set large in a book face**, inked darker as you come to know it.
-2. **The pronunciation**, as a plain respelling (*i-BUHL-yuhnt*). Tap it to hear the word spoken (the device's own voice, free and offline).
+2. **The pronunciation**, as a plain respelling (*i-BUHL-yuhnt*). Tap it to hear the word spoken. The prototype picks the most natural English voice on the device (Premium, Enhanced or Natural voices before the robotic defaults), and Preferences lets you choose. The native app should prefer **real human recordings** (Wiktionary/Wikimedia Commons audio, free through the Free Dictionary API when online), falling back to the best on-device voice (`AVSpeechSynthesizer` with a Premium voice) offline.
 3. **One plain meaning**, the sense that fits your sentence.
 4. **Your sentence from the book, with the word underlined in pencil.** This is the strongest memory cue there is, and the most loved detail.
 5. **Your own marks**: a margin note in handwriting, your own sentences from Revisit.
 6. **A literary quotation**, when one exists. It costs nothing and it delights.
 
-Folded away under one quiet "kindred words · 2 other senses": synonyms and alternative senses. **Notes are rare, by design.** The North Star is to read more; learning words is what happens along the way. So a page never asks for a note. Instead, each leaf has a small folded corner: **dog-ear** a word that really catches you, and only then does a faint ✎ appear under your sentence for a line on *why* (optional). Dog-eared words get a small corner mark in the book's list and a *Dog-eared* filter, reach the "write your own line" step in Revisit sooner, and are gathered in Patterns with your reasons, so you can see what the words you love have in common.
+Folded away under one quiet "kindred words · 2 other senses": synonyms and alternative senses. **Notes are rare, by design.** The North Star is to read more; learning words is what happens along the way. So a page never asks for a note. Instead, each leaf has a small folded corner: **dog-ear** a word that really catches you: one tap folds the corner and puts the cursor on a faint *why this word?* line under your sentence. Write a few words, or just tap away; the word stays dog-eared either way. Dog-eared words get a small corner mark in the book's list and a *Dog-eared* filter, reach the "write your own line" step in Revisit sooner, and are gathered in Patterns with your reasons, so you can see what the words you love have in common.
 
 ## 2. Today's workflow, and where it hurts
 
