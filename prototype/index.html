@@ -10,6 +10,7 @@
   --paper:#F2EEE6; --leaf:#FBF9F4; --ink:#26252B; --ink-2:#5E5A55; --graphite:#9A948A;
   --rule:#E0DACE; --accent:#2F416E; --pencil:#7D7869; --hand:#3D4F86; --veil:rgba(38,37,43,.18);
   --grain-op:.5; --grain-blend:multiply; --s:1;
+  --cloth1:#6E2F2C; --cloth2:#2F4B3B; --cloth3:#2D3B5E; --cloth4:#86672D; --cloth5:#4A4A56; --cloth6:#5B3651; --gilt:#EFE3C4; --plank:#CDBB9C; --plank-edge:#B39E7B; --ribbon:#A3332E;
   --f-display:"Cormorant Garamond","Iowan Old Style",Palatino,Georgia,serif;
   --f-text:"EB Garamond","Iowan Old Style",Palatino,Georgia,serif;
   --f-hand:"Caveat","Bradley Hand","Segoe Print",cursive;
@@ -18,10 +19,12 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --paper:#191715; --leaf:#221F1C; --ink:#EAE3D5; --ink-2:#B3AA9B; --graphite:#7C7468;
   --rule:#35302A; --accent:#D8B677; --pencil:#A89B83; --hand:#A9B8E6; --veil:rgba(0,0,0,.45);
+  --cloth1:#7C3B37; --cloth2:#3A5A48; --cloth3:#3A4B72; --cloth4:#94763A; --cloth5:#575866; --cloth6:#6A4461; --gilt:#EEE2C3; --plank:#3B3129; --plank-edge:#4C4035; --ribbon:#C0514A;
   --grain-op:.35; --grain-blend:soft-light; color-scheme:dark}}
 :root[data-theme="dark"]{
   --paper:#191715; --leaf:#221F1C; --ink:#EAE3D5; --ink-2:#B3AA9B; --graphite:#7C7468;
   --rule:#35302A; --accent:#D8B677; --pencil:#A89B83; --hand:#A9B8E6; --veil:rgba(0,0,0,.45);
+  --cloth1:#7C3B37; --cloth2:#3A5A48; --cloth3:#3A4B72; --cloth4:#94763A; --cloth5:#575866; --cloth6:#6A4461; --gilt:#EEE2C3; --plank:#3B3129; --plank-edge:#4C4035; --ribbon:#C0514A;
   --grain-op:.35; --grain-blend:soft-light; color-scheme:dark}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -140,7 +143,7 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .idx .e .s{color:var(--graphite);font-style:italic;font-size:15px}
 .search{display:block;width:100%;border:0;border-bottom:1px solid var(--rule);background:none;outline:none;font-style:italic;font-size:18px;padding:6px 2px;margin-bottom:6px}
 .sess{text-align:center;margin:32px 0 10px}
-.bk-e .w{font-family:var(--f-display);font-weight:600;font-size:23px}
+.bk-e .w{font-family:var(--f-display);font-weight:600}
 .bk-e .c{display:block;font-style:italic;color:var(--ink-2);margin-top:2px;font-size:16px}
 .bk-e .hand{display:block;font-size:20px;margin-top:2px}
 .bk-e:hover .w{color:var(--accent)!important}
@@ -217,6 +220,62 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .preview{margin-top:18px;text-align:left}
 .preview li{padding:4px 0}
 .preview ul{margin:6px 0 0;padding-left:20px;color:var(--ink-2)}
+/* leaf refinements */
+.pen{width:36px;height:36px;margin:-10px -10px 0 0;color:var(--graphite);border-radius:50%;display:grid;place-items:center;transition:color .3s,transform .4s var(--ease)}
+.pen:hover{color:var(--hand);transform:rotate(-10deg)}
+.pen svg{width:17px;height:17px}
+.ph-btn{letter-spacing:.06em;font-size:calc(13px*var(--s));font-variant-numeric:lining-nums;color:var(--ink-2);display:inline-flex;align-items:center;gap:5px;min-height:32px;border-bottom:1px dotted transparent}
+.ph-btn:hover{color:var(--ink);border-bottom-color:var(--graphite)}
+.ph-btn svg{width:13px;height:13px;opacity:.6}
+.ph-btn.on svg{opacity:1;color:var(--accent)}
+.more{margin-top:16px}
+.more summary{list-style:none;cursor:pointer;color:var(--graphite);font-size:calc(14px*var(--s));font-style:italic;min-height:32px;display:inline-flex;align-items:center}
+.more summary::-webkit-details-marker{display:none}
+.more .kin{margin-top:6px}
+.more ol{margin:8px 0 0;padding-left:22px;font-size:calc(16px*var(--s));color:var(--ink-2)}
+.more li{margin-bottom:6px;padding-left:4px}
+.more li button{text-align:left;color:inherit}
+.more li.on{color:var(--ink)}
+/* book page: compact entries, sittings thread */
+.bk-e{padding:7px 0}
+.bk-e .w{font-size:22px}
+.sitbreak{display:flex;align-items:center;gap:10px;margin:18px 0 2px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--graphite);scroll-margin-top:20px}
+.sitbreak::after{content:"";flex:1;border-top:1px solid var(--rule)}
+.sitbreak.flash{color:var(--accent)}
+.thread{margin:6px auto 26px;max-width:460px}
+.thread .cap{text-align:center;font-style:italic;color:var(--ink-2);font-size:16px;margin:0 0 12px;text-wrap:balance}
+.thread .line{position:relative;height:30px}
+.thread .line::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px solid var(--rule)}
+.thread .dot{position:absolute;top:50%;transform:translate(-50%,-50%);border-radius:50%;background:var(--ink-2);box-shadow:0 0 0 2px var(--paper);transition:background .3s,transform .3s}
+.thread .hit{position:absolute;top:0;width:28px;height:30px;transform:translateX(-50%)}
+.thread .hit:hover .dot,.thread .hit:focus-visible .dot{background:var(--accent)}
+.thread .ends{display:flex;justify-content:space-between;font-size:12px;color:var(--graphite);letter-spacing:.08em;margin-top:2px}
+.thread .tipx{top:18px}
+.thread{position:relative}
+/* library shelves */
+.lib-intro{text-align:center;font-style:italic;color:var(--ink-2);font-size:18px;line-height:1.55;max-width:34ch;margin:8px auto 8px;text-wrap:balance}
+.lib-intro i{color:var(--ink)}
+.shelf-h{display:flex;justify-content:space-between;align-items:baseline;margin:34px 0 6px}
+.shelf-h b{font-family:var(--f-display);font-weight:500;font-size:24px}
+.shelf-h span{font-style:italic;color:var(--graphite);font-size:15px}
+.shelfrow{display:flex;flex-wrap:wrap;align-items:flex-end;gap:0 3px;padding:0 10px;background:repeating-linear-gradient(to bottom,transparent 0 196px,var(--plank) 196px 204px,var(--plank-edge) 204px 206px,transparent 206px 214px)}
+.slot{height:214px;padding-bottom:18px;display:flex;align-items:flex-end}
+.bk{position:relative;display:flex;justify-content:center;align-items:flex-start;padding:14px 0 10px;background:var(--c);color:var(--gilt);border-radius:2px 2px 1px 1px;
+  box-shadow:inset 3px 0 0 rgba(255,255,255,.07),inset -3px 0 0 rgba(0,0,0,.18),0 1px 0 rgba(0,0,0,.25);transition:transform .45s var(--ease)}
+.bk::before,.bk::after{content:"";position:absolute;left:5px;right:5px;height:1px;background:var(--gilt);opacity:.45}
+.bk::before{top:7px}.bk::after{bottom:7px}
+.bk:hover,.bk:focus-visible{transform:translateY(-8px)}
+.bk .st{writing-mode:vertical-rl;font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:.03em;line-height:1;max-height:calc(100% - 26px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bk .sn{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:10px;font-variant-numeric:lining-nums;opacity:.75}
+.bk .rib{position:absolute;top:-12px;left:50%;width:7px;height:18px;margin-left:-3px;background:var(--ribbon);clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%)}
+.bk .lab{position:absolute;left:4px;right:4px;top:26px;height:44%;background:rgba(0,0,0,.16);border-top:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12)}
+.bk .st{position:relative}
+.bookend{display:block;width:16px;height:84px;margin-left:4px;border-left:5px solid var(--ink-2);border-bottom:5px solid var(--ink-2);border-radius:0 0 0 2px;opacity:.55}
+.bk.new{background:none;border:1px dashed var(--graphite);color:var(--graphite);box-shadow:none;align-items:center;font-size:22px}
+.bk.new::before,.bk.new::after{display:none}
+.lib-new{display:none}
+.lib-new.on{display:flex}
+.lib-foot{text-align:center;font-style:italic;color:var(--graphite);font-size:15px;margin-top:6px}
 /* library */
 .lib-h{font-family:var(--f-display);font-weight:500;font-size:27px;margin:40px 0 10px;display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .lib-h span{font-family:var(--f-text);font-size:15px;font-style:italic;color:var(--graphite);font-weight:400}
@@ -376,11 +435,14 @@ function quoteFor(w){for(const s of [w.senses[w.pick],...w.senses]){const q=s&&s
 let noting=null;
 function noteHTML(w){
   if(noting===w.id)return `<div class="margin-note"><textarea class="notearea" data-id="${w.id}" rows="2" aria-label="Your note in the margin" placeholder="whatever it reminds you of">${esc(w.note||"")}</textarea></div>`;
-  return w.note?`<button class="margin-note hand" data-act="note" data-id="${w.id}" style="text-align:left" aria-label="Edit your note">${esc(w.note)}</button>`:`<button class="addnote" data-act="note" data-id="${w.id}">+ a note in the margin</button>`;
+  return w.note?`<button class="margin-note hand" data-act="note" data-id="${w.id}" style="text-align:left" aria-label="Edit your note">${esc(w.note)}</button>`:"";
 }
+const PEN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.2-4.6L16.6 4a1.9 1.9 0 0 1 2.7 0l.7.7a1.9 1.9 0 0 1 0 2.7L8.6 18.8z"/><path d="M14.5 6.1l3.4 3.4"/></svg>',SPK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
+const canSpeak="speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined";
+const sayHTML=w=>w.say?(canSpeak?`<button class="ph-btn" data-act="speak" data-w="${esc(w.word)}" aria-label="Hear ${esc(w.word)}">${esc(w.say)}${SPK}</button>`:`<span class="ph">${esc(w.say)}</span>`):"";
 function leafHTML(w,i,n,fresh){
   const foot=`<div class="foot">${n>1?`<button class="folio" data-go="book" title="All of this book's words">${i+1} of ${n}</button>`:"<span></span>"}<span class="acts">${usable(w)?`<button data-act="known" data-id="${w.id}">${w.known?"Keep":"Known"}</button>`:""}<button data-act="del" data-id="${w.id}">Remove</button></span></div>`;
-  const rh=`<div class="rh"><span class="sc">${esc(sessionLabel(w.added))}</span></div>`;
+  const rh=`<div class="rh"><span class="sc">${esc(sessionLabel(w.added))}</span>${usable(w)&&noting!==w.id&&!w.note?`<button class="pen" data-act="note" data-id="${w.id}" aria-label="Write in the margin" title="Write in the margin">${PEN}</button>`:""}</div>`;
   if(!w.senses)return `<article class="leaf" data-id="${w.id}">${rh}<h2 class="hw">${esc(w.word)}</h2></article>`;
   if(!w.senses.length)return `<article class="leaf" data-id="${w.id}">${rh}<h2 class="hw" style="color:var(--graphite)">${esc(w.word)}</h2><p class="gist">Not in this dictionary.</p>${foot}</article>`;
   const s=w.senses[w.pick]||w.senses[0];const q=quoteFor(w),plainEx=!w.context&&s[2].find(e=>!e[1]),echo=(w.echoes||[]).filter(e=>!e.imported).slice(-1)[0],also=booksOf(w).filter(id=>id!==S.active);
@@ -388,16 +450,15 @@ function leafHTML(w,i,n,fresh){
    <div class="set">
     ${rh}
     <h2 class="hw">${esc(w.word)}</h2>
-    <div class="say"><span class="ps">${POSN[s[0]]||s[0]}</span>${w.say?`<span class="ph">${esc(w.say)}</span>`:""}</div>
+    <div class="say"><span class="ps">${POSN[s[0]]||s[0]}</span>${sayHTML(w)}</div>
     <p class="gist">${esc(cap1(s[1]))}.</p>
     ${w.context?`<p class="ctx">${markWord(w.context,w)}</p>`:plainEx?`<p class="ctx">${esc(plainEx[0])}</p>`:""}
-    ${s[3].length?`<p class="kin">Kindred: ${s[3].map(k=>`<i>${esc(k.replace(/-/g," "))}</i>`).join(", ")}</p>`:""}
     ${noteHTML(w)}
     ${(w.owns||[]).length?`<div class="owns"><span class="sc">In your hand</span>${w.owns.map(o=>`<span class="hand">${esc(o)}</span>`).join("")}</div>`:""}
     ${also.length?`<p class="echo">Also in ${also.map(id=>`<i>${esc(titleOf(id))}</i>`).join(", ")}.</p>`:""}
     ${echo?`<p class="echo">You looked this up again ${esc(sessionLabel(echo.at).toLowerCase())}. It will come back to you sooner.</p>`:""}
     ${q?`<p class="quote">“${esc(q[0])}”<span class="by">${esc(q[1])}</span></p>`:""}
-    ${w.senses.length>1?`<details class="senses"><summary>${w.senses.length-1} other sense${w.senses.length>2?"s":""}</summary><ol>${w.senses.map((x,k)=>`<li class="${k===w.pick?"on":""}"><button data-act="sense" data-id="${w.id}" data-k="${k}" title="Use this sense"><i>${x[0]}.</i> ${esc(x[1])}</button></li>`).join("")}</ol></details>`:""}
+    ${s[3].length||w.senses.length>1?`<details class="more"><summary>${[s[3].length?"kindred words":"",w.senses.length>1?`${w.senses.length-1} other sense${w.senses.length>2?"s":""}`:""].filter(Boolean).join(" · ")}</summary>${s[3].length?`<p class="kin">${s[3].map(k=>`<i>${esc(k.replace(/-/g," "))}</i>`).join(", ")}</p>`:""}${w.senses.length>1?`<ol>${w.senses.map((x,k)=>`<li class="${k===w.pick?"on":""}"><button data-act="sense" data-id="${w.id}" data-k="${k}" title="Use this sense"><i>${x[0]}.</i> ${esc(x[1])}</button></li>`).join("")}</ol>`:""}</details>`:""}
    </div>${foot}
   </article>`;
 }
@@ -593,18 +654,33 @@ function pageContents(){
 let bookQ="",bookSort="sitting",removeArmed=false;
 function shelfStrip(){const rd=reading();return `<div class="strip" aria-label="Books you're reading">${rd.map(b=>`<button class="spine${b.id===viewId?" cur":""}" data-act="switchbook" data-id="${b.id}" aria-current="${b.id===viewId}">${esc(b.title)}<span>${bookWords(b).length}</span></button>`).join("")}${S.books.some(b=>b.finished)?`<button class="spine add" data-go="shelf">The Library</button>`:`<button class="spine add" data-go="shelf">+ a book</button>`}</div>`}
 function bookEntry(w){const x=w.senses[w.pick];const also=booksOf(w).filter(id=>id!==viewId);return `<button class="bk-e" data-act="open" data-id="${w.id}"><span class="w" style="color:${inkColor(w)}">${esc(w.word)}</span> <i>${x[0]}.</i> ${esc(x[1])}.${w.context?`<span class="c">${markWord(w.context,w)}</span>`:""}${w.note?`<span class="hand">${esc(w.note)}</span>`:""}${also.length?`<span class="also">also in ${also.map(id=>esc(titleOf(id))).join(", ")}</span>`:""}</button>`}
+function bookSittings(b){return sessions(bookWords(b).filter(w=>!entryIn(w,b).imported),w=>entryIn(w,b).at)}
 function bookBody(){
   const b=viewBook(),q=bookQ.toLowerCase().trim();
   const ws=S.words.filter(w=>inBook(w,b)&&usable(w)&&(!q||w.word.includes(q)||w.senses[w.pick][1].includes(q)||(w.note||"").toLowerCase().includes(q)));
-  if(!ws.length)return `<p class="psub" style="margin-top:24px">${q?"Nothing in this book matches.":"The words you meet in this book will gather here, sitting by sitting."}</p>`;
+  if(!ws.length)return `<p class="psub" style="margin-top:24px">${q?"Nothing in this book matches.":"The words you meet in this book will gather here."}</p>`;
   if(bookSort==="az"){const g={};ws.sort((a,c)=>a.word.localeCompare(c.word)).forEach(w=>(g[w.word[0].toUpperCase()]??=[]).push(w));return `<div class="idx">`+Object.keys(g).map(L=>`<h3>${L}</h3>`+g[L].map(bookEntry).join("")).join("")+`</div>`}
-  return sessions(ws,w=>entryIn(w,b).at).reverse().map(s=>`<p class="sc sess">${s.words.every(w=>entryIn(w,b).imported)?"From your notes":esc(sessionLabel(s.start))}</p>`+s.words.map(bookEntry).join("")).join("");
+  const ss=sessions(ws,w=>entryIn(w,b).at).reverse();
+  return ss.map(s=>`${ss.length>1||!s.words.every(w=>entryIn(w,b).imported)?`<p class="sitbreak" id="sit-${s.start}">${s.words.every(w=>entryIn(w,b).imported)?"From your notes":esc(sessionLabel(s.start))}</p>`:""}`+s.words.map(bookEntry).join("")).join("");
+}
+// a thread of the sittings: when you picked the book up, and how many words each time
+function threadHTML(b){
+  const ss=bookSittings(b);if(ss.length<2)return"";
+  const t0=ss[0].start,t1=Math.max(ss[ss.length-1].end,t0+1);
+  const days=new Set(ss.map(s=>new Date(s.start).toDateString())).size;
+  const weeks=Math.max(1,Math.round((t1-t0)/(7*DAY)));
+  const f=t=>new Date(t).toLocaleDateString(undefined,{day:"numeric",month:"short"});
+  return `<div class="thread"><p class="cap">You picked it up on ${days} day${days===1?"":"s"}${t1-t0>6*DAY?` over ${weeks} week${weeks===1?"":"s"}`:""}.</p><span class="tipx" id="ttip"></span>
+   <div class="line">${ss.map(s=>{const x=((s.start-t0)/(t1-t0))*100;const d=Math.min(16,6+s.words.length*2);return `<button class="hit" style="left:${x}%" data-act="jumpsit" data-k="${s.start}" data-tip="${esc(sessionLabel(s.start))} · ${s.words.length} word${s.words.length===1?"":"s"}" aria-label="${esc(sessionLabel(s.start))}, ${s.words.length} words"><span class="dot" style="width:${d}px;height:${d}px"></span></button>`}).join("")}</div>
+   <div class="ends"><span>${f(t0)}</span><span>${b.finished&&b.finished!==true?"finished "+f(b.finished):f(t1)}</span></div></div>`;
 }
 function pageBook(id){
   if(typeof id==="string")viewId=id;else if(!viewId||pageKind!=="book"&&pageKind!=="leaf")viewId=S.active;
-  const b=viewBook();const n=bookWords(b).length;removeArmed=false;
+  const b=viewBook();const ws=bookWords(b),n=ws.length;removeArmed=false;
   openPage(`<button class="close" data-close>Return to the book</button>${shelfStrip()}
-   <h1 class="ptitle" style="font-style:italic">${esc(b.title)}</h1><p class="psub">${b.author?esc(b.author)+" · ":""}${n} word${n===1?"":"s"}${b.finished?` · <span class="badge-fin">${finishedLabel(b).toLowerCase()}</span>`:""}</p>
+   <h1 class="ptitle" style="font-style:italic">${esc(b.title)}</h1><p class="psub" style="margin-bottom:6px">${b.author?esc(b.author)+" · ":""}${n} word${n===1?"":"s"}${b.finished?` · <span class="badge-fin">${finishedLabel(b).toLowerCase()}</span>`:""}</p>
+   ${n?inkStrip(ws,true):""}<div style="height:22px"></div>
+   ${bookSort==="sitting"?threadHTML(b):""}
    ${n>8?`<div class="bookbar"><input class="search" id="bookq" placeholder="find a word in this book" value="${esc(bookQ)}" aria-label="Find a word in this book" autocapitalize="off"><span class="sortby"><button data-act="sort" data-v="sitting" aria-pressed="${bookSort==="sitting"}">By sitting</button><button data-act="sort" data-v="az" aria-pressed="${bookSort==="az"}">A–Z</button></span></div>`:""}
    <div id="bookBody">${bookBody()}</div>
    <div class="orn-c">❦</div>
@@ -653,17 +729,31 @@ function pageIndex(){
   openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Index</h1><p class="psub">Every word, from every book.</p>
     <input class="search" id="idxq" placeholder="find a word, a meaning or a note" value="${esc(idxQ)}" aria-label="Search the index"><div class="idx" id="idxBody">${body||`<p class="psub">Nothing yet.</p>`}</div>`,"index");
 }
+const hashOf=t=>{let h=7;for(const c of t)h=(h*31+c.charCodeAt(0))>>>0;return h};
+function spine(b,reading){
+  const n=bookWords(b).length,h=hashOf(b.title);
+  const H=152+h%42,W=Math.round(36+Math.min(26,Math.sqrt(n)*3.4)),long=b.title.length>16;
+  const label=`${b.title}, ${n} word${n===1?"":"s"}${b.finished?", "+finishedLabel(b).toLowerCase():", reading now"}`;
+  return `<div class="slot"><button class="bk" style="--c:var(--cloth${h%6+1});height:${H}px;width:${W}px" data-act="${reading?"setbook":"viewbook"}" data-id="${b.id}" aria-label="${esc(label)}" title="${esc(b.title)}">${reading?`<span class="rib" aria-hidden="true"></span>`:""}${h%3===0?`<span class="lab" aria-hidden="true"></span>`:""}<span class="st" style="${long?"font-size:13px":""}">${esc(b.title)}</span><span class="sn" aria-hidden="true">${n}</span></button></div>`;
+}
 function pageShelf(){
   const rd=reading(),fin=S.books.filter(b=>b.finished).sort((a,c)=>(c.finished===true?0:c.finished)-(a.finished===true?0:a.finished));
   const years={};fin.forEach(b=>{const y=b.finished===true?"Earlier":String(new Date(b.finished).getFullYear());(years[y]??=[]).push(b)});
-  const total=S.words.filter(usable).length;
+  const ws=S.words.filter(usable);
+  const most=S.books.map(b=>[b,bookWords(b).length]).sort((a,c)=>c[1]-a[1])[0];
+  const wander=ws.map(w=>[w,booksOf(w).length]).sort((a,c)=>c[1]-a[1])[0];
+  const settled=ws.filter(w=>w.known||w.strength>=3).length;
+  const intro=[`${S.books.length} book${S.books.length===1?"":"s"}, ${ws.length} word${ws.length===1?"":"s"}.`,
+    most&&most[1]&&S.books.length>1?`<i>${esc(most[0].title)}</i> gave you the most.`:"",
+    wander&&wander[1]>1?`<i>${esc(wander[0].word)}</i> has followed you through ${wander[1]} books.`:"",
+    ws.length?`${settled} ${settled===1?"word has":"words have"} settled into dark ink.`:""].filter(Boolean).join(" ");
   openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">The Library</h1>
-   <p class="psub">${S.books.length} book${S.books.length===1?"":"s"} · ${total} words</p>
-   <h2 class="lib-h">Reading now <span>${rd.length?"tap to open":""}</span></h2>
-   <div class="shelf">${rd.map(b=>`<button class="b${b.id===S.active?" cur":""}" data-act="setbook" data-id="${b.id}"><span class="t">${esc(b.title)}</span><span class="n">${bookWords(b).length} words</span></button>`).join("")||`<p class="psub" style="margin:0">Nothing at the moment.</p>`}</div>
-   <form class="field" id="nb" autocomplete="off"><input id="nbt" placeholder="a new book's title" aria-label="Title" required><button class="txtbtn">Place on shelf</button></form>
-   ${Object.keys(years).sort((a,c)=>a==="Earlier"?1:c==="Earlier"?-1:c-a).map(y=>`<h2 class="lib-h">${y==="Earlier"?"Finished earlier":`Finished in ${y}`} <span>${years[y].length} book${years[y].length===1?"":"s"}</span></h2>
-     <div class="vols">${years[y].map(b=>{const ws=bookWords(b);return `<button class="vol" data-act="viewbook" data-id="${b.id}"><span class="vt">${esc(b.title)}</span>${b.author?`<span class="va">${esc(b.author)}</span>`:""}<span class="vm">${ws.length} words${spanOf(b)?" · "+esc(spanOf(b)):""}</span>${inkStrip(ws)}</button>`}).join("")}</div>`).join("")}
+   <p class="lib-intro">${intro}</p>
+   <div class="shelf-h"><b>Reading now</b><span>a ribbon marks your place</span></div>
+   <div class="shelfrow">${rd.map(b=>spine(b,true)).join("")}<div class="slot"><button class="bk new" style="height:96px;width:34px" data-act="newbook" aria-label="Place a new book on the shelf">+</button></div></div>
+   <form class="field lib-new" id="nb" autocomplete="off"><input id="nbt" placeholder="the new book's title" aria-label="Title" required><button class="txtbtn">Place on shelf</button></form>
+   ${Object.keys(years).sort((a,c)=>a==="Earlier"?1:c==="Earlier"?-1:c-a).map(y=>`<div class="shelf-h"><b>${y==="Earlier"?"Read before":y}</b><span>${years[y].length} book${years[y].length===1?"":"s"}</span></div><div class="shelfrow">${years[y].map(b=>spine(b,false)).join("")}<div class="slot" aria-hidden="true"><span class="bookend"></span></div></div>`).join("")}
+   ${fin.length?`<p class="lib-foot">Thicker spines hold more words. Take one down to read its words again.</p>`:`<p class="lib-foot">Books you finish are shelved here, by the year you finished them.</p>`}
    <div class="orn-c">❦</div><div class="center"><button class="txtbtn" data-go="import">Bring in from Notes</button><button class="txtbtn dim" data-go="patterns">Patterns</button></div>`,"shelf");
 }
 // ----- importing from Notes -----
@@ -777,6 +867,7 @@ function pagePatterns(){
    <div class="orn-c">⁂</div>`,"patterns");
 }
 function bookEntryAll(w){const x=w.senses[w.pick];return `<button class="bk-e" data-act="open" data-id="${w.id}"><span class="w" style="color:${inkColor(w)}">${esc(w.word)}</span> <i>${x[0]}.</i> ${esc(x[1])}.<span class="also">${booksOf(w).map(id=>esc(titleOf(id))).join(" · ")}</span></button>`}
+document.addEventListener("pointerover",e=>{const h=e.target.closest?.(".thread .hit");const tt=$("ttip");if(tt){if(h){const r=h.getBoundingClientRect(),p=h.closest(".thread").getBoundingClientRect();tt.textContent=h.dataset.tip;tt.style.left=Math.min(p.width-80,Math.max(80,r.left-p.left+r.width/2))+"px";tt.classList.add("on")}else tt.classList.remove("on")}});
 document.addEventListener("pointerover",e=>{const c=e.target.closest?.(".col");const tip=$("tipx");if(!tip)return;if(!c){tip.classList.remove("on");return}const r=c.getBoundingClientRect(),p=$("cc").getBoundingClientRect();tip.textContent=c.dataset.tip;tip.style.left=Math.min(p.width-60,Math.max(60,r.left-p.left+r.width/2))+"px";tip.classList.add("on")});
 function pagePrefs(){
   const P=S.prefs,t=(k,b,s)=>`<div class="p"><div><b>${b}</b><span>${s}</span></div><button data-act="pref" data-k="${k}" aria-pressed="${!!P[k]}">${P[k]?"On":"Off"}</button></div>`;
@@ -826,6 +917,9 @@ document.addEventListener("click",async e=>{
    case"importmore":return pageImport();
    case"switchbook":S.active=id;save();bookQ="";return pageBook(id);
    case"viewbook":bookQ="";return pageBook(id);
+   case"newbook":{const f=$("nb");f.classList.add("on");$("nbt").focus();return}
+   case"speak":{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.dataset.w);u.lang="en-GB";u.rate=.82;t.classList.add("on");u.onend=u.onerror=()=>t.classList.remove("on");speechSynthesis.speak(u)}catch(err){}return}
+   case"jumpsit":{const el=$("sit-"+t.dataset.k);if(el){el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"instant":"smooth",block:"start"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1600)}return}
    case"finish":{const b=viewBook();b.finished=now();if(S.active===b.id){const nx=reading()[0];if(nx)S.active=nx.id}save();return pageFinis(b.id)}
    case"reopen":{const b=viewBook();delete b.finished;S.active=b.id;save();return pageBook(b.id)}
    case"earlier":{const b=S.books.find(x=>x.id===id);b.finished=true;save();return pageFinis(id)}

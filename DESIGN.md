@@ -18,6 +18,18 @@ Two different moments, two different jobs:
 | What Margin does | Look up in seconds. Save automatically. Ask nothing. | Short, varied, quiet rounds when *you* choose |
 | What Margin never does | Quiz you, ask for chapter or page, make you guess | Nag, count streaks, score you |
 
+## 1b. What's essential (the literary core)
+
+Everything on screen should earn its place. What stays, because it *is* the experience:
+1. **The word, set large in a book face**, inked darker as you come to know it.
+2. **The pronunciation**, as a plain respelling (*i-BUHL-yuhnt*). Tap it to hear the word spoken (the device's own voice, free and offline).
+3. **One plain meaning**, the sense that fits your sentence.
+4. **Your sentence from the book, with the word underlined in pencil.** This is the strongest memory cue there is, and the most loved detail.
+5. **Your own marks**: a margin note in handwriting, your own sentences from Revisit.
+6. **A literary quotation**, when one exists. It costs nothing and it delights.
+
+Folded away under one quiet "kindred words · 2 other senses": synonyms and alternative senses. To write in the margin, a small pencil sits in the leaf's top corner instead of a "+ a note in the margin" line.
+
 ## 2. Today's workflow, and where it hurts
 
 You keep a note per book (title on top, one word per line), and to see a meaning you double-tap the word, find **Look Up** in the menu, read, close. If you forget a word, you go back and do it all again.
@@ -103,6 +115,20 @@ Margin doesn't try to be Goodreads. It only needs to know one thing about a book
 - **The Library** (Contents → The Library): *Reading now* as a simple list, then finished books as small volumes grouped by year ("Finished in 2026", "Finished earlier"). Each volume shows title, author, word count, when you read it, and its **ink strip**: one mark per word, shaded from pale (new) to black (known). At a glance you see which books you've really absorbed.
 - Finished books stay fully usable: open one to read its words, search, *Revisit its words*, copy as a list, or tap *Reading it again*. Their words keep coming back in Revisit, because finishing the book shouldn't mean forgetting its words.
 - **Importing old notes**: "I've finished these books" is ticked by default, so old lists go straight to the Library with no dates.
+
+## 5c++. Sittings: when you picked the book up
+
+Dates do help a little. Remembering *when and where* you met a word is a real retrieval cue, and the record of your reading rhythm is quietly pleasing. But big date headings made the list long, so:
+- The book page opens with a **thread of your sittings**: a single line from your first day to your last (or the day you finished), one dot per sitting, sized by how many words you met. "You picked it up on 9 days over 5 weeks." Tap a dot to jump to those words.
+- In the list itself, a sitting is only a **hairline with a tiny date**, not a heading, so the words stay close together. *A–Z* removes them entirely.
+
+## 5c+++. The Library as a bookshelf
+
+- Each book is a **spine on a wooden shelf**: cloth-coloured (oxblood, bottle green, navy, ochre, slate, plum), title in gilt, the word count at its foot. **Thicker spines hold more words.**
+- **Reading now** is its own shelf; a red ribbon marks the books you're in. A dashed "+" spine adds a book.
+- Finished books are shelved **by the year you finished them** ("2026", "Read before"), each shelf closed with a bookend.
+- A short opening line in prose: "6 books, 35 words. *Wolf Hall* gave you the most. *ardent* has followed you through 3 books. 2 words have settled into dark ink."
+- Take a spine down (tap) to open its words, with the ink strip and sittings thread at the top.
 
 ## 5d. Patterns
 
