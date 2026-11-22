@@ -44,7 +44,7 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .head .title:hover{color:var(--accent)}
 
 /* gallery */
-.gallery{flex:1;min-height:0;display:flex;gap:18px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding:8px calc(50% - min(44vw,270px)) 14px;scrollbar-width:none;overscroll-behavior-x:contain}
+.gallery{position:relative;flex:1;min-height:0;display:flex;gap:18px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding:8px calc(50% - min(44vw,270px)) 14px;scrollbar-width:none;overscroll-behavior-x:contain}
 .gallery::-webkit-scrollbar{display:none}
 .leaf{flex:0 0 min(88vw,540px);scroll-snap-align:center;scroll-snap-stop:always;background:var(--leaf);border-radius:3px;box-shadow:0 1px 0 var(--rule),0 18px 40px -28px rgba(40,30,20,.35);
   padding:24px 26px 12px;overflow-y:auto;display:flex;flex-direction:column;opacity:.38;transform:scale(.965);transition:opacity .6s var(--ease),transform .6s var(--ease);scrollbar-width:none}
@@ -97,6 +97,10 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .senses li{margin-bottom:6px;padding-left:4px}
 .senses li button{text-align:left;color:inherit}
 .senses li.on{color:var(--ink)}
+.kinship{margin-top:14px;font-size:calc(15px*var(--s));font-style:italic;color:var(--graphite)}
+.kinship button{font-family:var(--f-display);font-size:calc(18px*var(--s));font-style:italic;color:var(--ink-2);border-bottom:1px dotted var(--rule);min-height:28px}
+.kinship button:hover{color:var(--accent)}
+.kinship span{font-size:13px}
 .echo{margin-top:16px;font-size:calc(15px*var(--s));font-style:italic;color:var(--accent)}
 .foot{margin-top:auto;padding-top:20px;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .foot .folio{font-size:14px;color:var(--graphite);font-variant-numeric:lining-nums}
@@ -155,6 +159,9 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .toc .lead{flex:1;border-bottom:1px dotted var(--graphite);transform:translateY(-5px);min-width:20px;opacity:.6}
 .toc .tv{font-style:italic;color:var(--ink-2);font-size:17px}
 .toc li>span .tv{color:var(--graphite)}
+.rooms li{margin-bottom:10px}
+.rooms li>button{padding-bottom:2px}
+.rooms p{margin:0;font-style:italic;color:var(--graphite);font-size:15px}
 .orn-c{text-align:center;color:var(--graphite);margin:30px 0;letter-spacing:.6em}
 .idx h3{font-family:var(--f-display);font-size:30px;font-weight:600;margin:26px 0 4px;color:var(--ink-2)}
 .idx .e,.bk-e{display:block;width:100%;text-align:left;padding:8px 0;font-size:17px;line-height:1.4}
@@ -315,9 +322,13 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .finis .sc{display:block;margin-bottom:8px}
 .finis .stats{font-size:19px;line-height:1.6;color:var(--ink-2);max-width:32ch;margin:18px auto 0;text-wrap:balance}
 .finis .stats i{color:var(--ink)}
+.ptitle.year{font-size:84px;font-weight:500;letter-spacing:.02em;font-variant-numeric:oldstyle-nums}
 .badge-fin{font-style:italic;color:var(--accent)}
 /* patterns */
 .sect{margin:38px 0 0}
+.invite{text-align:center;background:var(--leaf);border-radius:3px;padding:18px 18px 8px;box-shadow:0 1px 0 var(--rule);margin-top:-6px}
+.invite p{margin:0;font-style:italic;color:var(--ink-2)}
+.invite b{font-family:var(--f-display);font-style:normal;font-size:24px;color:var(--ink)}
 .sect h2{font-family:var(--f-display);font-weight:500;font-size:27px;margin:0 0 2px}
 .sect .lede{color:var(--ink-2);font-style:italic;margin:0 0 14px;font-size:16px}
 .hbars{display:grid;gap:8px}
@@ -476,6 +487,15 @@ const chosenVoice=()=>(S.prefs.voice&&voices.find(v=>v.name===S.prefs.voice))||r
 function speak(text,btn){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);const v=chosenVoice();if(v){u.voice=v;u.lang=v.lang}else u.lang="en-GB";u.rate=.9;
   if(btn){btn.classList.add("on");u.onend=u.onerror=()=>btn.classList.remove("on")}speechSynthesis.speak(u)}catch(e){}}
 const sayHTML=w=>w.say?(canSpeak?`<button class="ph-btn" data-act="speak" data-w="${esc(w.word)}" aria-label="Hear ${esc(w.word)}">${esc(w.say)}${SPK}</button>`:`<span class="ph">${esc(w.say)}</span>`):"";
+function kinOf(w){
+  const mine=new Set(w.senses[w.pick][3].map(k=>k.toLowerCase()));const out=[];
+  for(const x of S.words){if(x===w||!usable(x)||x.word===w.word)continue;
+    const xs=new Set(x.senses[x.pick][3].map(k=>k.toLowerCase()));
+    const meaning=mine.has(x.word)||xs.has(w.word)||[...mine].some(k=>xs.has(k));
+    const root=w.word.length>=6&&x.word.length>=6&&w.word.slice(0,5)===x.word.slice(0,5);
+    if(meaning||root)out.push(x);if(out.length>=3)break}
+  return out;
+}
 function leafHTML(w,i,n,fresh){
   const foot=`<div class="foot">${n>1?`<button class="folio" data-go="book" title="All of this book's words">${i+1} of ${n}</button>`:"<span></span>"}<span class="acts">${usable(w)?`<button data-act="known" data-id="${w.id}">${w.known?"Keep":"Known"}</button>`:""}<button data-act="del" data-id="${w.id}">Remove</button></span></div>`;
   const rh=`<div class="rh"><span class="sc">${esc(sessionLabel(w.added))}</span></div>`;
@@ -490,6 +510,7 @@ function leafHTML(w,i,n,fresh){
     <p class="gist">${esc(cap1(s[1]))}.</p>
     ${w.context?`<p class="ctx">${markWord(w.context,w)}</p>`:plainEx?`<p class="ctx">${esc(plainEx[0])}</p>`:""}
     ${noteHTML(w)}
+    ${(()=>{const k=kinOf(w);return k.length?`<p class="kinship">kin to ${k.map(x=>`<button data-act="open" data-id="${x.id}">${esc(x.word)}</button>${booksOf(x).filter(id=>!booksOf(w).includes(id)).length?` <span>(${esc(titleOf(booksOf(x).find(id=>!booksOf(w).includes(id))))})</span>`:""}`).join(", ")}</p>`:""})()}
     ${(w.owns||[]).length?`<div class="owns"><span class="sc">In your hand</span>${w.owns.map(o=>`<span class="hand">${esc(o)}</span>`).join("")}</div>`:""}
     ${also.length?`<p class="echo">Also in ${also.map(id=>`<i>${esc(titleOf(id))}</i>`).join(", ")}.</p>`:""}
     ${echo?`<p class="echo">You looked this up again ${esc(sessionLabel(echo.at).toLowerCase())}. It will come back to you sooner.</p>`:""}
@@ -507,8 +528,8 @@ function renderGallery(focusId,arrive){
   observer?.disconnect();
   observer=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle("cur",e.intersectionRatio>.6)),{root:g,threshold:[.6]});
   g.querySelectorAll(".leaf").forEach(l=>observer.observe(l));
-  const target=(focusId&&g.querySelector(`[data-id="${focusId}"]`))||g.querySelector(`[data-id="${ws.length?ws[ws.length-1].id:"blank"}"]`);
-  if(target){g.style.scrollSnapType="none";target.scrollIntoView({behavior:"instant",inline:"center",block:"nearest"});g.style.scrollSnapType="";if(arrive)target.animate?.([{transform:"translateY(10px)",opacity:.3},{transform:"none",opacity:1}],{duration:600,easing:"cubic-bezier(.22,.61,.36,1)"})}
+  const target=(focusId&&g.querySelector(`.leaf[data-id="${focusId}"]`))||g.querySelector(`.leaf[data-id="${ws.length?ws[ws.length-1].id:"blank"}"]`);
+  if(target){const to=()=>g.scrollTo({left:target.offsetLeft-(g.clientWidth-target.offsetWidth)/2,behavior:"instant"});to();requestAnimationFrame(to);if(arrive)target.animate?.([{transform:"translateY(10px)",opacity:.3},{transform:"none",opacity:1}],{duration:600,easing:"cubic-bezier(.22,.61,.36,1)"})}
   freshId=null;
   g.querySelectorAll(".notearea").forEach(fit);
 }
@@ -671,13 +692,13 @@ function pageContents(){
   const b=book(),due=dueWords().length,fin=S.books.filter(x=>x.finished).length;
   openPage(`<button class="close" data-close>Return to the book</button>
    <h1 class="ptitle">Contents</h1><p class="psub">${esc(b.title)}${b.author?", "+esc(b.author):""}</p>
-   <ul class="toc">
-    <li><button data-go="revisit"><span class="tn">Revisit</span><span class="lead"></span><span class="tv">${due?due+" ready":"a quiet round"}</span></button></li>
-    <li><button data-go="shelf"><span class="tn">The Library</span><span class="lead"></span><span class="tv">${reading().length} reading${fin?` · ${fin} finished`:""}</span></button></li>
-    <li><button data-go="patterns"><span class="tn">Patterns</span><span class="lead"></span><span class="tv">across your books</span></button></li>
-    <li><button data-go="prefs"><span class="tn">Preferences</span><span class="lead"></span><span class="tv">how it behaves</span></button></li>
+   <ul class="toc rooms">
+    <li><button data-close><span class="tn">The Margin</span><span class="lead"></span><span class="tv">you are here</span></button><p>Looking words up while you read.</p></li>
+    <li><button data-go="commonplace"><span class="tn">The Commonplace</span><span class="lead"></span><span class="tv">${due?due+" ready to return":"where words become yours"}</span></button><p>Revisit, dog-ears, and the words that keep finding you.</p></li>
+    <li><button data-go="shelf"><span class="tn">The Library</span><span class="lead"></span><span class="tv">${reading().length} reading${fin?` · ${fin} finished`:""}</span></button><p>Your shelves, your reading rhythm, your year.</p></li>
    </ul><div class="orn-c">❦</div>
-   <p class="psub" style="font-size:15px">Tap the book's title for all of its words.<br>Definitions from WordNet, Princeton University. Pronunciations from the CMU Pronouncing Dictionary.${S.words.some(w=>w.sample)?`<br>The Middlemarch words are examples. <button class="txtbtn" data-act="reset" style="font-size:inherit;letter-spacing:0;text-transform:none;text-decoration:underline;min-height:0">Begin with an empty margin</button>`:""}</p>`,"contents");
+   <div class="center"><button class="txtbtn dim" data-go="prefs">Preferences</button></div>
+   <p class="psub" style="font-size:15px;margin-top:14px">Definitions from WordNet, Princeton University. Pronunciations from the CMU Pronouncing Dictionary.${S.words.some(w=>w.sample)?`<br>The Middlemarch words are examples. <button class="txtbtn" data-act="reset" style="font-size:inherit;letter-spacing:0;text-transform:none;text-decoration:underline;min-height:0">Begin with an empty margin</button>`:""}</p>`,"contents");
 }
 let bookQ="",bookSort="sitting",removeArmed=false;
 function shelfStrip(){const rd=reading();return `<div class="strip" aria-label="Books you're reading">${rd.map(b=>`<button class="spine${b.id===viewId?" cur":""}" data-act="switchbook" data-id="${b.id}" aria-current="${b.id===viewId}">${esc(b.title)}<span>${bookWords(b).length}</span></button>`).join("")}${S.books.some(b=>b.finished)?`<button class="spine add" data-go="shelf">The Library</button>`:`<button class="spine add" data-go="shelf">+ a book</button>`}</div>`}
@@ -707,7 +728,7 @@ function pageBook(id){
   if(typeof id==="string")viewId=id;else if(!viewId||pageKind!=="book"&&pageKind!=="leaf")viewId=S.active;
   const b=viewBook();const ws=bookWords(b),n=ws.length;removeArmed=false;
   openPage(`<button class="close" data-close>Return to the book</button>${shelfStrip()}
-   <h1 class="ptitle" style="font-style:italic">${esc(b.title)}</h1><p class="psub" style="margin-bottom:6px">${b.author?esc(b.author)+" · ":""}${n} word${n===1?"":"s"}${b.finished?` · <span class="badge-fin">${finishedLabel(b).toLowerCase()}</span>`:""}</p>
+   <h1 class="ptitle" style="font-style:italic">${esc(b.title)}</h1>${b.why?`<p class="hand" style="text-align:center;margin:6px 0 0;font-size:20px">${esc(b.why)}</p>`:""}<p class="psub" style="margin-bottom:6px">${b.author?esc(b.author)+" · ":""}${n} word${n===1?"":"s"}${b.finished?` · <span class="badge-fin">${finishedLabel(b).toLowerCase()}</span>`:""}</p>
    <div style="height:12px"></div>
    ${bookSort==="sitting"?threadHTML(b):""}
    ${n>8?`<div class="bookbar"><input class="search" id="bookq" placeholder="find a word in this book" value="${esc(bookQ)}" aria-label="Find a word in this book" autocapitalize="off"><span class="sortby"><button data-act="sort" data-v="sitting" aria-pressed="${bookSort==="sitting"}">By sitting</button><button data-act="sort" data-v="az" aria-pressed="${bookSort==="az"}">A–Z</button>${ws.some(w=>w.fav)?`<button data-act="sort" data-v="fav" aria-pressed="${bookSort==="fav"}">Dog-eared</button>`:""}</span></div>`:""}
@@ -728,7 +749,7 @@ function pageFinis(id){
   const next=reading().filter(x=>x.id!==id);
   openPage(`<button class="close" data-close>Return</button><div class="finis">
     <span class="sc">${esc(finishedLabel(b))}</span><div class="orn-c" style="margin:6px 0 14px">⁂</div>
-    <h1 class="ptitle" style="font-style:italic">${esc(b.title)}</h1>${b.author?`<p class="psub" style="margin-bottom:0">${esc(b.author)}</p>`:""}
+    <h1 class="ptitle" style="font-style:italic">${esc(b.title)}</h1>${b.author?`<p class="psub" style="margin-bottom:0">${esc(b.author)}</p>`:""}${b.why?`<p class="hand" style="margin:14px 0 0">“${esc(b.why)}”</p>`:""}
     ${inkStrip(ws,true)}
     <p class="stats">${ws.length} word${ws.length===1?"":"s"}${sit?`, gathered in ${sit} sitting${sit===1?"":"s"}`:""}${spanOf(b)&&spanOf(b)!=="from your notes"?`, ${esc(spanOf(b))}`:""}.
     ${shared?`<br>${shared} of them you've met in other books too.`:""}
@@ -770,6 +791,41 @@ function libResults(){
   const q=libQ.toLowerCase().trim();const ws=S.words.filter(w=>usable(w)&&(w.word.includes(q)||w.senses[w.pick][1].includes(q)||(w.note||"").toLowerCase().includes(q))).sort((a,c)=>a.word.localeCompare(c.word));
   return ws.length?ws.map(w=>{const s=w.senses[w.pick];return `<button class="e" data-act="open" data-id="${w.id}"><b style="color:${inkColor(w)}">${esc(w.word)}</b>, <i>${s[0]}.</i> <span class="m">${esc(s[1])}.</span> <span class="s">${booksOf(w).map(id=>esc(titleOf(id))).join(", ")}</span></button>`}).join(""):`<p class="psub">No word matches.</p>`;
 }
+function yearsWithReading(){const ys=new Set();readDays().forEach(d=>ys.add(+d.slice(0,4)));S.books.forEach(b=>{if(b.finished&&b.finished!==true)ys.add(new Date(b.finished).getFullYear())});return [...ys].sort((a,c)=>c-a)}
+function pageYear(y){
+  const inY=t=>new Date(t).getFullYear()===y;
+  const fin=S.books.filter(b=>b.finished&&b.finished!==true&&inY(b.finished)).sort((a,c)=>a.finished-c.finished);
+  const ws=S.words.filter(w=>usable(w)&&!w.imported&&inY(w.added)).sort((a,c)=>a.added-c.added);
+  const days=readDays().filter(d=>d.startsWith(y+"-")).length;
+  const settled=ws.filter(w=>w.known||w.strength>=3).length;
+  const follow=ws.map(w=>[w,booksOf(w).length]).sort((a,c)=>c[1]-a[1])[0];
+  const favs=ws.filter(w=>w.fav).slice(0,6);
+  const first=ws[0],last=ws[ws.length-1];
+  const prose=[days?`You read with Margin beside you on ${days} day${days===1?"":"s"}.`:"",
+    fin.length?`You finished ${fin.length} book${fin.length===1?"":"s"}.`:"",
+    ws.length?`You gathered ${ws.length} word${ws.length===1?"":"s"}${settled?`, and ${settled} of them settled into dark ink`:""}.`:""].filter(Boolean).join(" ");
+  openPage(`<button class="close" data-go="shelf">Back to the Library</button><div class="finis">
+    <span class="sc">A year in reading</span><div class="orn-c" style="margin:6px 0 10px">⁂</div>
+    <h1 class="ptitle year">${y}</h1>
+    <p class="stats">${prose||"A quiet year so far."}</p>
+    ${fin.length?`<div class="shelfrow" style="justify-content:center;margin-top:26px">${fin.map(b=>spine(b,false)).join("")}</div>`:""}
+    ${first&&last&&first!==last?`<p class="stats">Your first word of the year was <i>${esc(first.word)}</i>; your latest, <i>${esc(last.word)}</i>.</p>`:""}
+    ${follow&&follow[1]>1?`<p class="stats">The word that followed you: <i>${esc(follow[0].word)}</i>, through ${follow[1]} books.</p>`:""}
+    ${favs.length?`<div class="orn-c">❦</div><p class="sc" style="margin-bottom:10px">Dog-eared this year</p><div class="olist" style="text-align:left;max-width:460px;margin:0 auto">${favs.map(w=>bookEntryAll(w).replace(/<\/button>$/,(w.note?`<span class="hand" style="display:block">${esc(w.note)}</span>`:"")+"</button>")).join("")}</div>`:""}
+    <div class="orn-c">⁂</div></div>`,"year");
+}
+function pageBegin(id){
+  const b=S.books.find(x=>x.id===id);
+  openPage(`<div class="finis" style="padding-top:8vh">
+    <span class="sc">Beginning</span><div class="orn-c" style="margin:6px 0 14px">⁂</div>
+    <h1 class="ptitle" style="font-style:italic">${esc(b.title)}</h1>
+    <form id="beginf" data-id="${b.id}" autocomplete="off" style="max-width:380px;margin:22px auto 0;display:grid;gap:14px">
+      <input id="ba" class="search" style="text-align:center;margin:0" placeholder="by…" aria-label="Author (optional)" value="${esc(b.author||"")}">
+      <input id="bw" class="search" style="text-align:center;margin:0;font-family:var(--f-hand);font-style:normal;font-size:22px;color:var(--hand)" placeholder="why this book? (if you like)" aria-label="Why this book (optional)">
+      <button class="txtbtn" style="margin-top:6px">Begin reading</button>
+    </form></div>`,"begin");
+  setTimeout(()=>$("ba")?.focus(),450);
+}
 function pageShelf(){
   const rd=reading(),fin=S.books.filter(b=>b.finished).sort((a,c)=>(c.finished===true?0:c.finished)-(a.finished===true?0:a.finished));
   const years={};fin.forEach(b=>{const y=b.finished===true?"Earlier":String(new Date(b.finished).getFullYear());(years[y]??=[]).push(b)});
@@ -790,7 +846,9 @@ function pageShelf(){
    <form class="field lib-new" id="nb" autocomplete="off"><input id="nbt" placeholder="the new book's title" aria-label="Title" required><button class="txtbtn">Place on shelf</button></form>
    ${Object.keys(years).sort((a,c)=>a==="Earlier"?1:c==="Earlier"?-1:c-a).map(y=>`<div class="shelf-h"><b>${y==="Earlier"?"Read before":y}</b><span>${years[y].length} book${years[y].length===1?"":"s"}</span></div><div class="shelfrow">${years[y].map(b=>spine(b,false)).join("")}<div class="slot" aria-hidden="true"><span class="bookend"></span></div></div>`).join("")}
    ${fin.length?`<p class="lib-foot">Thicker spines hold more words. Take one down to read its words again.</p>`:`<p class="lib-foot">Books you finish are shelved here, by the year you finished them.</p>`}
-   <div class="orn-c">❦</div><div class="center"><button class="txtbtn" data-go="import">Bring in from Notes</button><button class="txtbtn dim" data-go="patterns">Patterns</button></div></div>`,"shelf");
+   ${rhythmHTML()}
+   ${yearsWithReading().length?`<section class="sect"><h2>The year</h2><p class="lede">A page for each year of your reading.</p><div class="center" style="justify-content:flex-start">${yearsWithReading().map(y=>`<button class="txtbtn" style="letter-spacing:0;text-transform:none;font-family:var(--f-display);font-size:24px" data-act="year" data-v="${y}">${y}</button>`).join("")}</div></section>`:""}
+   <div class="orn-c">❦</div><div class="center"><button class="txtbtn" data-go="import">Bring in from Notes</button></div></div>`,"shelf");
 }
 // ----- importing from Notes -----
 const isHeading=l=>/^\s*#{1,6}\s+\S/.test(l), isRule=l=>/^\s*(-{3,}|={3,}|\*{3,}|_{3,})\s*$/.test(l);
@@ -847,28 +905,25 @@ async function doImport(){
   }
   if(blocks.length===1&&!lastBook.finished)S.active=lastBook.id;save();
   const fixes=[];for(const [m,bid] of missed){fixes.push([m,(await fuzzy(clean(m),1))[0],bid])}
-  msg.innerHTML=`<p class="psub" style="margin-bottom:10px">${made} word${made===1?"":"s"} set${blocks.length>1?` across ${blocks.length} books`:` in <i>${esc(blocks[0].title)}</i>`}.${overlap?`<br>${overlap} ${overlap===1?"was":"were"} already in another of your books. Patterns shows them together.`:""}<br>They'll come back in Revisit a few at a time over the next ${Math.max(1,Math.ceil(made/8))} day${made>8?"s":""}.</p>
+  msg.innerHTML=`<p class="psub" style="margin-bottom:10px">${made} word${made===1?"":"s"} set${blocks.length>1?` across ${blocks.length} books`:` in <i>${esc(blocks[0].title)}</i>`}.${overlap?`<br>${overlap} ${overlap===1?"was":"were"} already in another of your books. The Commonplace shows them together.`:""}<br>They'll come back in Revisit a few at a time over the next ${Math.max(1,Math.ceil(made/8))} day${made>8?"s":""}.</p>
    ${fixes.length?`<p class="sc">Not found</p><ul>${fixes.map(([m,f,bid])=>`<li>“${esc(m)}”${f?` — did you mean <button class="txtbtn" style="letter-spacing:0;text-transform:none;font-size:18px;font-style:italic;min-height:36px" data-act="impfix" data-w="${esc(f)}" data-b="${bid}">${esc(f)}</button>?`:" isn't in the dictionary."}</li>`).join("")}</ul>`:""}
-   <div class="center" style="margin-top:12px">${overlap?`<button class="txtbtn" data-go="patterns">See patterns</button>`:""}<button class="txtbtn" data-act="importmore">Bring in another</button><button class="txtbtn dim" data-close>Open the book</button></div>`;
+   <div class="center" style="margin-top:12px">${overlap?`<button class="txtbtn" data-go="commonplace">See them together</button>`:""}<button class="txtbtn" data-act="importmore">Bring in another</button><button class="txtbtn dim" data-close>Open the book</button></div>`;
 }
 // ----- patterns across books -----
 let patternIds={};
-function pagePatterns(){
+function pageCommonplace(){
   const ws=S.words.filter(usable);
-  if(ws.length<5){openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Patterns</h1><div class="orn-c">⁂</div><p class="psub">Patterns appear once you have a few more words. Bringing in your old notes is the quickest way.</p><div class="center"><button class="txtbtn" data-go="import">Bring in from Notes</button></div>`,"patterns");return}
+  if(ws.length<5){openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">The Commonplace</h1><div class="orn-c">⁂</div><p class="psub">Where words become yours. It fills as you gather words; bringing in your old notes is the quickest start.</p><div class="center"><button class="txtbtn" data-go="import">Bring in from Notes</button></div>`,"commonplace");return}
   const multi=ws.filter(w=>booksOf(w).length>1).sort((a,b)=>booksOf(b).length-booksOf(a).length||a.word.localeCompare(b.word));
   const trouble=w=>(w.lapses||0)+(w.echoes||[]).filter(e=>!e.imported).length;
   const favs=ws.filter(w=>w.fav).sort((a,c)=>(c.note?1:0)-(a.note?1:0));
   const settling=ws.filter(w=>!w.known&&trouble(w)>0).sort((a,b)=>trouble(b)-trouble(a)).slice(0,8);
   patternIds={multi:multi.slice(0,7).map(w=>w.id),settling:settling.slice(0,7).map(w=>w.id)};
-  const days=[...new Set([...(S.readDays||[]),...ws.filter(w=>!w.imported).map(w=>dayKey(w.added))])];
-  const months=[];const d0=new Date();d0.setDate(1);d0.setHours(0,0,0,0);
-  for(let k=11;k>=0;k--){const a=new Date(d0.getFullYear(),d0.getMonth()-k,1);const key=`${a.getFullYear()}-${String(a.getMonth()+1).padStart(2,"0")}`;months.push({a,n:days.filter(x=>x.startsWith(key)).length})}
-  const mmax=Math.max(1,...months.map(m=>m.n)),thisMonth=months[11].n,peak=months.reduce((x,y)=>y.n>x.n?y:x,months[0]);
-  const nb=S.books.filter(b=>bookWords(b).length).length;
+  const nb=S.books.filter(b=>bookWords(b).length).length,due=dueWords().length;
   const mname=d=>d.toLocaleDateString(undefined,{month:"long",year:"numeric"});
-  openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Patterns</h1>
-   <p class="psub">${ws.length} words across ${nb} book${nb===1?"":"s"}${multi.length?`. ${multi.length} of them found you in more than one.`:"."}</p>
+  openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">The Commonplace</h1>
+   <p class="psub">Where words become yours. ${ws.length} gathered from ${nb} book${nb===1?"":"s"}.</p>
+   <div class="invite">${due?`<p><b>${due}</b> word${due===1?" is":"s are"} ready to come back.</p><button class="txtbtn" data-go="revisit">Begin a round</button>`:`<p>Nothing is waiting. Words come back a day after you meet them.</p><button class="txtbtn dim" data-go="revisit">A round anyway</button>`}</div>
 
    <section class="sect"><h2>Words that keep finding you</h2>
     ${multi.length?`<p class="lede">You met these in more than one book. They're worth knowing well: authors you read reach for them.</p><div class="olist">${multi.slice(0,12).map(bookEntryAll).join("")}</div><div class="center" style="margin-top:10px"><button class="txtbtn" data-act="revisitset" data-k="multi">Revisit these</button></div>`
@@ -877,12 +932,19 @@ function pagePatterns(){
    ${favs.length?`<section class="sect"><h2>Dog-eared</h2><p class="lede">The words you folded a corner for${favs.filter(w=>w.note).length>=2?", with your reasons. See what they share":""}.</p><div class="olist">${favs.map(w=>bookEntryAll(w).replace(/<\/button>$/,(w.note?`<span class="hand" style="display:block">${esc(w.note)}</span>`:"")+"</button>")).join("")}</div></section>`:""}
    ${settling.length?`<section class="sect"><h2>Still settling</h2><p class="lede">Words you've forgotten in Revisit or looked up more than once.</p><div class="olist">${settling.map(bookEntryAll).join("")}</div><div class="center" style="margin-top:10px"><button class="txtbtn" data-act="revisitset" data-k="settling">Revisit these</button></div></section>`:""}
 
-   <section class="sect"><h2>Your reading rhythm</h2>
-    ${days.length>=3?`<p class="lede">Days you read with Margin open. ${thisMonth?`${thisMonth} day${thisMonth===1?"":"s"} so far this month`:"None yet this month"}${peak.n&&peak!==months[11]?`; the most was ${mname(peak.a)}, with ${peak.n}`:""}.</p>
+   <div class="orn-c">⁂</div>`,"commonplace");
+}
+function readDays(){return [...new Set([...(S.readDays||[]),...S.words.filter(w=>usable(w)&&!w.imported).map(w=>dayKey(w.added))])]}
+function rhythmHTML(){
+  const days=readDays();const months=[];const d0=new Date();d0.setDate(1);d0.setHours(0,0,0,0);
+  for(let k=11;k>=0;k--){const a=new Date(d0.getFullYear(),d0.getMonth()-k,1);const key=`${a.getFullYear()}-${String(a.getMonth()+1).padStart(2,"0")}`;months.push({a,n:days.filter(x=>x.startsWith(key)).length})}
+  const mmax=Math.max(1,...months.map(m=>m.n)),thisMonth=months[11].n,peak=months.reduce((x,y)=>y.n>x.n?y:x,months[0]);
+  const mname=d=>d.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+  return `<section class="sect"><h2>Your reading rhythm</h2>
+    ${days.length>=3?`<p class="lede">Days you read with Margin beside you. ${thisMonth?`${thisMonth} day${thisMonth===1?"":"s"} so far this month`:"None yet this month"}${peak.n&&peak!==months[11]?`; the most was ${mname(peak.a)}, with ${peak.n}`:""}.</p>
     <div class="colchart" id="cc"><span class="tipx" id="tipx"></span><div class="cols">${months.map(m=>`<div class="col" data-tip="${esc(mname(m.a))}: ${m.n} day${m.n===1?"":"s"}">${m.n?`<i style="height:${m.n/mmax*100}%"></i>`:""}</div>`).join("")}</div>
     <div class="mlabels">${months.map(m=>`<span>${m.a.toLocaleDateString(undefined,{month:"narrow"})}</span>`).join("")}</div></div>`
-      :`<p class="lede">The days you read with Margin open will gather here, month by month.</p>`}</section>
-   <div class="orn-c">⁂</div>`,"patterns");
+      :`<p class="lede">The days you read with Margin beside you will gather here, month by month.</p>`}</section>`;
 }
 function bookEntryAll(w){const x=w.senses[w.pick];return `<button class="bk-e" data-act="open" data-id="${w.id}"><span class="w" style="color:${inkColor(w)}">${esc(w.word)}</span> <i>${x[0]}.</i> ${esc(x[1])}.<span class="also">${booksOf(w).map(id=>esc(titleOf(id))).join(" · ")}</span></button>`}
 document.addEventListener("pointerover",e=>{const h=e.target.closest?.(".thread .hit");const tt=$("ttip");if(tt){if(h){const r=h.getBoundingClientRect(),p=h.closest(".thread").getBoundingClientRect();tt.textContent=h.dataset.tip;tt.style.left=Math.min(p.width-80,Math.max(80,r.left-p.left+r.width/2))+"px";tt.classList.add("on")}else tt.classList.remove("on")}});
@@ -900,7 +962,7 @@ function pagePrefs(){
    </div>`,"prefs");
 }
 function openLeaf(id,back){
-  leafBack=back||({index:"index",shelf:"shelf",patterns:"patterns"}[pageKind]||"book");const w=byId(id);
+  leafBack=back||({index:"index",shelf:"shelf",patterns:"commonplace",commonplace:"commonplace"}[pageKind]||"book");const w=byId(id);
   openPage(`<button class="close" data-go="${leafBack}">Back</button><div style="max-width:540px;margin:0 auto">${leafHTML(w,0,1,false).replace('class="leaf','style="opacity:1;transform:none;min-height:60vh" class="leaf')}</div>`,"leaf");$("page").querySelectorAll(".notearea").forEach(fit);
 }
 const refresh=id=>pageKind==="leaf"?openLeaf(id,leafBack):renderGallery(id);
@@ -915,7 +977,7 @@ document.addEventListener("click",async e=>{
   const t=e.target.closest("[data-go],[data-act],[data-close]");if(!t)return;
   if(t.hasAttribute("data-close")){closePage();return}
   const go=t.dataset.go;
-  if(go){closeSlip();({patterns:pagePatterns,contents:pageContents,book:pageBook,index:pageIndex,shelf:pageShelf,prefs:pagePrefs,revisit:startRevisit,import:pageImport})[go]?.();return}
+  if(go){closeSlip();({patterns:pageCommonplace,commonplace:pageCommonplace,contents:pageContents,book:pageBook,index:pageIndex,shelf:pageShelf,prefs:pagePrefs,revisit:startRevisit,import:pageImport})[go]?.();return}
   const a=t.dataset.act,id=t.dataset.id;
   if(["show","rate","pickc","keep","rvnext"].includes(a))return rvAct(a,t.dataset.v);
   switch(a){
@@ -939,6 +1001,7 @@ document.addEventListener("click",async e=>{
    case"switchbook":S.active=id;save();bookQ="";return pageBook(id);
    case"viewbook":bookQ="";return pageBook(id);
    case"goto":return renderGallery(id,true);
+   case"year":return pageYear(+t.dataset.v);
    case"fav":{const w=byId(id);w.fav=!w.fav;
      save();
      if(pageKind==="leaf")openLeaf(id,leafBack);else renderGallery(id);
@@ -963,7 +1026,10 @@ document.addEventListener("click",async e=>{
 $("cap").addEventListener("submit",e=>{e.preventDefault();submitLine()});
 $("q").addEventListener("input",()=>{clearTimeout(suggT);suggT=setTimeout(updateSugg,70)});
 $("q").addEventListener("paste",e=>{const t=(e.clipboardData||window.clipboardData)?.getData("text")||"";if(words(t).length>2){e.preventDefault();$("q").value="";showChooser(t.trim().replace(/\s+/g," "));$("q").blur()}});
-document.addEventListener("submit",e=>{if(e.target.id==="nb"){e.preventDefault();const t=$("nbt").value.trim();if(!t)return;const nb={id:uid(),title:t,author:""};S.books.push(nb);S.active=nb.id;save();closePage();setTimeout(()=>$("q").focus(),300)}});
+document.addEventListener("submit",e=>{
+  if(e.target.id==="nb"){e.preventDefault();const t=$("nbt").value.trim();if(!t)return;const nb={id:uid(),title:t,author:"",begun:now()};S.books.push(nb);S.active=nb.id;save();return pageBegin(nb.id)}
+  if(e.target.id==="beginf"){e.preventDefault();const b=S.books.find(x=>x.id===e.target.dataset.id);b.author=$("ba").value.trim();b.why=$("bw").value.trim();save();closePage();setTimeout(()=>$("q").focus(),300)}
+});
 document.addEventListener("input",e=>{if(e.target.id==="libq"){libQ=e.target.value;$("libResults").innerHTML=libQ.trim()?libResults():"";$("libShelves").hidden=!!libQ.trim()}if(e.target.id==="idxq"){idxQ=e.target.value;pageIndex()}if(e.target.id==="bookq"){bookQ=e.target.value;$("bookBody").innerHTML=bookBody()}if(e.target.id==="imp"){clearTimeout(suggT);suggT=setTimeout(previewImport,150)}});
 document.addEventListener("change",e=>{if(e.target.id==="voiceSel"){S.prefs.voice=e.target.value;save();speak("lugubrious")}if(e.target.id==="impMulti")previewImport()});
 // the margin: write right where the note lives; saved as you write, nothing to confirm

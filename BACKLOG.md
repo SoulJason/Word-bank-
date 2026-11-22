@@ -2,7 +2,7 @@
 
 ## The Writing Desk (future tab)
 
-Shown in Contents today as "The Writing Desk, in a later edition".
+The long-term vision for the Commonplace (see VISION.md). Not shown in the app until it exists.
 
 **Idea:** paste or write your own text, and Margin suggests words from *your* word bank that could fit, so the words you collected while reading find their way into your writing.
 

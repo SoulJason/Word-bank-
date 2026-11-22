@@ -64,6 +64,12 @@ Verdicts: **Keep** as is · **Simplified** in this pass · **Cut** in this pass.
 | "Before you read" sheet over the book | Primed last sitting's words, but it covered the book and needed a tap to dismiss. | **Simplified** → a 14-second line under the writing line: *Last time: parsimony · ebullient · lugubrious.* Nothing to dismiss. |
 | Pinch the gallery → book's list | Invisible shortcut for people who look for it; costs nothing. | Keep |
 
+### The three rooms (November 2026)
+
+Contents now lists only the three rooms from `VISION.md`: **The Margin** (here), **The Commonplace** (Revisit, dog-ears, words that keep finding you, still settling) and **The Library** (shelves, reading rhythm, the year). Patterns no longer exists as its own page: its word sections moved to the Commonplace, and reading rhythm moved to the Library, because each belongs with the room whose measure it serves. Preferences sits beneath the rooms in small type.
+
+New, each passing the five questions in §6: **kinship** on a word's page (one line, your own words only); **beginning a book** (a title page with an optional *why this book?* that returns on the closing page); **the year** (one page per year, made only from data you already give).
+
 ### Contents
 
 | Element | Why | Verdict |
