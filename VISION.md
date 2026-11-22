@@ -24,7 +24,19 @@ Every feature lives in exactly one room and serves that room's single measure. I
 | **The Commonplace** | Between readings | Make words yours | Words that stay (the ink) | Revisit, dog-eared words, words that keep finding you, still settling, kinship |
 | **The Library** | Across a reading life | See what reading has given you, and begin the next book | Books read, days read | Shelves, beginning and closing a book, reading rhythm, the year |
 
-Navigation: the Margin is always home. ❦ opens **Contents**, which lists the three rooms and nothing else (Preferences sits quietly beneath them).
+Navigation: the Margin is always home. ❦ opens **the Library**; words ready to return and the Commonplace sit at its top, Preferences at its foot. There is no menu page in between.
+
+## The shape of the experience: unlock → word → meaning → lock
+
+Margin is closed most of the time. Reading is meant to slow things down and take you away from screens, so Margin should feel almost as calm as the page.
+
+- **Opening it is for looking up.** Nothing greets you, reminds you or asks anything. The writing line is ready.
+- **A word met in this sitting shows only what you need:** the word, its sound, its meaning, your sentence. The rest (quotation, kinship, kindred words, other books) appears when you come back to it later.
+- **Motion is a 0.2-second fade.** Nothing moves after the meaning appears, because movement at the edge of your vision pulls your eye back to the phone.
+- **No signals on the reading screen.** Words ready to return are shown in the Library, where you go when you choose to.
+- **The phone is not a bookmark.** No always-on screen beside the book, and no continuously running camera. The camera (native) opens only for the moment you tap a word on the page.
+- **One payment, then it's yours.** Free for the first book; nothing runs on a server; it works on a plane and in ten years.
+- **The first launch is one question:** *What are you reading?* Then the writing line. One quiet line offers to bring in your old Notes lists.
 
 ## How Margin motivates without being an addictive app
 
@@ -38,7 +50,7 @@ Navigation: the Margin is always home. ❦ opens **Contents**, which lists the t
 
 - **Margin:** instant lookup, own-words-first autocomplete, paste a sentence and tap the word, dog-ear in one tap with an optional *why this word?*, spoken pronunciation.
 - **Commonplace:** an invitation to Revisit when words are ready; dog-eared words with your reasons; words that keep finding you across books; still settling; **kinship**: on a word's page, *kin to fervent (Wolf Hall)*, linking your own words by meaning or root.
-- **Library:** shelves by year; **beginning a book** (a title page, author, and an optional *why this book?*, which returns on its closing page); the closing page; **reading rhythm** (days read, by month); **the year**, one typeset page per year: days read, books finished (as spines), words gathered and settled, your first and latest word, the word that followed you, your dog-ears.
+- **Library:** shelves by year; adding a book is just its title (author optional on the same line); the closing page; **reading rhythm** (days read, by month); **the year**, one typeset page per year: days read, books finished (as spines), words gathered and settled, your first and latest word, the word that followed you, your dog-ears.
 
 ## Roadmap
 
@@ -47,8 +59,8 @@ Navigation: the Margin is always home. ❦ opens **Contents**, which lists the t
 2. Ambient "Last time" and Revisit tuning based on that week.
 
 ### The native app (v1): a paper reader's companion
-1. **Point at the page.** VisionKit Live Text camera: tap a word on the printed page; the sentence comes with it, so the right sense is chosen and the context is saved. The single biggest gain for a paper reader.
-2. **Open straight to the line.** Control Center control, Action Button and Lock Screen shortcut open Margin with the keyboard up.
+1. **Tap the page, on demand.** The camera opens only for a moment (VisionKit Live Text): tap a word on the printed page, and the camera closes; the sentence comes with it, so the right sense is chosen and the context is saved. The single biggest gain for a paper reader.
+2. **Open straight to the line.** (The most important native feature after the camera: unlock → word → meaning → lock.) Control Center control, Action Button and Lock Screen shortcut open Margin with the keyboard up.
 3. **iCloud sync** between iPhone and iPad.
 4. **One word, once a day.** A Lock Screen / Home Screen widget: a word from your margins, your sentence, the book's title; tap to see the meaning. Review that costs no reading time.
 5. **Bundled dictionary** (WordNet as SQLite), human-recorded pronunciations when online, the best on-device voice offline.

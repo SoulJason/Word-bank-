@@ -134,6 +134,24 @@ New, each passing the five questions in §6: **kinship** on a word's page (one l
 | Voice | The device's best voice, or your choice. | Keep |
 | Size of type | Accessibility. | Keep |
 
+## 3b. The calm pass (November 2026)
+
+Measured against *unlock → word → meaning → lock*, nine things were fluff and were changed:
+
+| # | What | Why it was fluff | Now |
+|---|---|---|---|
+| 1 | "Last time: …" line on opening | You open Margin to look something up, not to be reminded | **Cut** |
+| 2 | Extras on a word just looked up (sitting date, quotation, kinship, also-in, kindred words) | More reading while you want the book | Shown only when you return to the word in a later sitting |
+| 3 | Pencil underline drawing itself | Peripheral motion pulls the eye back to the phone | Drawn instantly |
+| 4 | Blur-to-sharp ink-in and rising leaf | Calm beats clever at the moment of lookup | A 0.2 s fade |
+| 5 | Ink dot on ❦ when words are due | A badge in disguise | **Cut**; shown in the Library instead |
+| 6 | Contents page | A whole page to choose between two places | ❦ opens the Library; Revisit and the Commonplace at its top |
+| 7 | "Beginning" page (author, *why this book?*) | Two fields between you and page one | A book is its title; author optional on the same line |
+| 8 | Five actions at the foot of a book's list | Choices you rarely need | "I've finished this book" visible; the rest behind *More* |
+| 9 | Sample Middlemarch words on first launch | A demo, not an experience | One question: *What are you reading?* |
+
+Also rejected on the same grounds: an always-on "bookmark" screen beside the book, a "closing the book" ritual screen, and a continuously running camera (battery, and technology sitting inside the reading).
+
 ## 4. Motion audit
 
 Rule: **no motion delays information, every motion says what just happened, and all of it collapses to a plain fade under Reduce Motion.**
