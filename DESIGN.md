@@ -2,7 +2,7 @@
 
 A quiet iPhone/iPad app for one job: when a word stops you in a book, understand it in a few seconds and get back to reading. Later, the words come back in a way that deepens your understanding and, eventually, lets you use them in your own writing.
 
-Clickable prototype: `prototype/index.html`, with its dictionary in `prototype/dict/`. Serve the folder over HTTP to run it locally (`python3 -m http.server`). Future work is in `BACKLOG.md`.
+Clickable prototype: `prototype/index.html`, with its dictionary in `prototype/dict/`. Serve the folder over HTTP to run it locally (`python3 -m http.server`). Future work is in `BACKLOG.md`. **Why each part exists, and what was cut, is in `PRINCIPLES.md`**, which takes precedence where the two differ.
 
 ---
 
