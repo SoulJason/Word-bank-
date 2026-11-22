@@ -142,6 +142,7 @@ Measured against *unlock → word → meaning → lock*, nine things were fluff 
 |---|---|---|---|
 | 1 | "Last time: …" line on opening | You open Margin to look something up, not to be reminded | **Cut** |
 | 2 | Extras on a word just looked up (sitting date, quotation, kinship, also-in, kindred words) | More reading while you want the book | Shown only when you return to the word in a later sitting |
+| 2b | *Correction:* other meanings were hidden along with the extras | The right meaning is the point of a lookup (*phalanx* showed the bones, not the troops) | Other meanings always show as small numbered lines under the main one; one tap makes one the meaning. Only kindred words stay folded |
 | 3 | Pencil underline drawing itself | Peripheral motion pulls the eye back to the phone | Drawn instantly |
 | 4 | Blur-to-sharp ink-in and rising leaf | Calm beats clever at the moment of lookup | A 0.2 s fade |
 | 5 | Ink dot on ❦ when words are due | A badge in disguise | **Cut**; shown in the Library instead |

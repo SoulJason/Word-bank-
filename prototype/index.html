@@ -96,6 +96,13 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .senses li{margin-bottom:6px;padding-left:4px}
 .senses li button{text-align:left;color:inherit}
 .senses li.on{color:var(--ink)}
+.alts{list-style:none;margin:10px 0 0;padding:0;counter-reset:alt 1}
+.alts li{counter-increment:alt;display:flex;gap:8px;align-items:baseline;font-size:calc(15px*var(--s));color:var(--graphite);line-height:1.4}
+.alts li::before{content:counter(alt);font-size:12px;font-variant-numeric:lining-nums;min-width:.8em}
+.alts button{text-align:left;color:inherit;min-height:30px;padding:2px 0;transition:color .3s}
+.alts button:hover{color:var(--ink)}
+.alts .more-alts{font-style:italic}
+.alts .more-alts::before{content:''}
 .kinship{margin-top:14px;font-size:calc(15px*var(--s));font-style:italic;color:var(--graphite)}
 .kinship button{font-family:var(--f-display);font-size:calc(18px*var(--s));font-style:italic;color:var(--ink-2);border-bottom:1px dotted var(--rule);min-height:28px}
 .kinship button:hover{color:var(--accent)}
@@ -563,6 +570,14 @@ function kinOf(w){
     if(meaning||root)out.push(x);if(out.length>=3)break}
   return out;
 }
+// other meanings, when a word has them: small, numbered, one tap to make one the meaning
+function altsHTML(w){
+  const seen=new Set([w.senses[w.pick][1]]);const alts=[];
+  w.senses.forEach((x,k)=>{if(k!==w.pick&&!seen.has(x[1])){seen.add(x[1]);alts.push([x,k])}});
+  if(!alts.length)return"";
+  const pos=w.senses[w.pick][0];
+  return `<ol class="alts" aria-label="Other meanings">${alts.map(([x,k],j)=>`<li ${j>=3?"hidden":""}><button data-act="sense" data-id="${w.id}" data-k="${k}" aria-label="Use this meaning: ${esc(x[1])}">${x[0]!==pos?`<i>${POSN[x[0]]||x[0]}.</i> `:""}${esc(x[1])}</button></li>`).join("")}${alts.length>3?`<li class="more-alts"><button data-act="altmore">${alts.length-3} more</button></li>`:""}</ol>`;
+}
 function leafHTML(w,i,n,fresh,full=true){
   const foot=`<div class="foot">${n>1?`<button class="folio" data-go="book" title="All of this book's words">${i+1} of ${n}</button>`:"<span></span>"}<span class="acts">${usable(w)?`<button data-act="known" data-id="${w.id}">${w.known?"Keep":"Known"}</button>`:""}<button data-act="del" data-id="${w.id}">Remove</button></span></div>`;
   const rh=`<div class="rh"><span class="sc">${esc(sessionLabel(w.added))}</span></div>`;
@@ -575,6 +590,7 @@ function leafHTML(w,i,n,fresh,full=true){
     <h2 class="hw">${esc(w.word)}</h2>
     <div class="say"><span class="ps">${POSN[s[0]]||s[0]}</span>${sayHTML(w)}</div>
     <p class="gist">${esc(cap1(s[1]))}.</p>
+    ${altsHTML(w)}
     ${w.context?`<p class="ctx">${markWord(w.context,w)}</p>`:plainEx?`<p class="ctx">${esc(plainEx[0])}</p>`:""}
     ${noteHTML(w)}
 ${full?`
@@ -583,7 +599,7 @@ ${full?`
     ${also.length?`<p class="echo">Also in ${also.map(id=>`<i>${esc(titleOf(id))}</i>`).join(", ")}.</p>`:""}
     ${echo?`<p class="echo">You looked this up again ${esc(sessionLabel(echo.at).toLowerCase())}. It will come back to you sooner.</p>`:""}
     ${q?`<p class="quote">“${esc(q[0])}”<span class="by">${esc(q[1])}</span></p>`:""}
-    ${s[3].length||w.senses.length>1?`<details class="more"><summary>${[s[3].length?"kindred words":"",w.senses.length>1?`${w.senses.length-1} other sense${w.senses.length>2?"s":""}`:""].filter(Boolean).join(" · ")}</summary>${s[3].length?`<p class="kin">${s[3].map(k=>`<i>${esc(k.replace(/-/g," "))}</i>`).join(", ")}</p>`:""}${w.senses.length>1?`<ol>${w.senses.map((x,k)=>`<li class="${k===w.pick?"on":""}"><button data-act="sense" data-id="${w.id}" data-k="${k}" title="Use this sense"><i>${x[0]}.</i> ${esc(x[1])}</button></li>`).join("")}</ol>`:""}</details>`:""}
+    ${s[3].length?`<details class="more"><summary>kindred words</summary><p class="kin">${s[3].map(k=>`<i>${esc(k.replace(/-/g," "))}</i>`).join(", ")}</p></details>`:""}
 `:""}
    </div>${foot}
   </article>`;
@@ -1031,7 +1047,8 @@ document.addEventListener("click",async e=>{
    case"choose-word":{const s=$("chooser").dataset.sentence||"";clearWriter();return lookup(t.dataset.w,s)}
    case"slipclose":return closeSlip();
    case"slip-revisit":closeSlip();return startRevisit();
-   case"sense":{const w=byId(id);w.pick=+t.dataset.k;save();return refresh(id)}
+   case"altmore":{t.closest("ol").querySelectorAll("li[hidden]").forEach(l=>l.hidden=false);t.parentElement.remove();return}
+   case"sense":{const w=byId(id);w.pick=+t.dataset.k;save();hint("Meaning chosen. Revisit will use it.");return refresh(id)}
    case"known":{const w=byId(id);w.known=!w.known;save();if(pageKind==="leaf")return openLeaf(id,leafBack);hint(`“${w.word}” is pressed into the index.`,()=>{w.known=false;save();renderGallery(id)});return renderGallery()}
    case"del":{const i=S.words.findIndex(x=>x.id===id);const [w]=S.words.splice(i,1);save();hint(`“${w.word}” removed.`,()=>{S.words.splice(i,0,w);save();renderGallery(w.id)});if(pageKind==="leaf")return leafBack==="index"?pageIndex():pageBook();return renderGallery()}
    case"undo":{const f=undoFn;undoFn=null;$("hint").textContent="";return f?.()}
