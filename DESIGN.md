@@ -95,6 +95,15 @@ No AI needed: the format you already use (title line, then one word per line) is
 - Misspellings are offered a fix ("did you mean *florid*?").
 - Imported words are spread across the coming days (about eight a day) so Revisit never floods.
 
+## 5c+. Finished books and the Library
+
+Margin doesn't try to be Goodreads. It only needs to know one thing about a book: *are you still reading it?*
+- **Reading now** books are the tabs at the top of the book page and the ones the gallery opens to. Nothing else gets in the way.
+- **I've finished this book** (at the foot of its word list) moves it to the Library and shows a short **closing page**: the date, an ink strip of all its words, how many sittings, which words settled and which are still settling, then *What are you reading next?* with your other books or a new title. "Finished earlier? Remove the date" is there for books you mark late.
+- **The Library** (Contents → The Library): *Reading now* as a simple list, then finished books as small volumes grouped by year ("Finished in 2026", "Finished earlier"). Each volume shows title, author, word count, when you read it, and its **ink strip**: one mark per word, shaded from pale (new) to black (known). At a glance you see which books you've really absorbed.
+- Finished books stay fully usable: open one to read its words, search, *Revisit its words*, copy as a list, or tap *Reading it again*. Their words keep coming back in Revisit, because finishing the book shouldn't mean forgetting its words.
+- **Importing old notes**: "I've finished these books" is ticked by default, so old lists go straight to the Library with no dates.
+
 ## 5d. Patterns
 
 A page (Contents → Patterns) that looks across all your books:
@@ -108,7 +117,7 @@ A page (Contents → Patterns) that looks across all your books:
 - **Gallery** (main): leaves for this book. Each has the sitting ("Last night"), headword (ink darkens with strength), part of speech and pronunciation, meaning, your sentence with a pencil underline, kindred words, + a note in the margin, *In your hand* sentences, a literary quotation, other senses, Known and Remove.
 - **Writing line**: autocomplete with your words first. A pasted sentence becomes "Which word?"
 - **This Book's Words** (tap the title, or pinch the gallery): your note, typeset, grouped by sitting; Copy as a list.
-- **Contents** (❦): The Gallery · This Book's Words · Revisit · Index (all books, searchable by word, meaning or note) · Patterns · The Shelf (books, import from Notes) · Preferences · *The Writing Desk, in a later edition*.
+- **Contents** (❦): The Gallery · This Book's Words · Revisit · Index (all books, searchable by word, meaning or note) · Patterns · The Library (reading now, finished books, import from Notes) · Preferences · *The Writing Desk, in a later edition*.
 - **Preferences**: Before I read, show last time's words · Keep the screen awake · Size of type.
 
 ## 7. Native app: removing the remaining steps

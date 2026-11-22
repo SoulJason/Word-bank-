@@ -26,6 +26,8 @@ Groundwork already done: *In your hand* sentences are stored per word (`owns`), 
 
 ## Smaller ideas
 
+- **Goodreads**: its public API is closed to new apps, but Goodreads can export your library as a CSV (My Books → Import and export). Reading that file could fill in authors and finish dates for books in the Library, and mark books finished automatically.
+
 - Audio pronunciation via the Free Dictionary API when online.
 - Etymology line when online.
 - Export a book's words (with meanings) as a nicely typeset PDF keepsake.
