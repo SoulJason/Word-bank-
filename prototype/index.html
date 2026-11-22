@@ -67,10 +67,16 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .quote{margin:20px 0 0;text-align:center;font-style:italic;color:var(--ink-2);font-size:calc(16px*var(--s));text-wrap:balance}
 .quote .by{display:block;font-style:normal;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--graphite);margin-top:4px}
 .margin-note{margin-top:18px;transform:rotate(-1deg);transform-origin:left;display:block}
-.margin-note textarea{display:block;width:100%;border:0;border-bottom:1px dashed color-mix(in srgb,var(--graphite) 45%,transparent);background:none;outline:none;resize:none;overflow:hidden;font-family:var(--f-hand);color:var(--hand);font-size:calc(23px*var(--s));line-height:1.25;padding:4px 2px;min-height:40px;cursor:text;transition:border-color .4s}
-.margin-note textarea::placeholder{color:var(--graphite);opacity:.55;font-size:calc(20px*var(--s))}
-.margin-note textarea:hover,.margin-note textarea:focus{border-bottom-color:var(--hand)}
+.margin-note{position:relative}
+.margin-note textarea{display:block;width:100%;border:0;background:none;outline:none;resize:none;overflow:hidden;font-family:var(--f-hand);color:var(--hand);font-size:calc(23px*var(--s));line-height:1.25;padding:4px 2px 8px;min-height:44px;cursor:text}
+.margin-note textarea::placeholder{color:var(--graphite);opacity:.6;font-size:calc(20px*var(--s))}
 .margin-note textarea:focus::placeholder{opacity:0}
+/* a short pencil stroke under the ✎, the same hand as the word's underline; gone once you write */
+.margin-note::after{content:"";position:absolute;left:0;bottom:6px;width:46px;height:6px;background:var(--pencil);opacity:.45;pointer-events:none;transition:opacity .4s,width .5s var(--ease);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'%3E%3Cpath d='M1 5.5C18 3.2 37 6.4 55 4.6S86 3 99 4.2' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'%3E%3Cpath d='M1 5.5C18 3.2 37 6.4 55 4.6S86 3 99 4.2' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+.margin-note:hover::after{opacity:.75;width:64px}
+.margin-note:has(textarea:not(:placeholder-shown))::after,.margin-note:has(textarea:focus)::after{opacity:0}
 .leaf{cursor:default}
 .addnote{margin-top:14px;font-family:var(--f-hand);font-size:calc(20px*var(--s));color:var(--graphite);text-align:left;min-height:44px}
 .addnote:hover{color:var(--hand)}
