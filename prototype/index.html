@@ -67,7 +67,11 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .quote{margin:20px 0 0;text-align:center;font-style:italic;color:var(--ink-2);font-size:calc(16px*var(--s));text-wrap:balance}
 .quote .by{display:block;font-style:normal;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--graphite);margin-top:4px}
 .margin-note{margin-top:18px;transform:rotate(-1deg);transform-origin:left;display:block}
-.margin-note textarea{width:100%;border:0;border-bottom:1px dashed var(--rule);background:none;outline:none;resize:none;font-family:var(--f-hand);color:var(--hand);font-size:calc(23px*var(--s));line-height:1.25;min-height:2.6em}
+.margin-note textarea{display:block;width:100%;border:0;border-bottom:1px dashed color-mix(in srgb,var(--graphite) 45%,transparent);background:none;outline:none;resize:none;overflow:hidden;font-family:var(--f-hand);color:var(--hand);font-size:calc(23px*var(--s));line-height:1.25;padding:4px 2px;min-height:40px;cursor:text;transition:border-color .4s}
+.margin-note textarea::placeholder{color:var(--graphite);opacity:.55;font-size:calc(20px*var(--s))}
+.margin-note textarea:hover,.margin-note textarea:focus{border-bottom-color:var(--hand)}
+.margin-note textarea:focus::placeholder{opacity:0}
+.leaf{cursor:default}
 .addnote{margin-top:14px;font-family:var(--f-hand);font-size:calc(20px*var(--s));color:var(--graphite);text-align:left;min-height:44px}
 .addnote:hover{color:var(--hand)}
 .owns{margin-top:16px;font-size:calc(16px*var(--s));color:var(--ink-2)}
@@ -432,17 +436,15 @@ const inkColor=w=>w.known?"var(--ink)":inkFor(w.strength);
 const stemOf=w=>{const t=(w.typed||w.word);return t.slice(0,Math.max(4,t.length-2)).replace(/[^a-z'-]/g,"")};
 function markWord(ctx,w){const e=esc(ctx),re=new RegExp(`\\b(${stemOf(w)}[a-z]*)`,"i");return re.test(e)?e.replace(re,'<span class="pencil">$1</span>'):e}
 function quoteFor(w){for(const s of [w.senses[w.pick],...w.senses]){const q=s&&s[2].find(e=>e[1]);if(q)return q}return null}
-let noting=null;
 function noteHTML(w){
-  if(noting===w.id)return `<div class="margin-note"><textarea class="notearea" data-id="${w.id}" rows="2" aria-label="Your note in the margin" placeholder="whatever it reminds you of">${esc(w.note||"")}</textarea></div>`;
-  return w.note?`<button class="margin-note hand" data-act="note" data-id="${w.id}" style="text-align:left" aria-label="Edit your note">${esc(w.note)}</button>`:"";
+  return `<div class="margin-note"><textarea class="notearea" data-id="${w.id}" rows="1" aria-label="Your note in the margin" placeholder="✎" enterkeyhint="done" autocapitalize="sentences">${esc(w.note||"")}</textarea></div>`;
 }
 const PEN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.2-4.6L16.6 4a1.9 1.9 0 0 1 2.7 0l.7.7a1.9 1.9 0 0 1 0 2.7L8.6 18.8z"/><path d="M14.5 6.1l3.4 3.4"/></svg>',SPK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
 const canSpeak="speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined";
 const sayHTML=w=>w.say?(canSpeak?`<button class="ph-btn" data-act="speak" data-w="${esc(w.word)}" aria-label="Hear ${esc(w.word)}">${esc(w.say)}${SPK}</button>`:`<span class="ph">${esc(w.say)}</span>`):"";
 function leafHTML(w,i,n,fresh){
   const foot=`<div class="foot">${n>1?`<button class="folio" data-go="book" title="All of this book's words">${i+1} of ${n}</button>`:"<span></span>"}<span class="acts">${usable(w)?`<button data-act="known" data-id="${w.id}">${w.known?"Keep":"Known"}</button>`:""}<button data-act="del" data-id="${w.id}">Remove</button></span></div>`;
-  const rh=`<div class="rh"><span class="sc">${esc(sessionLabel(w.added))}</span>${usable(w)&&noting!==w.id&&!w.note?`<button class="pen" data-act="note" data-id="${w.id}" aria-label="Write in the margin" title="Write in the margin">${PEN}</button>`:""}</div>`;
+  const rh=`<div class="rh"><span class="sc">${esc(sessionLabel(w.added))}</span></div>`;
   if(!w.senses)return `<article class="leaf" data-id="${w.id}">${rh}<h2 class="hw">${esc(w.word)}</h2></article>`;
   if(!w.senses.length)return `<article class="leaf" data-id="${w.id}">${rh}<h2 class="hw" style="color:var(--graphite)">${esc(w.word)}</h2><p class="gist">Not in this dictionary.</p>${foot}</article>`;
   const s=w.senses[w.pick]||w.senses[0];const q=quoteFor(w),plainEx=!w.context&&s[2].find(e=>!e[1]),echo=(w.echoes||[]).filter(e=>!e.imported).slice(-1)[0],also=booksOf(w).filter(id=>id!==S.active);
@@ -474,7 +476,7 @@ function renderGallery(focusId,arrive){
   const target=(focusId&&g.querySelector(`[data-id="${focusId}"]`))||g.querySelector(`[data-id="${ws.length?ws[ws.length-1].id:"blank"}"]`);
   if(target){g.style.scrollSnapType="none";target.scrollIntoView({behavior:"instant",inline:"center",block:"nearest"});g.style.scrollSnapType="";if(arrive)target.animate?.([{transform:"translateY(10px)",opacity:.3},{transform:"none",opacity:1}],{duration:600,easing:"cubic-bezier(.22,.61,.36,1)"})}
   freshId=null;
-  if(noting){const t=g.querySelector(".notearea");if(t){t.focus({preventScroll:true});t.setSelectionRange(t.value.length,t.value.length)}}
+  g.querySelectorAll(".notearea").forEach(fit);
 }
 function renderHead(){
   $("bookTitle").textContent=book()?.title||"";if(book()?.finished&&reading().length===0)$("bookTitle").textContent=book().title+" · finished";
@@ -880,7 +882,7 @@ function pagePrefs(){
 }
 function openLeaf(id,back){
   leafBack=back||(pageKind==="index"?"index":"book");const w=byId(id);
-  openPage(`<button class="close" data-go="${leafBack}">Back</button><div style="max-width:540px;margin:0 auto">${leafHTML(w,0,1,false).replace('class="leaf','style="opacity:1;transform:none;min-height:60vh" class="leaf')}</div>`,"leaf");
+  openPage(`<button class="close" data-go="${leafBack}">Back</button><div style="max-width:540px;margin:0 auto">${leafHTML(w,0,1,false).replace('class="leaf','style="opacity:1;transform:none;min-height:60vh" class="leaf')}</div>`,"leaf");$("page").querySelectorAll(".notearea").forEach(fit);
 }
 const refresh=id=>pageKind==="leaf"?openLeaf(id,leafBack):renderGallery(id);
 
@@ -903,7 +905,6 @@ document.addEventListener("click",async e=>{
    case"slipclose":return closeSlip();
    case"slip-revisit":closeSlip();return startRevisit();
    case"sense":{const w=byId(id);w.pick=+t.dataset.k;save();return refresh(id)}
-   case"note":noting=id;return refresh(id);
    case"known":{const w=byId(id);w.known=!w.known;save();if(pageKind==="leaf")return openLeaf(id,leafBack);hint(`“${w.word}” is pressed into the index.`,()=>{w.known=false;save();renderGallery(id)});return renderGallery()}
    case"del":{const i=S.words.findIndex(x=>x.id===id);const [w]=S.words.splice(i,1);save();hint(`“${w.word}” removed.`,()=>{S.words.splice(i,0,w);save();renderGallery(w.id)});if(pageKind==="leaf")return leafBack==="index"?pageIndex():pageBook();return renderGallery()}
    case"undo":{const f=undoFn;undoFn=null;$("hint").textContent="";return f?.()}
@@ -938,7 +939,16 @@ $("q").addEventListener("paste",e=>{const t=(e.clipboardData||window.clipboardDa
 document.addEventListener("submit",e=>{if(e.target.id==="nb"){e.preventDefault();const t=$("nbt").value.trim();if(!t)return;const nb={id:uid(),title:t,author:""};S.books.push(nb);S.active=nb.id;save();closePage();setTimeout(()=>$("q").focus(),300)}});
 document.addEventListener("input",e=>{if(e.target.id==="idxq"){idxQ=e.target.value;pageIndex()}if(e.target.id==="bookq"){bookQ=e.target.value;$("bookBody").innerHTML=bookBody()}if(e.target.id==="imp"){clearTimeout(suggT);suggT=setTimeout(previewImport,150)}});
 document.addEventListener("change",e=>{if(e.target.id==="impMulti")previewImport()});
-document.addEventListener("focusout",e=>{if(e.target.classList?.contains("notearea")){const w=byId(e.target.dataset.id);if(w){w.note=e.target.value.trim();save()}noting=null;setTimeout(()=>refresh(w?.id),0)}});
+// the margin: write right where the note lives; saved as you write, nothing to confirm
+const fit=t=>{t.style.height="auto";t.style.height=t.scrollHeight+"px"};
+document.addEventListener("input",e=>{if(e.target.classList?.contains("notearea")){fit(e.target);const w=byId(e.target.dataset.id);if(w){w.note=e.target.value.trim();save()}}});
+document.addEventListener("focusout",e=>{if(e.target.classList?.contains("notearea"))e.target.value=e.target.value.trim()});
+// tapping the blank paper below a leaf's text also opens the margin
+document.addEventListener("click",e=>{
+  const leaf=e.target.closest(".leaf");if(!leaf||e.target.closest("button,a,input,textarea,summary,details"))return;
+  const t=leaf.querySelector(".notearea");if(!t)return;
+  if(e.clientY>t.getBoundingClientRect().bottom||e.target===leaf){t.focus();t.setSelectionRange(t.value.length,t.value.length)}
+});
 document.addEventListener("keydown",e=>{
   if(e.target.classList?.contains("notearea")&&e.key==="Enter"&&!e.shiftKey){e.preventDefault();e.target.blur();return}
   const typing=/INPUT|TEXTAREA/.test(document.activeElement?.tagName);
