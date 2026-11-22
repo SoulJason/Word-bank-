@@ -26,6 +26,8 @@ Groundwork already done: *In your hand* sentences are stored per word (`owns`), 
 
 ## Smaller ideas
 
+- **Book search when adding a book (native)**: Open Library Search API (`openlibrary.org/search.json`, free, no key, be polite with a User-Agent and caching) or Apple's iTunes Search API (`media=ebook`). Covers from Open Library's Covers API. Use covers sparingly: closing page and the year page.
+
 - **Goodreads**: its public API is closed to new apps, but Goodreads can export your library as a CSV (My Books → Import and export). Reading that file could fill in authors and finish dates for books in the Library, and mark books finished automatically.
 - Human-recorded pronunciations (Wiktionary / Wikimedia Commons audio via the Free Dictionary API) when online, falling back to the device's best voice. The prototype can't fetch them because the artifact page blocks outside sites.
 - Etymology line when online.

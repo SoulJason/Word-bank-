@@ -12,6 +12,8 @@ This document decides what Margin is, what it will become, and where it stops. `
 | Who is it for? | A reader of **paper books**. Not built for everyone. | Capture is designed around a phone lying beside an open book: type fast, autocomplete, keep the screen awake, and (native) point the camera at the page. E-book share flows are not a priority. |
 | Words or passages? | **Words.** You underline passages in the book itself, with a pen. | No highlights, no quotes database. Passages may come later only if they never distract from words. |
 | Numbers? | **Welcome when they come free** from what you already do (days read, books finished, words gathered). | No logging, no timers, no page counts: nothing you have to enter just to be measured. |
+| Where does my data live before the app exists? | **With your Claude account**, privately, through the prototype page. Updates never touch it; it appears on iPhone and iPad; a backup file can be saved any time. | Use the prototype for real now. The native app imports the same data. |
+| Book titles and covers? | **Free, in the native app**: Open Library (search and covers, no key) or Apple's iTunes Search API. The prototype page can't reach outside websites. | Adding a book becomes: type three letters, tap the right edition. Covers appear only where they add warmth (the closing page, the year), never as a grid. |
 | Native app? | **On the table.** Get the prototype right first, then build the native iPhone/iPad app. | The prototype is the spec. |
 
 ## The three rooms

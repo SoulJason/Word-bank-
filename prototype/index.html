@@ -398,7 +398,72 @@ function seed(){return{v:4,books:[{id:"b1",title:"Middlemarch",author:"George El
 let S;try{S=JSON.parse(localStorage.getItem("margin.v4"))}catch(e){}
 if(!S||!Array.isArray(S.words))S={v:4,books:[],active:null,words:[],prefs:{...PREFS},lastActive:0};
 S.prefs={...PREFS,...(S.prefs||{})};
-const save=()=>{try{localStorage.setItem("margin.v4",JSON.stringify(S))}catch(e){}};
+const save=()=>{try{localStorage.setItem("margin.v4",JSON.stringify(S))}catch(e){}scheduleSync()};
+// ===== your account: words kept with your Claude account, private to you, safe across updates and devices =====
+// Each word is its own small document (definitions are re-read from the bundled dictionary, so they're not stored).
+let DB=null,COL=null,syncState="local",synced=new Map(),syncT=null,syncing=false,syncAgain=false;
+const strip=w=>{const {senses,say,...rest}=w;return rest};
+const metaOf=()=>({v:4,books:S.books,active:S.active,prefs:S.prefs,readDays:S.readDays||[],lastActive:S.lastActive||0});
+function scheduleSync(){if(!COL)return;clearTimeout(syncT);syncT=setTimeout(runSync,900)}
+async function runSync(){
+  if(!COL)return;if(syncing){syncAgain=true;return}syncing=true;
+  try{
+    const want=new Map([["meta",JSON.stringify(metaOf())],...S.words.map(w=>["w_"+w.id,JSON.stringify(strip(w))])]);
+    const jobs=[];
+    for(const [id,json] of want)if(synced.get(id)!==json)jobs.push(async()=>{await COL.doc(id).set(JSON.parse(json));synced.set(id,json)});
+    for(const id of [...synced.keys()])if(!want.has(id))jobs.push(async()=>{await COL.doc(id).delete();synced.delete(id)});
+    // a few at a time, so a big import never trips the rate limit
+    for(let i=0;i<jobs.length;i+=4)await Promise.all(jobs.slice(i,i+4).map(j=>j().catch(async e=>{if(e?.code==="unavailable"){await new Promise(r=>setTimeout(r,800+Math.random()*800));return j()}throw e})));
+    setSync("account");
+  }catch(e){setSync(e?.code==="quota_exceeded"?"full":"retry")}
+  syncing=false;if(syncAgain){syncAgain=false;scheduleSync()}
+}
+function setSync(st){syncState=st;if(pageKind==="prefs"&&$("syncNote"))$("syncNote").innerHTML=syncNote()}
+function syncNote(){return({account:"Your words are kept with your Claude account. They survive every update, and appear on any device where you open this page.",
+  loading:"Connecting to your account…",retry:"Your account couldn't be reached just now. Your words are safe in this browser and will be saved to your account when it can.",
+  full:"Your account's storage for Margin is full. Save a backup file below.",local:"Your words are kept in this browser only. Sign in to Claude and open this page there to keep them with your account."})[syncState]}
+async function initAccount(){
+  const timer=setTimeout(()=>{if(syncState==="loading")setSync("retry")},10000);
+  try{
+    syncState="loading";
+    const [db,user]=await Promise.all([window.claude?.use?.("db"),window.claude?.use?.("user")]);
+    const uid=db&&user?await user.id():null;
+    if(!uid){clearTimeout(timer);setSync("local");return}
+    const col=db.collection("data/users/"+uid);
+    const meta=await col.doc("meta").get();
+    let accountEmpty=true;
+    if(meta.exists){const m0=meta.data()||{};const probe=await col.where("added",">",-1).limit(1).get();accountEmpty=!(m0.books||[]).length&&probe.empty}
+    // never let an empty account copy replace words in this browser
+    if(meta.exists&&!(accountEmpty&&S.words.length)){
+      // your account is the source of truth: load it over this browser's copy
+      const m=meta.data();const words=[];let last=-1;
+      for(;;){const q=await col.where("added",">",last).orderBy("added").limit(500).get();q.docs.forEach(d=>{if(d.id.startsWith("w_"))words.push(d.data())});if(q.size<500)break;last=q.docs[q.docs.length-1].data().added}
+      const cache=new Map(S.words.map(w=>[w.id,w]));
+      S.books=m.books||[];S.active=m.active;S.prefs={...PREFS,...(m.prefs||{})};S.readDays=m.readDays||[];S.lastActive=Math.max(S.lastActive||0,m.lastActive||0);
+      S.words=words.map(w=>{const c=cache.get(w.id);return c&&c.word===w.word&&c.senses?{...w,senses:c.senses,say:c.say}:w});
+      synced=new Map([["meta",JSON.stringify(m)],...words.map(w=>["w_"+w.id,JSON.stringify(w)])]);
+      try{localStorage.setItem("margin.v4",JSON.stringify(S))}catch(e){}
+      await Promise.all(S.words.filter(w=>!w.senses).map(hydrate));
+      COL=col;DB=db;clearTimeout(timer);setSync("account");renderHead();renderGallery();
+    }else{
+      // first time with an account: carry this browser's words up
+      COL=col;DB=db;clearTimeout(timer);if(S.words.length||S.books.length)await runSync();else setSync("account");
+    }
+  }catch(e){clearTimeout(timer);setSync("retry")}
+}
+// ===== backups: a file you keep =====
+async function saveBackup(btn){
+  const data=JSON.stringify({app:"Margin",saved:new Date().toISOString(),...metaOf(),words:S.words.map(strip)},null,1);
+  const name=`margin-${dayKey(now())}.json`;
+  try{const d=await window.claude?.use?.("downloads");if(d){await d.save({filename:name,data});btn.textContent="Saved";return}}catch(e){if(e?.code==="dismissed"||e?.code==="declined")return}
+  try{await navigator.clipboard.writeText(data);btn.textContent="Copied. Paste it into a note to keep"}catch(e){btn.textContent="Couldn't save a file here"}
+}
+async function restoreBackup(file){
+  try{const o=JSON.parse(await file.text());if(o.app!=="Margin"||!Array.isArray(o.words))throw 0;
+    S.books=o.books||[];S.active=o.active;S.prefs={...PREFS,...(o.prefs||{})};S.readDays=o.readDays||[];S.words=o.words;
+    await Promise.all(S.words.map(hydrate));save();renderHead();renderGallery();pagePrefs();hint(`Restored ${S.words.length} words.`)}
+  catch(e){hint("That file isn't a Margin backup.")}
+}
 const book=()=>S.books.find(b=>b.id===S.active&&!b.finished)||S.books.find(b=>!b.finished)||S.books.find(b=>b.id===S.active)||S.books[0];
 const byId=id=>S.words.find(w=>w.id===id);
 const $=id=>document.getElementById(id);
@@ -460,7 +525,7 @@ function pickSense(senses,context,lemma){ // simplified Lesk: overlap between yo
   const c=new Set(toks(context).filter(t=>t!==lemma.slice(0,5)));if(!c.size)return 0;
   let best=0,bs=0;senses.forEach((s,i)=>{const bag=toks(s[1]+" "+s[2].map(e=>e[0]).join(" ")+" "+s[3].join(" "));const sc=bag.filter(t=>c.has(t)).length-i*.01;if(sc>bs){bs=sc;best=i}});return best;
 }
-async function hydrate(w){if(w.senses)return;const e=await findEntry(w.word);if(e){w.word=e.lemma;w.say=e.say;w.senses=e.senses;w.pick=pickSense(e.senses,w.context,e.lemma)}else w.senses=[]}
+async function hydrate(w){if(w.senses)return;const e=await findEntry(w.word);if(e){w.word=e.lemma;w.say=e.say;w.senses=e.senses;w.pick=Number.isInteger(w.pick)&&w.pick>0&&w.pick<e.senses.length?w.pick:pickSense(e.senses,w.context,e.lemma)}else w.senses=[]}
 
 // ===== the leaf =====
 const POSN={n:"noun",v:"verb",adj:"adjective",adv:"adverb"};
@@ -937,6 +1002,8 @@ function pagePrefs(){
     ${canSpeak?`<div class="p"><div><b>Voice</b><span>${voices.length?"Used when you tap a pronunciation. Voices marked Enhanced or Premium sound most natural.":"Your device hasn't offered any voices yet."} On iPhone and iPad you can download better ones in Settings › Accessibility › Spoken Content › Voices › English.</span>
       ${voices.length?`<select id="voiceSel" class="voicesel" aria-label="Voice">${rankedVoices().map(v=>`<option value="${esc(v.name)}" ${chosenVoice()?.name===v.name?"selected":""}>${esc(v.name)} · ${esc(v.lang)}</option>`).join("")}</select>`:""}</div>
       <button data-act="trysay" aria-label="Hear the voice">Hear it</button></div>`:""}
+    <div class="p"><div><b>Your words</b><span id="syncNote">${syncNote()}</span></div></div>
+    <div class="p"><div><b>Backup</b><span>A file with every book and word, to keep wherever you like. You can restore from it here.</span></div><span style="display:flex;flex-direction:column;align-items:flex-end"><button data-act="backup">Save</button><label class="txtbtn dim" style="display:flex;align-items:center;cursor:pointer">Restore<input type="file" id="restoreIn" accept="application/json,.json" hidden></label></span></div>
     <div class="p"><div><b>Size of type</b><span>Larger or smaller text on the leaves.</span></div><span style="display:flex;gap:4px"><button data-act="scale" data-v="-1" aria-label="Smaller type" style="min-width:44px;text-align:center;font-size:15px;letter-spacing:0;text-transform:none">A</button><button data-act="scale" data-v="1" aria-label="Larger type" style="min-width:44px;text-align:center;font-size:22px;letter-spacing:0;text-transform:none">A</button></span></div>
    </div><div class="center" style="margin-top:30px"><button class="txtbtn dim" data-act="erase">Start over</button></div>`,"prefs");
 }
@@ -980,8 +1047,9 @@ document.addEventListener("click",async e=>{
    case"switchbook":S.active=id;save();bookQ="";return pageBook(id);
    case"viewbook":bookQ="";return pageBook(id);
    case"goto":return renderGallery(id,true);
+   case"backup":return saveBackup(t);
    case"bookmore":{const m=$("bookMore");m.hidden=!m.hidden;t.setAttribute("aria-expanded",String(!m.hidden));t.textContent=m.hidden?"More":"Less";return}
-   case"erase":if(t.dataset.armed!=="1"){t.dataset.armed="1";t.textContent="Tap again to erase every book and word";return}try{localStorage.removeItem("margin.v4")}catch(err){}S={v:4,books:[],active:null,words:[],prefs:{...PREFS},lastActive:0};save();closePage();renderHead();renderGallery();return;
+   case"erase":if(t.dataset.armed!=="1"){t.dataset.armed="1";t.textContent="Tap again to erase every book and word";return}try{localStorage.removeItem("margin.v4")}catch(err){}S={v:4,books:[],active:null,words:[],prefs:{...PREFS},lastActive:0};save();runSync();closePage();renderHead();renderGallery();return;
    case"year":return pageYear(+t.dataset.v);
    case"fav":{const w=byId(id);w.fav=!w.fav;
      save();
@@ -1013,7 +1081,7 @@ document.addEventListener("submit",e=>{
     closePage();renderHead();renderGallery();$("q").focus();return}
 });
 document.addEventListener("input",e=>{if(e.target.id==="libq"){libQ=e.target.value;$("libResults").innerHTML=libQ.trim()?libResults():"";$("libShelves").hidden=!!libQ.trim()}if(e.target.id==="idxq"){idxQ=e.target.value;pageIndex()}if(e.target.id==="bookq"){bookQ=e.target.value;$("bookBody").innerHTML=bookBody()}if(e.target.id==="imp"){clearTimeout(suggT);suggT=setTimeout(previewImport,150)}});
-document.addEventListener("change",e=>{if(e.target.id==="voiceSel"){S.prefs.voice=e.target.value;save();speak("lugubrious")}if(e.target.id==="impMulti")previewImport()});
+document.addEventListener("change",e=>{if(e.target.id==="restoreIn"&&e.target.files[0])restoreBackup(e.target.files[0]);if(e.target.id==="voiceSel"){S.prefs.voice=e.target.value;save();speak("lugubrious")}if(e.target.id==="impMulti")previewImport()});
 // the margin: write right where the note lives; saved as you write, nothing to confirm
 const fit=t=>{t.style.height="auto";t.style.height=t.scrollHeight+"px"};
 document.addEventListener("input",e=>{if(e.target.classList?.contains("notearea")){fit(e.target);const w=byId(e.target.dataset.id);if(w){w.note=e.target.value.trim();save()}}});
@@ -1045,5 +1113,6 @@ $("gallery").addEventListener("touchmove",e=>{if(e.touches.length===2&&pinch0&&d
   if(pending.length){await Promise.all(pending.map(hydrate));save();renderGallery();renderHead()}
   if(!$("slip").classList.contains("on")&&matchMedia("(hover:hover)").matches)$("q").focus();
   touch();
+  initAccount();
 })();
 </script>
