@@ -197,6 +197,55 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .endlist .w{font-family:var(--f-display);font-weight:600;font-size:24px;transition:color 2.4s var(--ease)}
 .endlist .n{font-style:italic;color:var(--graphite);font-size:15px;text-align:right}
 .missing-sugg button{font-family:var(--f-display);font-style:italic;font-size:22px;color:var(--accent);margin:0 8px;min-height:44px}
+/* book page: shelf strip, search, sort */
+.strip{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;margin:0 0 24px;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.spine{flex-shrink:0;font-family:var(--f-display);font-style:italic;font-size:18px;padding:4px 14px;border:1px solid var(--rule);border-radius:2px;color:var(--ink-2);min-height:42px;background:var(--leaf)}
+.spine span{font-style:normal;font-family:var(--f-text);font-size:13px;color:var(--graphite);margin-left:8px;font-variant-numeric:lining-nums}
+.spine.cur{border-color:var(--ink-2);color:var(--ink)}
+.spine.add{border-style:dashed;color:var(--accent);background:none}
+.bookbar{display:flex;gap:4px 14px;align-items:flex-end;flex-wrap:wrap;margin-bottom:4px}
+.bookbar .search{flex:1 1 200px;width:auto;margin:0}
+.sortby{display:flex}
+.sortby button,.folio{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--graphite);min-height:40px;padding:0 6px}
+.sortby button[aria-pressed="true"]{color:var(--accent)}
+.bk-e .also{display:block;font-size:14px;color:var(--accent);font-style:italic;margin-top:2px}
+.foot .folio{letter-spacing:0;text-transform:none;font-size:14px;padding:0}
+.foot .folio:hover{color:var(--ink)}
+.multi{display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-style:italic;color:var(--ink-2);font-size:16px;cursor:pointer}
+.multi input{margin-top:6px;accent-color:var(--accent)}
+.preview{margin-top:18px;text-align:left}
+.preview li{padding:4px 0}
+.preview ul{margin:6px 0 0;padding-left:20px;color:var(--ink-2)}
+/* patterns */
+.sect{margin:38px 0 0}
+.sect h2{font-family:var(--f-display);font-weight:500;font-size:27px;margin:0 0 2px}
+.sect .lede{color:var(--ink-2);font-style:italic;margin:0 0 14px;font-size:16px}
+.hbars{display:grid;gap:8px}
+.hb{display:grid;grid-template-columns:minmax(0,10em) 1fr 2.6em;gap:12px;align-items:center;font-size:16px;width:100%;text-align:left}
+.hb .l{font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hb .track{height:10px}
+.hb .track i{display:block;height:100%;background:var(--accent);border-radius:0 4px 4px 0;min-width:3px}
+.hb .v{text-align:right;color:var(--ink-2);font-variant-numeric:lining-nums tabular-nums}
+button.hb:hover .l{color:var(--accent)}
+.colchart{position:relative;padding-top:30px}
+.cols{display:flex;align-items:flex-end;gap:2px;height:120px;border-bottom:1px solid var(--rule)}
+.col{flex:1;height:100%;display:flex;align-items:flex-end}
+.col i{display:block;width:100%;background:var(--accent);border-radius:4px 4px 0 0}
+.col:hover i,.col.on i{opacity:.75}
+.mlabels{display:flex;gap:2px;margin-top:4px}
+.mlabels span{flex:1;text-align:center;font-size:12px;color:var(--graphite);font-variant-numeric:lining-nums}
+.tipx{position:absolute;top:0;transform:translateX(-50%);font-size:14px;color:var(--ink);background:var(--leaf);padding:2px 8px;border:1px solid var(--rule);border-radius:3px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s}
+.tipx.on{opacity:1}
+.inks{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px;text-align:center}
+.inks b{display:block;font-family:var(--f-display);font-size:30px;font-weight:600;line-height:1.2}
+.inks span{display:block;font-size:15px;color:var(--ink-2);font-variant-numeric:lining-nums}
+.inks small{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--graphite)}
+.olist .bk-e{padding:7px 0;border-bottom:1px solid var(--rule)}
+.theme{padding:8px 0;border-bottom:1px solid var(--rule);font-size:16px;color:var(--ink-2)}
+.theme b{font-family:var(--f-display);font-size:21px;font-weight:600;color:var(--ink);margin-right:8px}
+.theme button{font-style:italic;color:var(--ink-2);min-height:32px}
+.theme button:hover{color:var(--accent)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
 @media (min-width:900px){.gallery{gap:28px}.leaf{padding:32px 38px 16px}}
 </style>
@@ -244,11 +293,15 @@ const $=id=>document.getElementById(id);
 const lastVisit=S.lastActive;
 const touch=()=>{S.lastActive=now();save()};
 const usable=w=>w&&w.senses&&w.senses.length;
+const inBook=(w,b)=>!!b&&(w.bookId===b.id||(w.echoes||[]).some(e=>e.bookId===b.id));
+const booksOf=w=>[...new Set([w.bookId,...(w.echoes||[]).map(e=>e.bookId)])].filter(id=>S.books.some(b=>b.id===id));
+const entryIn=(w,b)=>w.bookId===b.id?{at:w.added,imported:!!w.imported}:(w.echoes||[]).find(e=>e.bookId===b.id)||{at:w.added};
+const titleOf=id=>S.books.find(b=>b.id===id)?.title||"";
 
 // ===== reading sessions: grouped by time, so you never note a chapter or page =====
-function sessions(ws){
-  const sorted=[...ws].sort((a,b)=>a.added-b.added);const out=[];
-  for(const w of sorted){const last=out[out.length-1];if(last&&w.added-last.end<SESSION_GAP){last.words.push(w);last.end=w.added}else out.push({start:w.added,end:w.added,words:[w]})}
+function sessions(ws,at=w=>w.added){
+  const sorted=[...ws].sort((a,b)=>at(a)-at(b));const out=[];
+  for(const w of sorted){const t=at(w),last=out[out.length-1];if(last&&t-last.end<SESSION_GAP){last.words.push(w);last.end=t}else out.push({start:t,end:t,words:[w]})}
   return out;
 }
 function sessionLabel(t){
@@ -299,11 +352,11 @@ function noteHTML(w){
   return w.note?`<button class="margin-note hand" data-act="note" data-id="${w.id}" style="text-align:left" aria-label="Edit your note">${esc(w.note)}</button>`:`<button class="addnote" data-act="note" data-id="${w.id}">+ a note in the margin</button>`;
 }
 function leafHTML(w,i,n,fresh){
-  const foot=`<div class="foot"><span class="folio">${n>1?`${i+1} of ${n}`:""}</span><span class="acts">${usable(w)?`<button data-act="known" data-id="${w.id}">${w.known?"Keep":"Known"}</button>`:""}<button data-act="del" data-id="${w.id}">Remove</button></span></div>`;
+  const foot=`<div class="foot">${n>1?`<button class="folio" data-go="book" title="All of this book's words">${i+1} of ${n}</button>`:"<span></span>"}<span class="acts">${usable(w)?`<button data-act="known" data-id="${w.id}">${w.known?"Keep":"Known"}</button>`:""}<button data-act="del" data-id="${w.id}">Remove</button></span></div>`;
   const rh=`<div class="rh"><span class="sc">${esc(sessionLabel(w.added))}</span></div>`;
   if(!w.senses)return `<article class="leaf" data-id="${w.id}">${rh}<h2 class="hw">${esc(w.word)}</h2></article>`;
   if(!w.senses.length)return `<article class="leaf" data-id="${w.id}">${rh}<h2 class="hw" style="color:var(--graphite)">${esc(w.word)}</h2><p class="gist">Not in this dictionary.</p>${foot}</article>`;
-  const s=w.senses[w.pick]||w.senses[0];const q=quoteFor(w),plainEx=!w.context&&s[2].find(e=>!e[1]),echo=(w.echoes||[]).slice(-1)[0];
+  const s=w.senses[w.pick]||w.senses[0];const q=quoteFor(w),plainEx=!w.context&&s[2].find(e=>!e[1]),echo=(w.echoes||[]).filter(e=>!e.imported).slice(-1)[0],also=booksOf(w).filter(id=>id!==S.active);
   return `<article class="leaf${fresh?" fresh":""}" data-id="${w.id}" style="--hwc:${inkColor(w)}">
    <div class="set">
     ${rh}
@@ -314,6 +367,7 @@ function leafHTML(w,i,n,fresh){
     ${s[3].length?`<p class="kin">Kindred: ${s[3].map(k=>`<i>${esc(k.replace(/-/g," "))}</i>`).join(", ")}</p>`:""}
     ${noteHTML(w)}
     ${(w.owns||[]).length?`<div class="owns"><span class="sc">In your hand</span>${w.owns.map(o=>`<span class="hand">${esc(o)}</span>`).join("")}</div>`:""}
+    ${also.length?`<p class="echo">Also in ${also.map(id=>`<i>${esc(titleOf(id))}</i>`).join(", ")}.</p>`:""}
     ${echo?`<p class="echo">You looked this up again ${esc(sessionLabel(echo.at).toLowerCase())}. It will come back to you sooner.</p>`:""}
     ${q?`<p class="quote">“${esc(q[0])}”<span class="by">${esc(q[1])}</span></p>`:""}
     ${w.senses.length>1?`<details class="senses"><summary>${w.senses.length-1} other sense${w.senses.length>2?"s":""}</summary><ol>${w.senses.map((x,k)=>`<li class="${k===w.pick?"on":""}"><button data-act="sense" data-id="${w.id}" data-k="${k}" title="Use this sense"><i>${x[0]}.</i> ${esc(x[1])}</button></li>`).join("")}</ol></details>`:""}
@@ -329,7 +383,7 @@ function renderGallery(focusId,arrive){
   observer?.disconnect();
   observer=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle("cur",e.intersectionRatio>.6)),{root:g,threshold:[.6]});
   g.querySelectorAll(".leaf").forEach(l=>observer.observe(l));
-  const target=g.querySelector(`[data-id="${focusId||(ws.length?ws[ws.length-1].id:"blank")}"]`);
+  const target=(focusId&&g.querySelector(`[data-id="${focusId}"]`))||g.querySelector(`[data-id="${ws.length?ws[ws.length-1].id:"blank"}"]`);
   if(target){g.style.scrollSnapType="none";target.scrollIntoView({behavior:"instant",inline:"center",block:"nearest"});g.style.scrollSnapType="";if(arrive)target.animate?.([{transform:"translateY(10px)",opacity:.3},{transform:"none",opacity:1}],{duration:600,easing:"cubic-bezier(.22,.61,.36,1)"})}
   freshId=null;
   if(noting){const t=g.querySelector(".notearea");if(t){t.focus({preventScroll:true});t.setSelectionRange(t.value.length,t.value.length)}}
@@ -407,7 +461,7 @@ const dueWords=()=>S.words.filter(w=>!w.known&&usable(w)&&w.due<=now());
 function schedule(w,q){ // q: 2 clear, 1 hazy, 0 forgot
   if(q===2){w.strength=Math.min(5,w.strength+1);w.due=now()+Math.max(1,INTERVALS[w.strength])*DAY}
   else if(q===1)w.due=now()+DAY;
-  else{w.strength=Math.max(0,w.strength-1);w.due=now()+HOUR}
+  else{w.strength=Math.max(0,w.strength-1);w.due=now()+HOUR;w.lapses=(w.lapses||0)+1}
   w.lastSeen=now();save();
 }
 const wordRe=w=>new RegExp(`\\b${w.word.slice(0,Math.max(4,w.word.length-2))}[a-z]*`,"i");
@@ -431,9 +485,9 @@ function makeCard(w,forced){
   return c;
 }
 let rv=null;
-function startRevisit(){
-  let pool=dueWords().sort((a,b)=>a.due-b.due);
-  if(pool.length<4)pool=pool.concat(S.words.filter(w=>!w.known&&usable(w)&&!pool.includes(w)).sort((a,b)=>(a.lastSeen||0)-(b.lastSeen||0)||a.strength-b.strength)).slice(0,4);
+function startRevisit(ids){
+  let pool=Array.isArray(ids)?ids.map(byId).filter(usable):dueWords().sort((a,b)=>a.due-b.due);
+  if(!Array.isArray(ids)&&pool.length<4)pool=pool.concat(S.words.filter(w=>!w.known&&usable(w)&&!pool.includes(w)).sort((a,b)=>(a.lastSeen||0)-(b.lastSeen||0)||a.strength-b.strength)).slice(0,4);
   pool=pool.slice(0,7).sort(()=>Math.random()-.5);
   if(!pool.length){openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Revisit</h1><div class="orn-c">⁂</div><p class="psub">Nothing to revisit yet. Words come back here a day after you meet them.</p>`,"revisit");return}
   rv={cards:pool.map(w=>makeCard(w)),i:0,before:Object.fromEntries(pool.map(w=>[w.id,w.strength])),retried:new Set()};drawRv();
@@ -499,23 +553,43 @@ function pageContents(){
    <h1 class="ptitle">Contents</h1><p class="psub">${esc(b.title)}${b.author?", "+esc(b.author):""}</p>
    <ul class="toc">
     <li><button data-close><span class="tn">The Gallery</span><span class="lead"></span><span class="tv">${galleryWords().length} leaves</span></button></li>
-    <li><button data-go="book"><span class="tn">This Book's Words</span><span class="lead"></span><span class="tv">${S.words.filter(w=>w.bookId===b.id).length} words</span></button></li>
+    <li><button data-go="book"><span class="tn">This Book's Words</span><span class="lead"></span><span class="tv">${S.words.filter(w=>inBook(w,b)).length} words</span></button></li>
     <li><button data-go="revisit"><span class="tn">Revisit</span><span class="lead"></span><span class="tv">${due?due+" ready":"a quiet round"}</span></button></li>
     <li><button data-go="index"><span class="tn">Index</span><span class="lead"></span><span class="tv">every book</span></button></li>
+    <li><button data-go="patterns"><span class="tn">Patterns</span><span class="lead"></span><span class="tv">across your books</span></button></li>
     <li><button data-go="shelf"><span class="tn">The Shelf</span><span class="lead"></span><span class="tv">${S.books.length} book${S.books.length>1?"s":""}</span></button></li>
     <li><button data-go="prefs"><span class="tn">Preferences</span><span class="lead"></span><span class="tv">how it behaves</span></button></li>
     <li><span><span class="tn">The Writing Desk</span><span class="lead"></span><span class="tv">in a later edition</span></span></li>
    </ul><div class="orn-c">❦</div>
    <p class="psub" style="font-size:15px">Definitions from WordNet, Princeton University. Pronunciations from the CMU Pronouncing Dictionary.${S.words.some(w=>w.sample)?`<br>The Middlemarch words are examples. <button class="txtbtn" data-act="reset" style="font-size:inherit;letter-spacing:0;text-transform:none;text-decoration:underline;min-height:0">Begin with an empty margin</button>`:""}</p>`,"contents");
 }
+let bookQ="",bookSort="sitting",removeArmed=false;
+function shelfStrip(){return `<div class="strip" aria-label="Your books">${S.books.map(b=>`<button class="spine${b.id===S.active?" cur":""}" data-act="switchbook" data-id="${b.id}" aria-current="${b.id===S.active}">${esc(b.title)}<span>${S.words.filter(w=>inBook(w,b)).length}</span></button>`).join("")}<button class="spine add" data-go="shelf">+ a book</button></div>`}
+function bookEntry(w){const x=w.senses[w.pick];const also=booksOf(w).filter(id=>id!==S.active);return `<button class="bk-e" data-act="open" data-id="${w.id}"><span class="w" style="color:${inkColor(w)}">${esc(w.word)}</span> <i>${x[0]}.</i> ${esc(x[1])}.${w.context?`<span class="c">${markWord(w.context,w)}</span>`:""}${w.note?`<span class="hand">${esc(w.note)}</span>`:""}${also.length?`<span class="also">also in ${also.map(id=>esc(titleOf(id))).join(", ")}</span>`:""}</button>`}
+function bookBody(){
+  const b=book(),q=bookQ.toLowerCase().trim();
+  const ws=S.words.filter(w=>inBook(w,b)&&usable(w)&&(!q||w.word.includes(q)||w.senses[w.pick][1].includes(q)||(w.note||"").toLowerCase().includes(q)));
+  if(!ws.length)return `<p class="psub" style="margin-top:24px">${q?"Nothing in this book matches.":"The words you meet in this book will gather here, sitting by sitting."}</p>`;
+  if(bookSort==="az"){const g={};ws.sort((a,c)=>a.word.localeCompare(c.word)).forEach(w=>(g[w.word[0].toUpperCase()]??=[]).push(w));return `<div class="idx">`+Object.keys(g).map(L=>`<h3>${L}</h3>`+g[L].map(bookEntry).join("")).join("")+`</div>`}
+  return sessions(ws,w=>entryIn(w,b).at).reverse().map(s=>`<p class="sc sess">${s.words.every(w=>entryIn(w,b).imported)?"From your notes":esc(sessionLabel(s.start))}</p>`+s.words.map(bookEntry).join("")).join("");
+}
 function pageBook(){
-  const b=book();const ws=S.words.filter(w=>w.bookId===b.id&&usable(w));
-  const ss=sessions(ws).reverse();
-  openPage(`<button class="close" data-close>Return to the book</button>
-   <h1 class="ptitle" style="font-style:italic">${esc(b.title)}</h1><p class="psub">${b.author?esc(b.author)+" · ":""}${ws.length} word${ws.length===1?"":"s"}</p>
-   ${ss.map(s=>`<p class="sc sess">${esc(sessionLabel(s.start))}</p>`+s.words.map(w=>{const x=w.senses[w.pick];return `<button class="bk-e" data-act="open" data-id="${w.id}"><span class="w" style="color:${inkColor(w)}">${esc(w.word)}</span> <i>${x[0]}.</i> ${esc(x[1])}.${w.context?`<span class="c">${markWord(w.context,w)}</span>`:""}${w.note?`<span class="hand">${esc(w.note)}</span>`:""}</button>`}).join("")).join("")||`<p class="psub">The words you meet in this book will gather here, sitting by sitting.</p>`}
-   <div class="orn-c">❦</div><div class="center">${ws.length?`<button class="txtbtn" data-act="copylist">Copy as a list</button>`:""}<button class="txtbtn dim" data-go="shelf">Another book</button></div>
+  const b=book();const n=S.words.filter(w=>inBook(w,b)&&usable(w)).length;removeArmed=false;
+  openPage(`<button class="close" data-close>Return to the book</button>${shelfStrip()}
+   <h1 class="ptitle" style="font-style:italic">${esc(b.title)}</h1><p class="psub">${b.author?esc(b.author)+" · ":""}${n} word${n===1?"":"s"}</p>
+   ${n>8?`<div class="bookbar"><input class="search" id="bookq" placeholder="find a word in this book" value="${esc(bookQ)}" aria-label="Find a word in this book" autocapitalize="off"><span class="sortby"><button data-act="sort" data-v="sitting" aria-pressed="${bookSort==="sitting"}">By sitting</button><button data-act="sort" data-v="az" aria-pressed="${bookSort==="az"}">A–Z</button></span></div>`:""}
+   <div id="bookBody">${bookBody()}</div>
+   <div class="orn-c">❦</div><div class="center">${n?`<button class="txtbtn" data-act="copylist">Copy as a list</button>`:""}<button class="txtbtn dim" data-go="import">Bring in from Notes</button>${S.books.length>1?`<button class="txtbtn dim" data-act="removebook">Remove this book</button>`:""}</div>
    <textarea id="copyArea" class="paste" style="display:none;min-height:140px;margin-top:12px" readonly aria-label="The list"></textarea>`,"book");
+  document.querySelector(".spine.cur")?.scrollIntoView({inline:"center",block:"nearest",behavior:"instant"});
+}
+function removeBook(){
+  const b=book();
+  for(const w of [...S.words]){
+    if(w.bookId===b.id){const other=(w.echoes||[]).find(e=>e.bookId!==b.id);if(other){w.bookId=other.bookId;w.echoes=w.echoes.filter(e=>e!==other&&e.bookId!==b.id)}else S.words.splice(S.words.indexOf(w),1)}
+    else if(w.echoes)w.echoes=w.echoes.filter(e=>e.bookId!==b.id);
+  }
+  S.books=S.books.filter(x=>x.id!==b.id);S.active=S.books[0].id;save();bookQ="";pageBook();
 }
 let idxQ="";
 function pageIndex(){
@@ -528,34 +602,121 @@ function pageIndex(){
 }
 function pageShelf(){
   openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">The Shelf</h1><p class="psub">Choose the book you're reading.</p>
-   <div class="shelf">${S.books.map(b=>`<button class="b${b.id===S.active?" cur":""}" data-act="setbook" data-id="${b.id}"><span class="t">${esc(b.title)}</span><span class="n">${S.words.filter(w=>w.bookId===b.id).length} words</span></button>`).join("")}</div>
+   <div class="shelf">${S.books.map(b=>`<button class="b${b.id===S.active?" cur":""}" data-act="setbook" data-id="${b.id}"><span class="t">${esc(b.title)}</span><span class="n">${S.words.filter(w=>inBook(w,b)).length} words</span></button>`).join("")}</div>
    <form class="field" id="nb" autocomplete="off"><input id="nbt" placeholder="a new book's title" aria-label="Title" required><button class="txtbtn">Place on shelf</button></form>
-   <div class="orn-c">❦</div><div class="center"><button class="txtbtn" data-go="import">Bring in a list from Notes</button></div>`,"shelf");
+   <div class="orn-c">❦</div><div class="center"><button class="txtbtn" data-go="import">Bring in from Notes</button><button class="txtbtn dim" data-go="patterns">Patterns</button></div>`,"shelf");
 }
+// ----- importing from Notes -----
+const isHeading=l=>/^\s*#{1,6}\s+\S/.test(l), isRule=l=>/^\s*(-{3,}|={3,}|\*{3,}|_{3,})\s*$/.test(l);
+const stripBullet=l=>l.replace(/^\s*(?:[-*•–—+◦▪]\s*)?(?:\[[ xX]?\]|[☐☑✓✔])?\s*(?:\d+[.)]\s*)?/,"").trim();
+function lineWords(l){
+  let t=stripBullet(l).split(/\s+[-–—]\s+|\s*[:=(]\s*|\s+[–—]/)[0].trim();
+  const parts=t.includes(",")?t.split(",").map(x=>x.trim()):[t];
+  return parts.filter(x=>x&&x.split(/\s+/).length<=3&&x.length<=40);
+}
+function parseNotes(text,multi){
+  const blocks=[];let cur=null,expectTitle=true;const explicit=text.split(/\r?\n/).some(l=>isHeading(l)||isRule(l));
+  for(const raw of text.split(/\r?\n/)){
+    if(explicit&&isHeading(raw)){cur={title:raw.replace(/^\s*#+\s*/,"").trim(),words:[]};blocks.push(cur);expectTitle=false;continue}
+    if(explicit&&isRule(raw)){expectTitle=true;continue}
+    if(!raw.trim()){if(multi&&cur&&cur.words.length)expectTitle=true;continue}
+    if(!cur||expectTitle){cur={title:stripBullet(raw),words:[]};blocks.push(cur);expectTitle=false;continue}
+    for(const w of lineWords(raw))if(!cur.words.some(x=>x.toLowerCase()===w.toLowerCase()))cur.words.push(w);
+  }
+  return blocks.filter(b=>b.title&&b.words.length);
+}
+let impBlocks=[];
 function pageImport(){
+  impBlocks=[];
   openPage(`<button class="close" data-go="shelf">Back to the shelf</button><h1 class="ptitle">From your notes</h1>
-   <p class="psub">Paste a note the way you keep them: the book's title on the first line, then one word per line. Anything after a dash is ignored.</p>
+   <p class="psub">In Notes, open a book's note, Select All, Copy, and paste it here. The title goes on the first line, one word per line. Bullets, numbers and anything after a dash are ignored.</p>
    <textarea class="paste" id="imp" aria-label="Your note" placeholder="The Remains of the Day&#10;banter&#10;dignity&#10;indiscretion"></textarea>
-   <div class="center" style="margin-top:10px"><button class="txtbtn" data-act="doimport">Set these words</button></div><p class="psub" id="impMsg" style="margin-top:14px"></p>`,"import");
+   <label class="multi"><input type="checkbox" id="impMulti"> <span>Several notes in one paste. Each one starts with its title, after an empty line.</span></label>
+   <div id="impMsg" class="preview"></div>`,"import");
   setTimeout(()=>$("imp")?.focus(),400);
 }
-async function doImport(){
-  const lines=$("imp").value.split(/\r?\n/).map(l=>l.replace(/^\s*(?:[-*•–—]|\d+[.)])\s*/,"").replace(/^#+\s*/,"").trim()).filter(Boolean);
-  if(lines.length<2){$("impMsg").textContent="Put the book's title on the first line and at least one word below it.";return}
-  const title=lines[0];let b=S.books.find(x=>x.title.toLowerCase()===title.toLowerCase());
-  if(!b){b={id:uid(),title,author:""};S.books.push(b)}
-  $("impMsg").textContent="Setting the words…";
-  const missed=[];let n=0,t=now()-lines.length*MIN;
-  for(const raw of lines.slice(1)){
-    const word=raw.split(/\s+[-–—]\s+|\s*[:=]\s*/)[0].trim();const e=await findEntry(word);
-    if(!e){missed.push(word);continue}
-    if(S.words.some(w=>w.word===e.lemma&&w.bookId===b.id))continue;
-    S.words.push({id:uid(),bookId:b.id,word:e.lemma,typed:clean(word),say:e.say,senses:e.senses,pick:0,context:"",strength:0,added:t+=MIN,due:now()+DAY,known:false,echoes:[],note:"",owns:[]});n++;
-  }
-  S.active=b.id;save();
-  const fixes=[];for(const m of missed){const f=(await fuzzy(clean(m),1))[0];fixes.push([m,f])}
-  $("impMsg").innerHTML=`${n} word${n===1?"":"s"} set in <i>${esc(b.title)}</i>.${fixes.length?`<br>${fixes.map(([m,f])=>f?`<span style="display:inline-block">“${esc(m)}” — did you mean <button class="txtbtn" style="letter-spacing:0;text-transform:none;font-size:18px;font-style:italic;min-height:36px" data-act="impfix" data-w="${esc(f)}">${esc(f)}</button>?</span>`:`“${esc(m)}” isn't in the dictionary.`).join("<br>")}`:""}<br><button class="txtbtn" data-close>Open the book</button>`;
+function previewImport(){
+  impBlocks=parseNotes($("imp").value,$("impMulti").checked);
+  const total=impBlocks.reduce((a,b)=>a+b.words.length,0);
+  $("impMsg").innerHTML=!impBlocks.length?"":`<p class="sc">Ready to set</p><ul>${impBlocks.map(b=>`<li><i>${esc(b.title)}</i> · ${b.words.length} word${b.words.length===1?"":"s"}${S.books.some(x=>x.title.toLowerCase()===b.title.toLowerCase())?" · adds to the book on your shelf":""}</li>`).join("")}</ul>
+    <div class="center" style="margin-top:12px"><button class="txtbtn" data-act="doimport">Set ${total} word${total===1?"":"s"}${impBlocks.length>1?` in ${impBlocks.length} books`:""}</button></div>`;
 }
+async function doImport(){
+  const blocks=impBlocks;if(!blocks.length)return;const msg=$("impMsg");
+  const missed=[];let made=0,overlap=0,k=0;const total=blocks.reduce((a,b)=>a+b.words.length,0);let lastBook=null;
+  for(const blk of blocks){
+    let b=S.books.find(x=>x.title.toLowerCase()===blk.title.toLowerCase());
+    if(!b){b={id:uid(),title:blk.title,author:""};S.books.push(b)}lastBook=b;
+    let t=now()-blk.words.length*MIN;
+    for(const word of blk.words){
+      k++;if(k%15===0)msg.innerHTML=`<p class="psub">Setting ${k} of ${total}…</p>`;
+      const e=await findEntry(word);
+      if(!e){missed.push([word,b.id]);continue}
+      const ex=S.words.find(w=>w.word===e.lemma);
+      if(ex){if(!inBook(ex,b)){(ex.echoes||=[]).push({bookId:b.id,at:now(),imported:true});overlap++}continue}
+      // spread first returns over the coming days, about eight a day, so Revisit never floods
+      S.words.push({id:uid(),bookId:b.id,word:e.lemma,typed:clean(word),say:e.say,senses:e.senses,pick:0,context:"",strength:0,added:t+=MIN,due:now()+DAY*(1+Math.floor(made/8)),known:false,echoes:[],note:"",owns:[],imported:true});made++;
+    }
+  }
+  if(blocks.length===1)S.active=lastBook.id;save();
+  const fixes=[];for(const [m,bid] of missed){fixes.push([m,(await fuzzy(clean(m),1))[0],bid])}
+  msg.innerHTML=`<p class="psub" style="margin-bottom:10px">${made} word${made===1?"":"s"} set${blocks.length>1?` across ${blocks.length} books`:` in <i>${esc(blocks[0].title)}</i>`}.${overlap?`<br>${overlap} ${overlap===1?"was":"were"} already in another of your books. Patterns shows them together.`:""}<br>They'll come back in Revisit a few at a time over the next ${Math.max(1,Math.ceil(made/8))} day${made>8?"s":""}.</p>
+   ${fixes.length?`<p class="sc">Not found</p><ul>${fixes.map(([m,f,bid])=>`<li>“${esc(m)}”${f?` — did you mean <button class="txtbtn" style="letter-spacing:0;text-transform:none;font-size:18px;font-style:italic;min-height:36px" data-act="impfix" data-w="${esc(f)}" data-b="${bid}">${esc(f)}</button>?`:" isn't in the dictionary."}</li>`).join("")}</ul>`:""}
+   <div class="center" style="margin-top:12px">${overlap?`<button class="txtbtn" data-go="patterns">See patterns</button>`:""}<button class="txtbtn" data-act="importmore">Bring in another</button><button class="txtbtn dim" data-close>Open the book</button></div>`;
+}
+// ----- patterns across books -----
+const GENERIC=new Set("characterized having quality state something someone person being manner especially often made make given showing lacking without full marked tending inclined relating associated used become cause causing condition great much more less other another very extremely excessively especially small large small high having into kind form ones thing things act action time place part make makes giving give take taking little lack usually certain particular feeling".split(" "));
+function concepts(ws){
+  const m={};for(const w of ws){const d=w.senses[w.pick][1].toLowerCase().match(/[a-z]+/g)||[];
+    for(let t of new Set(d)){if(t.length<4||STOP.has(t)||GENERIC.has(t))continue;if(t.endsWith("s")&&!t.endsWith("ss"))t=t.slice(0,-1);(m[t]??=new Set()).add(w)}}
+  return Object.entries(m).filter(([,v])=>v.size>=2).sort((a,b)=>b[1].size-a[1].size).slice(0,6);
+}
+let patternIds={};
+function pagePatterns(){
+  const ws=S.words.filter(usable);
+  if(ws.length<5){openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Patterns</h1><div class="orn-c">⁂</div><p class="psub">Patterns appear once you have a few more words. Bringing in your old notes is the quickest way.</p><div class="center"><button class="txtbtn" data-go="import">Bring in from Notes</button></div>`,"patterns");return}
+  const multi=ws.filter(w=>booksOf(w).length>1).sort((a,b)=>booksOf(b).length-booksOf(a).length||a.word.localeCompare(b.word));
+  const trouble=w=>(w.lapses||0)+(w.echoes||[]).filter(e=>!e.imported).length;
+  const settling=ws.filter(w=>!w.known&&trouble(w)>0).sort((a,b)=>trouble(b)-trouble(a)).slice(0,8);
+  patternIds={multi:multi.slice(0,7).map(w=>w.id),settling:settling.slice(0,7).map(w=>w.id)};
+  const per=S.books.map(b=>[b,ws.filter(w=>inBook(w,b)).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]);const pmax=Math.max(...per.map(x=>x[1]));
+  // months: only words looked up while reading (imported words carry no real date)
+  const looked=ws.filter(w=>!w.imported);const months=[];const d0=new Date();d0.setDate(1);d0.setHours(0,0,0,0);
+  for(let i=11;i>=0;i--){const a=new Date(d0.getFullYear(),d0.getMonth()-i,1),b=new Date(d0.getFullYear(),d0.getMonth()-i+1,1);months.push({a,n:looked.filter(w=>w.added>=a.getTime()&&w.added<b.getTime()).length})}
+  const mmax=Math.max(1,...months.map(m=>m.n)),activeMonths=months.filter(m=>m.n).length,peak=months.reduce((x,y)=>y.n>x.n?y:x,months[0]);
+  const pos={};ws.forEach(w=>{const p=w.senses[w.pick][0];pos[p]=(pos[p]||0)+1});const posRows=Object.entries(pos).sort((a,b)=>b[1]-a[1]);const top=posRows[0];
+  const inks=[0,1,2,3,4,5].map(s=>ws.filter(w=>(w.known?5:Math.min(5,w.strength))===s).length);
+  const th=concepts(ws);
+  const mname=d=>d.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+  openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Patterns</h1>
+   <p class="psub">${ws.length} words across ${per.length} book${per.length===1?"":"s"}${multi.length?`. ${multi.length} of them found you in more than one.`:"."}</p>
+
+   <section class="sect"><h2>Words that keep finding you</h2>
+    ${multi.length?`<p class="lede">You met these in more than one book. They're worth knowing well: authors you read reach for them.</p><div class="olist">${multi.slice(0,12).map(bookEntryAll).join("")}</div><div class="center" style="margin-top:10px"><button class="txtbtn" data-act="revisitset" data-k="multi">Revisit these</button></div>`
+      :`<p class="lede">No word has turned up in two books yet. When one does, it will appear here.</p>`}</section>
+
+   ${settling.length?`<section class="sect"><h2>Still settling</h2><p class="lede">Words you've forgotten in Revisit or looked up more than once.</p><div class="olist">${settling.map(bookEntryAll).join("")}</div><div class="center" style="margin-top:10px"><button class="txtbtn" data-act="revisitset" data-k="settling">Revisit these</button></div></section>`:""}
+
+   <section class="sect"><h2>How settled they are</h2><p class="lede">Each word's ink darkens as it comes back to you clearly.</p>
+    <div class="inks" role="table" aria-label="Words by how well you know them">${inks.map((n,s)=>`<div role="row"><b style="color:${s===5?"var(--ink)":inkFor(s)}" aria-hidden="true">Aa</b><span role="cell">${n}</span><small>${["new","faint","light","steady","dark","inked"][s]}</small></div>`).join("")}</div></section>
+
+   <section class="sect"><h2>Words per book</h2><p class="lede">${per.length>1?`<i>${esc(per[0][0].title)}</i> has given you the most.`:"Your one book so far."}</p>
+    <div class="hbars">${per.map(([b,n])=>`<button class="hb" data-act="switchbook" data-id="${b.id}"><span class="l">${esc(b.title)}</span><span class="track"><i style="width:${n/pmax*100}%"></i></span><span class="v">${n}</span></button>`).join("")}</div></section>
+
+   <section class="sect"><h2>When you meet them</h2>
+    ${activeMonths>=2?`<p class="lede">Words looked up while reading, by month. Most in ${mname(peak.a)} (${peak.n}).</p>
+    <div class="colchart" id="cc"><span class="tipx" id="tipx"></span><div class="cols">${months.map(m=>`<div class="col" data-tip="${esc(mname(m.a))}: ${m.n} word${m.n===1?"":"s"}">${m.n?`<i style="height:${m.n/mmax*100}%"></i>`:""}</div>`).join("")}</div>
+    <div class="mlabels">${months.map(m=>`<span>${m.a.toLocaleDateString(undefined,{month:"narrow"})}</span>`).join("")}</div></div>`
+      :`<p class="lede">This fills in as you look words up over the coming months. Words brought in from Notes have no dates, so they're left out.</p>`}</section>
+
+   <section class="sect"><h2>What kind of words</h2><p class="lede">${top?`Mostly ${({n:"nouns",v:"verbs",adj:"adjectives",adv:"adverbs"})[top[0]]}: ${Math.round(top[1]/ws.length*100)}% of your words.${top[0]==="adj"?" The words that colour a description.":""}`:""}</p>
+    <div class="hbars">${posRows.map(([p,n])=>`<div class="hb"><span class="l">${({n:"nouns",v:"verbs",adj:"adjectives",adv:"adverbs"})[p]}</span><span class="track"><i style="width:${n/top[1]*100}%"></i></span><span class="v">${Math.round(n/ws.length*100)}%</span></div>`).join("")}</div></section>
+
+   ${th.length?`<section class="sect"><h2>What they're about</h2><p class="lede">Ideas that recur in your words' meanings.</p>${th.map(([t,set])=>`<div class="theme"><b>${esc(t)}</b>${[...set].slice(0,6).map(w=>`<button data-act="open" data-id="${w.id}">${esc(w.word)}</button>`).join(", ")}</div>`).join("")}</section>`:""}
+   <div class="orn-c">⁂</div>`,"patterns");
+}
+function bookEntryAll(w){const x=w.senses[w.pick];return `<button class="bk-e" data-act="open" data-id="${w.id}"><span class="w" style="color:${inkColor(w)}">${esc(w.word)}</span> <i>${x[0]}.</i> ${esc(x[1])}.<span class="also">${booksOf(w).map(id=>esc(titleOf(id))).join(" · ")}</span></button>`}
+document.addEventListener("pointerover",e=>{const c=e.target.closest?.(".col");const tip=$("tipx");if(!tip)return;if(!c){tip.classList.remove("on");return}const r=c.getBoundingClientRect(),p=$("cc").getBoundingClientRect();tip.textContent=c.dataset.tip;tip.style.left=Math.min(p.width-60,Math.max(60,r.left-p.left+r.width/2))+"px";tip.classList.add("on")});
 function pagePrefs(){
   const P=S.prefs,t=(k,b,s)=>`<div class="p"><div><b>${b}</b><span>${s}</span></div><button data-act="pref" data-k="${k}" aria-pressed="${!!P[k]}">${P[k]?"On":"Off"}</button></div>`;
   openPage(`<button class="close" data-close>Return to the book</button><h1 class="ptitle">Preferences</h1><p class="psub">Margin should be as quiet as you want it.</p>
@@ -581,7 +742,7 @@ document.addEventListener("click",async e=>{
   const t=e.target.closest("[data-go],[data-act],[data-close]");if(!t)return;
   if(t.hasAttribute("data-close")){closePage();return}
   const go=t.dataset.go;
-  if(go){closeSlip();({contents:pageContents,book:pageBook,index:pageIndex,shelf:pageShelf,prefs:pagePrefs,revisit:startRevisit,import:pageImport})[go]?.();return}
+  if(go){closeSlip();({patterns:pagePatterns,contents:pageContents,book:pageBook,index:pageIndex,shelf:pageShelf,prefs:pagePrefs,revisit:startRevisit,import:pageImport})[go]?.();return}
   const a=t.dataset.act,id=t.dataset.id;
   if(["show","rate","pickc","keep","rvnext"].includes(a))return rvAct(a,t.dataset.v);
   switch(a){
@@ -601,8 +762,13 @@ document.addEventListener("click",async e=>{
    case"pref":S.prefs[t.dataset.k]=!S.prefs[t.dataset.k];save();syncWake();return pagePrefs();
    case"scale":S.prefs.scale=Math.round(Math.min(1.3,Math.max(.9,S.prefs.scale+ +t.dataset.v*.1))*10)/10;save();renderHead();return;
    case"doimport":return doImport();
-   case"impfix":{const e2=await findEntry(t.dataset.w);if(e2&&!S.words.some(w=>w.word===e2.lemma&&w.bookId===S.active)){S.words.push({id:uid(),bookId:S.active,word:e2.lemma,typed:e2.lemma,say:e2.say,senses:e2.senses,pick:0,context:"",strength:0,added:now(),due:now()+DAY,known:false,echoes:[],note:"",owns:[]});save()}t.outerHTML=`<i>${esc(t.dataset.w)}</i>, added`;return}
-   case"copylist":{const b=book();const txt=[b.title,...S.words.filter(w=>w.bookId===b.id&&usable(w)).sort((x,y)=>x.added-y.added).map(w=>w.word)].join("\n");
+   case"importmore":return pageImport();
+   case"switchbook":S.active=id;save();bookQ="";return pageBook();
+   case"sort":bookSort=t.dataset.v;return pageBook();
+   case"removebook":if(!removeArmed){removeArmed=true;t.textContent=`Tap again to remove ${S.words.filter(w=>w.bookId===S.active).length} words`;return}return removeBook();
+   case"revisitset":return startRevisit(patternIds[t.dataset.k]||[]);
+   case"impfix":{const bid=t.dataset.b||S.active;const e2=await findEntry(t.dataset.w);if(e2&&!S.words.some(w=>w.word===e2.lemma)){S.words.push({id:uid(),bookId:bid,imported:true,word:e2.lemma,typed:e2.lemma,say:e2.say,senses:e2.senses,pick:0,context:"",strength:0,added:now(),due:now()+DAY,known:false,echoes:[],note:"",owns:[]});save()}t.outerHTML=`<i>${esc(t.dataset.w)}</i>, added`;return}
+   case"copylist":{const b=book();const txt=[b.title,...S.words.filter(w=>inBook(w,b)&&usable(w)).sort((x,y)=>x.added-y.added).map(w=>w.word)].join("\n");
      try{await navigator.clipboard.writeText(txt);t.textContent="Copied"}catch(err){const ta=$("copyArea");ta.style.display="block";ta.value=txt;ta.focus();ta.select();t.textContent="Select and copy"}return}
   }
 });
@@ -610,7 +776,8 @@ $("cap").addEventListener("submit",e=>{e.preventDefault();submitLine()});
 $("q").addEventListener("input",()=>{clearTimeout(suggT);suggT=setTimeout(updateSugg,70)});
 $("q").addEventListener("paste",e=>{const t=(e.clipboardData||window.clipboardData)?.getData("text")||"";if(words(t).length>2){e.preventDefault();$("q").value="";showChooser(t.trim().replace(/\s+/g," "));$("q").blur()}});
 document.addEventListener("submit",e=>{if(e.target.id==="nb"){e.preventDefault();const t=$("nbt").value.trim();if(!t)return;const nb={id:uid(),title:t,author:""};S.books.push(nb);S.active=nb.id;save();closePage();setTimeout(()=>$("q").focus(),300)}});
-document.addEventListener("input",e=>{if(e.target.id==="idxq"){idxQ=e.target.value;pageIndex()}});
+document.addEventListener("input",e=>{if(e.target.id==="idxq"){idxQ=e.target.value;pageIndex()}if(e.target.id==="bookq"){bookQ=e.target.value;$("bookBody").innerHTML=bookBody()}if(e.target.id==="imp"){clearTimeout(suggT);suggT=setTimeout(previewImport,150)}});
+document.addEventListener("change",e=>{if(e.target.id==="impMulti")previewImport()});
 document.addEventListener("focusout",e=>{if(e.target.classList?.contains("notearea")){const w=byId(e.target.dataset.id);if(w){w.note=e.target.value.trim();save()}noting=null;setTimeout(()=>refresh(w?.id),0)}});
 document.addEventListener("keydown",e=>{
   if(e.target.classList?.contains("notearea")&&e.key==="Enter"&&!e.shiftKey){e.preventDefault();e.target.blur();return}

@@ -80,12 +80,35 @@ Supporting mechanics:
 - **Forgiving input**: plurals and tenses map to the dictionary form, misspellings get suggestions, and pasted text is split into tappable words.
 - **Works offline and free**: the dictionary ships with the app.
 
+## 5b. Many books, many words
+
+- **Switching books**: tap the book's title (or the "4 of 120" folio on any leaf). Your books sit along the top of that page as tabs; tap one to switch. No scrolling.
+- **Long lists**: once a book has more than a handful of words, a search line and a *By sitting / A–Z* switch appear. The Index searches every book by word, meaning or note.
+- **One word, many books**: a word you meet in several books is one entry that knows all of them ("also in *Wolf Hall*, *Jane Eyre*"). It shows in each book's gallery and list, dated by when it entered that book.
+
+## 5c. Bringing in your Notes
+
+No AI needed: the format you already use (title line, then one word per line) is parsed directly and every word goes through the same offline dictionary.
+- Paste one note, or **several at once** (tick "Several notes in one paste"; each starts with its title after an empty line). `#` headings or `---` lines also separate books.
+- Bullets, numbers, checkboxes, "word – note" and "word: note" are cleaned; comma lists are split.
+- A **preview** shows each book and its word count before anything is saved. Titles matching a book on your shelf add to it.
+- Misspellings are offered a fix ("did you mean *florid*?").
+- Imported words are spread across the coming days (about eight a day) so Revisit never floods.
+
+## 5d. Patterns
+
+A page (Contents → Patterns) that looks across all your books:
+- **Words that keep finding you**: words met in more than one book, ranked by how many. Authors you read reach for them, so they're the most valuable to know well. "Revisit these" starts a round of just those words.
+- **Still settling**: words forgotten in Revisit or looked up again. These also get "Revisit these".
+- **How settled they are**: how many words sit at each shade of ink, from new to inked.
+- **Words per book**, **When you meet them** (by month, looked-up words only, since imported words have no real date), **What kind of words** (adjectives vs nouns…), and **What they're about** (ideas that recur across your words' meanings).
+
 ## 6. Screens
 
 - **Gallery** (main): leaves for this book. Each has the sitting ("Last night"), headword (ink darkens with strength), part of speech and pronunciation, meaning, your sentence with a pencil underline, kindred words, + a note in the margin, *In your hand* sentences, a literary quotation, other senses, Known and Remove.
 - **Writing line**: autocomplete with your words first. A pasted sentence becomes "Which word?"
 - **This Book's Words** (tap the title, or pinch the gallery): your note, typeset, grouped by sitting; Copy as a list.
-- **Contents** (❦): The Gallery · This Book's Words · Revisit · Index (all books, searchable by word, meaning or note) · The Shelf (books, import from Notes) · Preferences · *The Writing Desk, in a later edition*.
+- **Contents** (❦): The Gallery · This Book's Words · Revisit · Index (all books, searchable by word, meaning or note) · Patterns · The Shelf (books, import from Notes) · Preferences · *The Writing Desk, in a later edition*.
 - **Preferences**: Before I read, show last time's words · Keep the screen awake · Size of type.
 
 ## 7. Native app: removing the remaining steps
