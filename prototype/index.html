@@ -1017,7 +1017,7 @@ function pagePrefs(){
   openPage(`<button class="close" data-go="shelf">Back to the Library</button><h1 class="ptitle">Preferences</h1><p class="psub">Margin should be as quiet as you want it.</p>
    <div class="prefs">
     ${t("awake","Keep the screen awake","For when the phone lies open beside a paper book.")}
-    ${canSpeak?`<div class="p"><div><b>Voice</b><span>${voices.length?"Used when you tap a pronunciation. Voices marked Enhanced or Premium sound most natural.":"Your device hasn't offered any voices yet."} On iPhone and iPad you can download better ones in Settings › Accessibility › Spoken Content › Voices › English.</span>
+    ${canSpeak?`<div class="p"><div><b>Voice</b><span>${voices.length?"Used when you tap a pronunciation. Voices marked Enhanced or Premium sound most natural.":"Your device hasn't offered any voices yet."} On iPhone and iPad you can download better ones in Settings › Accessibility › Read & Speak › Voices › English (called Spoken Content on older iOS), then choose a Premium or Enhanced version.</span>
       ${voices.length?`<select id="voiceSel" class="voicesel" aria-label="Voice">${rankedVoices().map(v=>`<option value="${esc(v.name)}" ${chosenVoice()?.name===v.name?"selected":""}>${esc(v.name)} · ${esc(v.lang)}</option>`).join("")}</select>`:""}</div>
       <button data-act="trysay" aria-label="Hear the voice">Hear it</button></div>`:""}
     <div class="p"><div><b>Your words</b><span id="syncNote">${syncNote()}</span></div></div>
