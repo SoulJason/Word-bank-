@@ -161,7 +161,7 @@ SwiftUI notes: paging `ScrollView` with `.scrollTargetBehavior(.viewAligned)`; i
 
 ## 8. Dictionary: free, offline, no credits
 
-- **WordNet 3.1** (Princeton, free licence): meanings, examples, literary quotations, synonyms. **CMU Pronouncing Dictionary**: pronunciations, as plain respellings.
+- **WordNet 3.1** (Princeton, free licence): meanings, examples, literary quotations, synonyms. **CMU Pronouncing Dictionary** for pronunciations, with **eSpeak NG** (run once at build time) filling the ~47,000 words CMU lacks, so all but 2 words have a plain respelling. The speaker shows for every word regardless.
 - `tools/build-dictionary.mjs` builds 26 JSON files (~15 MB, 82,784 words) loaded one letter at a time. Proper names are flagged so autocomplete skips them. Licence in `prototype/dict/LICENSE.txt`.
 - Optional, free, online-only extras for the native app: the Free Dictionary API (dictionaryapi.dev) for audio and etymology; Apple's built-in dictionary as a "full entry" view.
 

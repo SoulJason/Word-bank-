@@ -451,6 +451,7 @@ async function initAccount(){
       synced=new Map([["meta",JSON.stringify(m)],...words.map(w=>["w_"+w.id,JSON.stringify(w)])]);
       try{localStorage.setItem("margin.v4",JSON.stringify(S))}catch(e){}
       await Promise.all(S.words.filter(w=>!w.senses).map(hydrate));
+      await refreshSay(S.words);try{localStorage.setItem("margin.v4",JSON.stringify(S))}catch(e){}
       COL=col;DB=db;clearTimeout(timer);setSync("account");renderHead();renderGallery();
     }else{
       // first time with an account: carry this browser's words up
@@ -532,6 +533,7 @@ function pickSense(senses,context,lemma){ // simplified Lesk: overlap between yo
   const c=new Set(toks(context).filter(t=>t!==lemma.slice(0,5)));if(!c.size)return 0;
   let best=0,bs=0;senses.forEach((s,i)=>{const bag=toks(s[1]+" "+s[2].map(e=>e[0]).join(" ")+" "+s[3].join(" "));const sc=bag.filter(t=>c.has(t)).length-i*.01;if(sc>bs){bs=sc;best=i}});return best;
 }
+async function refreshSay(ws){let n=0;for(const w of ws){if(w.say||!usable(w))continue;const e=await findEntry(w.word);if(e&&e.say){w.say=e.say;n++}}return n}
 async function hydrate(w){if(w.senses)return;const e=await findEntry(w.word);if(e){w.word=e.lemma;w.say=e.say;w.senses=e.senses;w.pick=Number.isInteger(w.pick)&&w.pick>0&&w.pick<e.senses.length?w.pick:pickSense(e.senses,w.context,e.lemma)}else w.senses=[]}
 
 // ===== the leaf =====
@@ -560,7 +562,7 @@ const rankedVoices=()=>voices.slice().sort((a,b)=>voiceScore(b)-voiceScore(a));
 const chosenVoice=()=>(S.prefs.voice&&voices.find(v=>v.name===S.prefs.voice))||rankedVoices()[0]||null;
 function speak(text,btn){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);const v=chosenVoice();if(v){u.voice=v;u.lang=v.lang}else u.lang="en-GB";u.rate=.9;
   if(btn){btn.classList.add("on");u.onend=u.onerror=()=>btn.classList.remove("on")}speechSynthesis.speak(u)}catch(e){}}
-const sayHTML=w=>w.say?(canSpeak?`<button class="ph-btn" data-act="speak" data-w="${esc(w.word)}" aria-label="Hear ${esc(w.word)}">${esc(w.say)}${SPK}</button>`:`<span class="ph">${esc(w.say)}</span>`):"";
+const sayHTML=w=>canSpeak?`<button class="ph-btn" data-act="speak" data-w="${esc(w.word)}" aria-label="Hear ${esc(w.word)}">${esc(w.say||"")}${SPK}</button>`:(w.say?`<span class="ph">${esc(w.say)}</span>`:"");
 function kinOf(w){
   const mine=new Set(w.senses[w.pick][3].map(k=>k.toLowerCase()));const out=[];
   for(const x of S.words){if(x===w||!usable(x)||x.word===w.word)continue;
@@ -909,7 +911,7 @@ function pageShelf(){
    ${rhythmHTML()}
    ${yearsWithReading().length?`<section class="sect"><h2>The year</h2><p class="lede">A page for each year of your reading.</p><div class="center" style="justify-content:flex-start">${yearsWithReading().map(y=>`<button class="txtbtn" style="letter-spacing:0;text-transform:none;font-family:var(--f-display);font-size:24px" data-act="year" data-v="${y}">${y}</button>`).join("")}</div></section>`:""}
    <div class="orn-c">❦</div><div class="center"><button class="txtbtn" data-go="import">Bring in from Notes</button><button class="txtbtn dim" data-go="prefs">Preferences</button></div>
-   <p class="lib-foot" style="margin-top:14px">Definitions from WordNet, Princeton University. Pronunciations from the CMU Pronouncing Dictionary.${S.words.some(w=>w.sample)?`<br><button class="txtbtn dim" data-act="reset" style="letter-spacing:0;text-transform:none;font-size:inherit;text-decoration:underline;min-height:0">Remove the example words</button>`:""}</p></div>`,"shelf");
+   <p class="lib-foot" style="margin-top:14px">Definitions from WordNet, Princeton University. Pronunciations from the CMU Pronouncing Dictionary and eSpeak NG.${S.words.some(w=>w.sample)?`<br><button class="txtbtn dim" data-act="reset" style="letter-spacing:0;text-transform:none;font-size:inherit;text-decoration:underline;min-height:0">Remove the example words</button>`:""}</p></div>`,"shelf");
 }
 // ----- importing from Notes -----
 const isHeading=l=>/^\s*#{1,6}\s+\S/.test(l), isRule=l=>/^\s*(-{3,}|={3,}|\*{3,}|_{3,})\s*$/.test(l);
@@ -1128,6 +1130,7 @@ $("gallery").addEventListener("touchmove",e=>{if(e.touches.length===2&&pinch0&&d
   renderHead();renderGallery();syncWake();
   const pending=S.words.filter(w=>!w.senses);
   if(pending.length){await Promise.all(pending.map(hydrate));save();renderGallery();renderHead()}
+  if(await refreshSay(S.words)){try{localStorage.setItem("margin.v4",JSON.stringify(S))}catch(e){}renderGallery(galleryFocus())}
   if(!$("slip").classList.contains("on")&&matchMedia("(hover:hover)").matches)$("q").focus();
   touch();
   initAccount();

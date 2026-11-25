@@ -50,3 +50,6 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+-----
+Pronunciations for words the CMU dictionary lacks were generated with eSpeak NG (https://github.com/espeak-ng/espeak-ng), run once at build time; its phonetic output was converted to plain respellings. eSpeak NG itself is not included.
