@@ -153,6 +153,12 @@ Measured against *unlock → word → meaning → lock*, nine things were fluff 
 
 Also rejected on the same grounds: an always-on "bookmark" screen beside the book, a "closing the book" ritual screen, and a continuously running camera (battery, and technology sitting inside the reading).
 
+## 3c. Adding a book
+
+The dashed **+** spine on the Reading now shelf is the only way in, so the Library stays quiet. Tapping it, the spine lifts and floats to the middle of the screen, opening into a cloth cover with a gilt frame. You type the title on the cover (its cloth colour settles as you type), return, the author if you like, return. The cover closes back into a spine and settles onto the shelf beside your other books. Tapping outside or Escape folds it away.
+
+It also fixes a real bug: inside the Claude app, pressing Add did nothing, because the page's sandbox can block form submission. Every return key and button now acts directly, never through a form submit.
+
 ## 4. Motion audit
 
 Rule: **no motion delays information, every motion says what just happened, and all of it collapses to a plain fade under Reduce Motion.**

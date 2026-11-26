@@ -309,10 +309,24 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .bk .lab{position:absolute;left:4px;right:4px;top:26px;height:44%;background:rgba(0,0,0,.16);border-top:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12)}
 .bk .st{position:relative}
 .bookend{display:block;width:16px;height:84px;margin-left:4px;border-left:5px solid var(--ink-2);border-bottom:5px solid var(--ink-2);border-radius:0 0 0 2px;opacity:.55}
+.nbveil{position:fixed;inset:0;z-index:40;background:color-mix(in srgb,var(--paper) 78%,transparent);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;transition:opacity .45s var(--ease)}
+.nbveil.on{opacity:1}
+.nbook{position:fixed;z-index:41;border:1px dashed var(--graphite);border-radius:2px;background:transparent;overflow:hidden;
+  transition:left .55s var(--ease),top .55s var(--ease),width .55s var(--ease),height .55s var(--ease),background-color .6s,border-color .3s,box-shadow .55s}
+.nbook{--c:var(--cloth3)}
+.nbook.open{background:var(--c);border:1px solid transparent;box-shadow:inset 4px 0 0 rgba(0,0,0,.16),0 30px 60px -30px rgba(20,12,6,.55)}
+.nbook.landing{background:var(--c);border-color:transparent;transition-duration:.6s}
+.nbook .frame{position:absolute;inset:14px;border:1px solid color-mix(in srgb,var(--gilt) 50%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px 14px;opacity:0;transition:opacity .25s}
+.nbook.open .frame{opacity:1;transition:opacity .35s .3s}
+.nbook input{width:100%;background:none;border:0;outline:none;text-align:center;color:var(--gilt);caret-color:var(--gilt);padding:4px 0}
+.nbook input::placeholder{color:var(--gilt);opacity:.45}
+#nbTitle{font-family:var(--f-display);font-size:28px;font-style:italic;font-weight:500;line-height:1.15}
+#nbAuthor{font-family:var(--f-text);font-size:16px;font-style:italic}
+.nbook .rule{width:34%;border-top:1px solid color-mix(in srgb,var(--gilt) 45%,transparent)}
+.nbhint{position:fixed;left:0;right:0;z-index:41;text-align:center;font-style:italic;font-size:14px;color:var(--graphite);margin:0;opacity:0;transition:opacity .4s .4s;pointer-events:none}
+.nbhint.on{opacity:1}
 .bk.new{background:none;border:1px dashed var(--graphite);color:var(--graphite);box-shadow:none;align-items:center;font-size:22px}
 .bk.new::before,.bk.new::after{display:none}
-.addbook{margin-top:14px}
-.addbook input{font-size:19px}
 .lib-foot{text-align:center;font-style:italic;color:var(--graphite);font-size:15px;margin-top:6px}
 /* library */
 .lib-h{font-family:var(--f-display);font-weight:500;font-size:27px;margin:40px 0 10px;display:flex;justify-content:space-between;align-items:baseline;gap:12px}
@@ -886,6 +900,45 @@ function pageYear(y){
     ${favs.length?`<div class="orn-c">❦</div><p class="sc" style="margin-bottom:10px">Dog-eared this year</p><div class="olist" style="text-align:left;max-width:460px;margin:0 auto">${favs.map(w=>bookEntryAll(w).replace(/<\/button>$/,(w.note?`<span class="hand" style="display:block">${esc(w.note)}</span>`:"")+"</button>")).join("")}</div>`:""}
     <div class="orn-c">⁂</div></div>`,"year");
 }
+let nbState=null;
+const calm=()=>matchMedia("(prefers-reduced-motion: reduce)").matches;
+function openNewBook(from){
+  if(nbState)return;
+  const r=from.getBoundingClientRect();
+  const veil=document.createElement("div");veil.className="nbveil";veil.dataset.act="nbcancel";
+  const bk=document.createElement("div");bk.className="nbook";bk.setAttribute("role","dialog");bk.setAttribute("aria-label","A new book");
+  bk.innerHTML=`<div class="frame"><input id="nbTitle" placeholder="Title" aria-label="Title" autocomplete="off" autocapitalize="words" enterkeyhint="next"><span class="rule"></span><input id="nbAuthor" placeholder="author, if you like" aria-label="Author (optional)" autocomplete="off" autocapitalize="words" enterkeyhint="done"></div>`;
+  const W=Math.min(260,innerWidth-80),H=Math.round(W*1.42),L=(innerWidth-W)/2,T=Math.max(56,Math.min((innerHeight-H)/2-70,140));
+  const hintEl=document.createElement("p");hintEl.className="nbhint";hintEl.style.top=(T+H+18)+"px";hintEl.textContent="Return to shelve it";
+  Object.assign(bk.style,{left:r.left+"px",top:r.top+"px",width:r.width+"px",height:r.height+"px"});
+  document.body.append(veil,bk,hintEl);
+  nbState={bk,veil,hintEl,from:r};
+  const ti=bk.querySelector("#nbTitle");ti.focus({preventScroll:true});
+  ti.addEventListener("input",()=>bk.style.setProperty("--c",`var(--cloth${hashOf(ti.value.trim()||"x")%6+1})`)); // in the same tap, so the keyboard opens on iPhone
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{veil.classList.add("on");hintEl.classList.add("on");bk.classList.add("open");Object.assign(bk.style,{left:L+"px",top:T+"px",width:W+"px",height:H+"px"})}));
+  bk.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.isComposing){e.preventDefault();e.stopPropagation();if(e.target.id==="nbTitle"&&ti.value.trim()&&!bk.querySelector("#nbAuthor").value)return bk.querySelector("#nbAuthor").focus();shelveNewBook()}
+    if(e.key==="Escape"){e.stopPropagation();closeNewBook(null)}},true);
+}
+function shelveNewBook(){
+  if(!nbState)return;const {bk}=nbState;const t=bk.querySelector("#nbTitle").value.trim(),a=bk.querySelector("#nbAuthor").value.trim();
+  if(!t)return closeNewBook(null);
+  const nb=addBook(a?`${t} — ${a}`:t);
+  const pg=$("page"),y=pg.scrollTop;pageShelf();pg.scrollTop=y;
+  const spineEl=document.querySelector(`.bk[data-id="${nb.id}"]`);
+  closeNewBook(spineEl,nb);
+}
+function closeNewBook(target,nb){
+  if(!nbState)return;const {bk,veil,hintEl,from}=nbState;nbState=null;
+  document.activeElement?.blur();
+  const done=()=>{bk.remove();veil.remove();hintEl.remove();if(target)target.style.visibility=""};
+  veil.classList.remove("on");hintEl.classList.remove("on");
+  if(calm()){done();return}
+  const r=target?target.getBoundingClientRect():from;
+  if(target)target.style.visibility="hidden";
+  bk.classList.remove("open");bk.classList.add(target?"landing":"leaving");
+  Object.assign(bk.style,{left:r.left+"px",top:r.top+"px",width:r.width+"px",height:r.height+"px"});
+  setTimeout(done,620);
+}
 function pageShelf(){
   const rd=reading(),fin=S.books.filter(b=>b.finished).sort((a,c)=>(c.finished===true?0:c.finished)-(a.finished===true?0:a.finished));
   const years={};fin.forEach(b=>{const y=b.finished===true?"Earlier":String(new Date(b.finished).getFullYear());(years[y]??=[]).push(b)});
@@ -905,7 +958,6 @@ function pageShelf(){
    <div class="idx" id="libResults">${libQ?libResults():""}</div><div id="libShelves" ${libQ?"hidden":""}>
    <div class="shelf-h"><b>Reading now</b><span>a ribbon marks your place</span></div>
    <div class="shelfrow">${rd.map(b=>spine(b,true)).join("")}<div class="slot"><button class="bk new" style="height:96px;width:34px" data-act="newbook" aria-label="Place a new book on the shelf">+</button></div></div>
-   <form class="field addbook" id="nb" autocomplete="off"><input id="nbt" placeholder="Add a book: title — author" aria-label="Add a book: title, then author if you like" autocapitalize="words" enterkeyhint="done" required><button class="txtbtn">Add</button></form>
    ${Object.keys(years).sort((a,c)=>a==="Earlier"?1:c==="Earlier"?-1:c-a).map(y=>`<div class="shelf-h"><b>${y==="Earlier"?"Read before":y}</b><span>${years[y].length} book${years[y].length===1?"":"s"}</span></div><div class="shelfrow">${years[y].map(b=>spine(b,false)).join("")}<div class="slot" aria-hidden="true"><span class="bookend"></span></div></div>`).join("")}
    ${fin.length?`<p class="lib-foot">Thicker spines hold more words. Take one down to read its words again.</p>`:`<p class="lib-foot">Books you finish are shelved here, by the year you finished them.</p>`}
    ${rhythmHTML()}
@@ -1076,7 +1128,8 @@ document.addEventListener("click",async e=>{
      // focus in the same tap, so the keyboard opens on iPhone and iPad too
      if(w.fav){const ta=document.querySelector(`${pageKind==="leaf"?"#page":"#gallery"} .notearea[data-id="${id}"]`);if(ta){ta.focus({preventScroll:true});ta.setSelectionRange(ta.value.length,ta.value.length)}}
      return}
-   case"newbook":{$("nbt").focus();$("nbt").scrollIntoView({block:"center",behavior:"smooth"});return}
+   case"newbook":return openNewBook(t);
+   case"nbcancel":return closeNewBook(null);
    case"speak":return speak(t.dataset.w,t);
    case"jumpsit":{const el=$("sit-"+t.dataset.k);if(el){el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"instant":"smooth",block:"start"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1600)}return}
    case"finish":{const b=viewBook();b.finished=now();if(S.active===b.id){const nx=reading()[0];if(nx)S.active=nx.id}save();return pageFinis(b.id)}
@@ -1091,14 +1144,18 @@ document.addEventListener("click",async e=>{
      try{await navigator.clipboard.writeText(txt);t.textContent="Copied"}catch(err){const ta=$("copyArea");ta.style.display="block";ta.value=txt;ta.focus();ta.select();t.textContent="Select and copy"}return}
   }
 });
-$("cap").addEventListener("submit",e=>{e.preventDefault();submitLine()});
+function addBook(raw){raw=(raw||"").trim();if(!raw)return null;const [title,author]=raw.split(/\s+(?:—|–|-)\s+/);
+  const nb={id:uid(),title:title.trim(),author:(author||"").trim(),begun:now()};S.books.push(nb);S.active=nb.id;save();return nb}
+function handleForm(form){
+  if(form.id==="cap")return submitLine();
+  if(form.id==="nb"||form.id==="firstf"){const nb=addBook(form.querySelector("input").value);if(!nb)return;closePage();renderHead();renderGallery();hint(`${nb.title} is on your shelf.`);$("q").focus();return}
+}
+document.addEventListener("keydown",e=>{if(e.key!=="Enter"||e.isComposing)return;const f=e.target.closest?.("form");if(f&&e.target.tagName==="INPUT"){e.preventDefault();handleForm(f)}},true);
+document.addEventListener("click",e=>{const b=e.target.closest?.("form button");if(b&&b.type!=="button"){e.preventDefault();handleForm(b.form)}},true);
+document.addEventListener("submit",e=>{e.preventDefault();handleForm(e.target)});
 $("q").addEventListener("input",()=>{clearTimeout(suggT);suggT=setTimeout(updateSugg,70)});
 $("q").addEventListener("paste",e=>{const t=(e.clipboardData||window.clipboardData)?.getData("text")||"";if(words(t).length>2){e.preventDefault();$("q").value="";showChooser(t.trim().replace(/\s+/g," "));$("q").blur()}});
-document.addEventListener("submit",e=>{
-  if(e.target.id==="nb"||e.target.id==="firstf"){e.preventDefault();const inp=e.target.querySelector("input");const raw=inp.value.trim();if(!raw)return;
-    const [title,author]=raw.split(/\s+(?:—|–|-)\s+/);const nb={id:uid(),title:title.trim(),author:(author||"").trim(),begun:now()};S.books.push(nb);S.active=nb.id;save();
-    closePage();renderHead();renderGallery();hint(`${nb.title} is on your shelf. Its words will gather here.`);$("q").focus();return}
-});
+
 document.addEventListener("input",e=>{if(e.target.id==="libq"){libQ=e.target.value;$("libResults").innerHTML=libQ.trim()?libResults():"";$("libShelves").hidden=!!libQ.trim()}if(e.target.id==="idxq"){idxQ=e.target.value;pageIndex()}if(e.target.id==="bookq"){bookQ=e.target.value;$("bookBody").innerHTML=bookBody()}if(e.target.id==="imp"){clearTimeout(suggT);suggT=setTimeout(previewImport,150)}});
 document.addEventListener("change",e=>{if(e.target.id==="restoreIn"&&e.target.files[0])restoreBackup(e.target.files[0]);if(e.target.id==="voiceSel"){S.prefs.voice=e.target.value;save();speak("lugubrious")}if(e.target.id==="impMulti")previewImport()});
 // the margin: write right where the note lives; saved as you write, nothing to confirm
