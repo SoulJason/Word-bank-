@@ -1096,7 +1096,7 @@ $("q").addEventListener("input",()=>{clearTimeout(suggT);suggT=setTimeout(update
 $("q").addEventListener("paste",e=>{const t=(e.clipboardData||window.clipboardData)?.getData("text")||"";if(words(t).length>2){e.preventDefault();$("q").value="";showChooser(t.trim().replace(/\s+/g," "));$("q").blur()}});
 document.addEventListener("submit",e=>{
   if(e.target.id==="nb"||e.target.id==="firstf"){e.preventDefault();const inp=e.target.querySelector("input");const raw=inp.value.trim();if(!raw)return;
-    const [title,author]=raw.split(/\s+(?:—|–|-|by)\s+/i);const nb={id:uid(),title:title.trim(),author:(author||"").trim(),begun:now()};S.books.push(nb);S.active=nb.id;save();
+    const [title,author]=raw.split(/\s+(?:—|–|-)\s+/);const nb={id:uid(),title:title.trim(),author:(author||"").trim(),begun:now()};S.books.push(nb);S.active=nb.id;save();
     closePage();renderHead();renderGallery();hint(`${nb.title} is on your shelf. Its words will gather here.`);$("q").focus();return}
 });
 document.addEventListener("input",e=>{if(e.target.id==="libq"){libQ=e.target.value;$("libResults").innerHTML=libQ.trim()?libResults():"";$("libShelves").hidden=!!libQ.trim()}if(e.target.id==="idxq"){idxQ=e.target.value;pageIndex()}if(e.target.id==="bookq"){bookQ=e.target.value;$("bookBody").innerHTML=bookBody()}if(e.target.id==="imp"){clearTimeout(suggT);suggT=setTimeout(previewImport,150)}});
