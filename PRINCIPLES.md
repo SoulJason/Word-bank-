@@ -159,6 +159,12 @@ The dashed **+** spine on the Reading now shelf is the only way in, so the Libra
 
 It also fixes a real bug: inside the Claude app, pressing Add did nothing, because the page's sandbox can block form submission. Every return key and button now acts directly, never through a form submit.
 
+## 3d. Never lose what you just did (sync)
+
+Bug found November 2026: when Margin opened, it loaded your words from your Claude account in the background, which takes several seconds on a phone. Anything added in that window (a new book, a word) was replaced by the account copy and never uploaded.
+
+Rule now: when the account copy arrives it is **merged**, never swapped in. Anything this device created since its last complete save to the account is kept and uploaded; anything deleted on another device stays deleted. The add-book sheet keeps its buttons above the keyboard, shrinking the cover if it must.
+
 ## 4. Motion audit
 
 Rule: **no motion delays information, every motion says what just happened, and all of it collapses to a plain fade under Reduce Motion.**

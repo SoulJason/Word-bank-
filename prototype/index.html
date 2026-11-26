@@ -323,7 +323,7 @@ button{cursor:pointer;background:none;border:0;padding:0}
 #nbTitle{font-family:var(--f-display);font-size:28px;font-style:italic;font-weight:500;line-height:1.15}
 #nbAuthor{font-family:var(--f-text);font-size:16px;font-style:italic}
 .nbook .rule{width:34%;border-top:1px solid color-mix(in srgb,var(--gilt) 45%,transparent)}
-.nbacts{position:fixed;left:0;right:0;z-index:42;display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0;transition:opacity .3s .3s}
+.nbacts{position:fixed;left:0;right:0;z-index:43;display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0;transition:opacity .3s .3s}
 .nbacts.on{opacity:1}
 .nbbtn{min-height:48px;min-width:200px;padding:0 24px;border-radius:24px;font-size:16px;color:var(--ink-2);touch-action:manipulation;-webkit-user-select:none;user-select:none}
 .nbbtn.primary{background:var(--ink);color:var(--paper);font-weight:500}
@@ -429,7 +429,7 @@ const strip=w=>{const {senses,say,...rest}=w;return rest};
 const metaOf=()=>({v:4,books:S.books,active:S.active,prefs:S.prefs,readDays:S.readDays||[],lastActive:S.lastActive||0});
 function scheduleSync(){if(!COL)return;clearTimeout(syncT);syncT=setTimeout(runSync,900)}
 async function runSync(){
-  if(!COL)return;if(syncing){syncAgain=true;return}syncing=true;
+  if(!COL)return;if(syncing){syncAgain=true;return}syncing=true;const startedAt=now();
   try{
     const want=new Map([["meta",JSON.stringify(metaOf())],...S.words.map(w=>["w_"+w.id,JSON.stringify(strip(w))])]);
     const jobs=[];
@@ -437,6 +437,7 @@ async function runSync(){
     for(const id of [...synced.keys()])if(!want.has(id))jobs.push(async()=>{await COL.doc(id).delete();synced.delete(id)});
     // a few at a time, so a big import never trips the rate limit
     for(let i=0;i<jobs.length;i+=4)await Promise.all(jobs.slice(i,i+4).map(j=>j().catch(async e=>{if(e?.code==="unavailable"){await new Promise(r=>setTimeout(r,800+Math.random()*800));return j()}throw e})));
+    S.lastSyncOk=startedAt;try{localStorage.setItem("margin.v4",JSON.stringify(S))}catch(e){}
     setSync("account");
   }catch(e){setSync(e?.code==="quota_exceeded"?"full":"retry")}
   syncing=false;if(syncAgain){syncAgain=false;scheduleSync()}
@@ -462,13 +463,21 @@ async function initAccount(){
       const m=meta.data();const words=[];let last=-1;
       for(;;){const q=await col.where("added",">",last).orderBy("added").limit(500).get();q.docs.forEach(d=>{if(d.id.startsWith("w_"))words.push(d.data())});if(q.size<500)break;last=q.docs[q.docs.length-1].data().added}
       const cache=new Map(S.words.map(w=>[w.id,w]));
-      S.books=m.books||[];S.active=m.active;S.prefs={...PREFS,...(m.prefs||{})};S.readDays=m.readDays||[];S.lastActive=Math.max(S.lastActive||0,m.lastActive||0);
-      S.words=words.map(w=>{const c=cache.get(w.id);return c&&c.word===w.word&&c.senses?{...w,senses:c.senses,say:c.say}:w});
+      // anything made on this device since it last saved to the account (or while the account was loading) is kept
+      const since=S.lastSyncOk||0,acctBooks=new Set((m.books||[]).map(b=>b.id)),acctWords=new Set(words.map(w=>w.id));
+      const keepBooks=S.books.filter(b=>!acctBooks.has(b.id)&&(b.begun||0)>=since);
+      const keepWords=S.words.filter(w=>!acctWords.has(w.id)&&(w.added||0)>=since);
+      const keepActive=keepBooks.some(b=>b.id===S.active)?S.active:null;
+      S.books=[...(m.books||[]),...keepBooks];S.active=keepActive||m.active;S.prefs={...PREFS,...(m.prefs||{})};S.readDays=m.readDays||[];S.lastActive=Math.max(S.lastActive||0,m.lastActive||0);
+      S.words=[...words.map(w=>{const c=cache.get(w.id);return c&&c.word===w.word&&c.senses?{...w,senses:c.senses,say:c.say}:w}),...keepWords];
       synced=new Map([["meta",JSON.stringify(m)],...words.map(w=>["w_"+w.id,JSON.stringify(w)])]);
       try{localStorage.setItem("margin.v4",JSON.stringify(S))}catch(e){}
       await Promise.all(S.words.filter(w=>!w.senses).map(hydrate));
       await refreshSay(S.words);try{localStorage.setItem("margin.v4",JSON.stringify(S))}catch(e){}
-      COL=col;DB=db;clearTimeout(timer);setSync("account");renderHead();renderGallery();
+      COL=col;DB=db;clearTimeout(timer);setSync("account");
+      if(keepBooks.length||keepWords.length)runSync();else{S.lastSyncOk=now();try{localStorage.setItem("margin.v4",JSON.stringify(S))}catch(e){}}
+      if(pageKind==="shelf"){const pg=$("page"),y=pg.scrollTop;pageShelf();pg.scrollTop=y}
+      renderHead();renderGallery();
     }else{
       // first time with an account: carry this browser's words up
       COL=col;DB=db;clearTimeout(timer);if(S.words.length||S.books.length)await runSync();else setSync("account");
@@ -919,13 +928,20 @@ function openNewBook(from){
   Object.assign(bk.style,{left:r.left+"px",top:r.top+"px",width:r.width+"px",height:r.height+"px"});
   document.body.append(veil,bk,hintEl);
   nbState={bk,veil,hintEl,from:r};
+  // keep Add book above the keyboard: if the keyboard would cover it, it rides just above it
+  const vv=window.visualViewport;
+  const fitH=()=>{const limit=(vv?vv.offsetTop+vv.height:innerHeight)-112;return Math.max(140,Math.min(H,limit-16-T))};
+  const place=()=>{if(!nbState||nbState.bk!==bk)return;const h=fitH();hintEl.style.top=(T+h+16)+"px";if(bk.classList.contains("open"))bk.style.height=h+"px"};
+  place();vv?.addEventListener("resize",place);vv?.addEventListener("scroll",place);
+
   const ti=bk.querySelector("#nbTitle");ti.focus({preventScroll:true});
   ti.addEventListener("input",()=>bk.style.setProperty("--c",`var(--cloth${hashOf(ti.value.trim()||"x")%6+1})`)); // in the same tap, so the keyboard opens on iPhone
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{veil.classList.add("on");hintEl.classList.add("on");bk.classList.add("open");Object.assign(bk.style,{left:L+"px",top:T+"px",width:W+"px",height:H+"px"})}));
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{veil.classList.add("on");hintEl.classList.add("on");bk.classList.add("open");Object.assign(bk.style,{left:L+"px",top:T+"px",width:W+"px",height:fitH()+"px"});place()}));
   bk.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.isComposing){e.preventDefault();e.stopPropagation();if(e.target.id==="nbTitle"&&ti.value.trim()&&!bk.querySelector("#nbAuthor").value)return bk.querySelector("#nbAuthor").focus();shelveNewBook()}
     if(e.key==="Escape"){e.stopPropagation();closeNewBook(null)}},true);
 }
-function shelveNewBook(){
+function shelveNewBook(){try{shelveNewBook0()}catch(e){closeNewBook(null);hint("Couldn't add the book: "+(e?.message||e))}}
+function shelveNewBook0(){
   if(!nbState)return;const {bk}=nbState;const t=bk.querySelector("#nbTitle").value.trim(),a=bk.querySelector("#nbAuthor").value.trim();
   if(!t){bk.querySelector("#nbTitle").focus();bk.animate?.([{transform:"translateX(0)"},{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"translateX(0)"}],{duration:260});return}
   const nb=addBook(a?`${t} — ${a}`:t);
