@@ -323,8 +323,10 @@ button{cursor:pointer;background:none;border:0;padding:0}
 #nbTitle{font-family:var(--f-display);font-size:28px;font-style:italic;font-weight:500;line-height:1.15}
 #nbAuthor{font-family:var(--f-text);font-size:16px;font-style:italic}
 .nbook .rule{width:34%;border-top:1px solid color-mix(in srgb,var(--gilt) 45%,transparent)}
-.nbhint{position:fixed;left:0;right:0;z-index:41;text-align:center;font-style:italic;font-size:14px;color:var(--graphite);margin:0;opacity:0;transition:opacity .4s .4s;pointer-events:none}
-.nbhint.on{opacity:1}
+.nbbar{position:fixed;left:0;right:0;top:calc(18px + env(safe-area-inset-top,0px));z-index:42;display:flex;justify-content:space-between;align-items:center;padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));max-width:520px;margin:0 auto;opacity:0;transition:opacity .35s .25s}
+.nbbar.on{opacity:1}
+.nbbar .txtbtn{min-height:44px;padding:0 10px;font-size:13px}
+.nbbar .txtbtn:disabled{color:var(--graphite);opacity:.5;cursor:default}
 .bk.new{background:none;border:1px dashed var(--graphite);color:var(--graphite);box-shadow:none;align-items:center;font-size:22px}
 .bk.new::before,.bk.new::after{display:none}
 .lib-foot{text-align:center;font-style:italic;color:var(--graphite);font-size:15px;margin-top:6px}
@@ -905,16 +907,17 @@ const calm=()=>matchMedia("(prefers-reduced-motion: reduce)").matches;
 function openNewBook(from){
   if(nbState)return;
   const r=from.getBoundingClientRect();
-  const veil=document.createElement("div");veil.className="nbveil";veil.dataset.act="nbcancel";
+  const veil=document.createElement("div");veil.className="nbveil";veil.dataset.act="nbveil";
   const bk=document.createElement("div");bk.className="nbook";bk.setAttribute("role","dialog");bk.setAttribute("aria-label","A new book");
   bk.innerHTML=`<div class="frame"><input id="nbTitle" placeholder="Title" aria-label="Title" autocomplete="off" autocapitalize="words" enterkeyhint="next"><span class="rule"></span><input id="nbAuthor" placeholder="author, if you like" aria-label="Author (optional)" autocomplete="off" autocapitalize="words" enterkeyhint="done"></div>`;
-  const W=Math.min(260,innerWidth-80),H=Math.round(W*1.42),L=(innerWidth-W)/2,T=Math.max(56,Math.min((innerHeight-H)/2-70,140));
-  const hintEl=document.createElement("p");hintEl.className="nbhint";hintEl.style.top=(T+H+18)+"px";hintEl.textContent="Return to shelve it";
+  const W=Math.min(230,innerWidth-100),H=Math.round(W*1.4),L=(innerWidth-W)/2,T=86;
+  const hintEl=document.createElement("div");hintEl.className="nbbar";
+  hintEl.innerHTML=`<button class="txtbtn dim" data-act="nbcancel">Cancel</button><span class="sc">A new book</span><button class="txtbtn" data-act="nbshelve" id="nbGo" disabled>Shelve it</button>`;
   Object.assign(bk.style,{left:r.left+"px",top:r.top+"px",width:r.width+"px",height:r.height+"px"});
   document.body.append(veil,bk,hintEl);
   nbState={bk,veil,hintEl,from:r};
   const ti=bk.querySelector("#nbTitle");ti.focus({preventScroll:true});
-  ti.addEventListener("input",()=>bk.style.setProperty("--c",`var(--cloth${hashOf(ti.value.trim()||"x")%6+1})`)); // in the same tap, so the keyboard opens on iPhone
+  ti.addEventListener("input",()=>{bk.style.setProperty("--c",`var(--cloth${hashOf(ti.value.trim()||"x")%6+1})`);$("nbGo").disabled=!ti.value.trim()}); // in the same tap, so the keyboard opens on iPhone
   requestAnimationFrame(()=>requestAnimationFrame(()=>{veil.classList.add("on");hintEl.classList.add("on");bk.classList.add("open");Object.assign(bk.style,{left:L+"px",top:T+"px",width:W+"px",height:H+"px"})}));
   bk.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.isComposing){e.preventDefault();e.stopPropagation();if(e.target.id==="nbTitle"&&ti.value.trim()&&!bk.querySelector("#nbAuthor").value)return bk.querySelector("#nbAuthor").focus();shelveNewBook()}
     if(e.key==="Escape"){e.stopPropagation();closeNewBook(null)}},true);
@@ -1130,6 +1133,8 @@ document.addEventListener("click",async e=>{
      return}
    case"newbook":return openNewBook(t);
    case"nbcancel":return closeNewBook(null);
+   case"nbshelve":return shelveNewBook();
+   case"nbveil":{if(nbState&&!nbState.bk.querySelector("#nbTitle").value.trim())closeNewBook(null);else nbState?.bk.querySelector("#nbTitle").focus();return}
    case"speak":return speak(t.dataset.w,t);
    case"jumpsit":{const el=$("sit-"+t.dataset.k);if(el){el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"instant":"smooth",block:"start"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1600)}return}
    case"finish":{const b=viewBook();b.finished=now();if(S.active===b.id){const nx=reading()[0];if(nx)S.active=nx.id}save();return pageFinis(b.id)}
