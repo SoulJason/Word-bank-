@@ -311,8 +311,8 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .bookend{display:block;width:16px;height:84px;margin-left:4px;border-left:5px solid var(--ink-2);border-bottom:5px solid var(--ink-2);border-radius:0 0 0 2px;opacity:.55}
 .bk.new{background:none;border:1px dashed var(--graphite);color:var(--graphite);box-shadow:none;align-items:center;font-size:22px}
 .bk.new::before,.bk.new::after{display:none}
-.lib-new{display:none}
-.lib-new.on{display:flex}
+.addbook{margin-top:14px}
+.addbook input{font-size:19px}
 .lib-foot{text-align:center;font-style:italic;color:var(--graphite);font-size:15px;margin-top:6px}
 /* library */
 .lib-h{font-family:var(--f-display);font-weight:500;font-size:27px;margin:40px 0 10px;display:flex;justify-content:space-between;align-items:baseline;gap:12px}
@@ -905,7 +905,7 @@ function pageShelf(){
    <div class="idx" id="libResults">${libQ?libResults():""}</div><div id="libShelves" ${libQ?"hidden":""}>
    <div class="shelf-h"><b>Reading now</b><span>a ribbon marks your place</span></div>
    <div class="shelfrow">${rd.map(b=>spine(b,true)).join("")}<div class="slot"><button class="bk new" style="height:96px;width:34px" data-act="newbook" aria-label="Place a new book on the shelf">+</button></div></div>
-   <form class="field lib-new" id="nb" autocomplete="off"><input id="nbt" placeholder="title — author, if you like" aria-label="Title" required><button class="txtbtn">Place on shelf</button></form>
+   <form class="field addbook" id="nb" autocomplete="off"><input id="nbt" placeholder="Add a book: title — author" aria-label="Add a book: title, then author if you like" autocapitalize="words" enterkeyhint="done" required><button class="txtbtn">Add</button></form>
    ${Object.keys(years).sort((a,c)=>a==="Earlier"?1:c==="Earlier"?-1:c-a).map(y=>`<div class="shelf-h"><b>${y==="Earlier"?"Read before":y}</b><span>${years[y].length} book${years[y].length===1?"":"s"}</span></div><div class="shelfrow">${years[y].map(b=>spine(b,false)).join("")}<div class="slot" aria-hidden="true"><span class="bookend"></span></div></div>`).join("")}
    ${fin.length?`<p class="lib-foot">Thicker spines hold more words. Take one down to read its words again.</p>`:`<p class="lib-foot">Books you finish are shelved here, by the year you finished them.</p>`}
    ${rhythmHTML()}
@@ -1076,7 +1076,7 @@ document.addEventListener("click",async e=>{
      // focus in the same tap, so the keyboard opens on iPhone and iPad too
      if(w.fav){const ta=document.querySelector(`${pageKind==="leaf"?"#page":"#gallery"} .notearea[data-id="${id}"]`);if(ta){ta.focus({preventScroll:true});ta.setSelectionRange(ta.value.length,ta.value.length)}}
      return}
-   case"newbook":{const f=$("nb");f.classList.add("on");$("nbt").focus();return}
+   case"newbook":{$("nbt").focus();$("nbt").scrollIntoView({block:"center",behavior:"smooth"});return}
    case"speak":return speak(t.dataset.w,t);
    case"jumpsit":{const el=$("sit-"+t.dataset.k);if(el){el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"instant":"smooth",block:"start"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1600)}return}
    case"finish":{const b=viewBook();b.finished=now();if(S.active===b.id){const nx=reading()[0];if(nx)S.active=nx.id}save();return pageFinis(b.id)}
@@ -1097,7 +1097,7 @@ $("q").addEventListener("paste",e=>{const t=(e.clipboardData||window.clipboardDa
 document.addEventListener("submit",e=>{
   if(e.target.id==="nb"||e.target.id==="firstf"){e.preventDefault();const inp=e.target.querySelector("input");const raw=inp.value.trim();if(!raw)return;
     const [title,author]=raw.split(/\s+(?:—|–|-|by)\s+/i);const nb={id:uid(),title:title.trim(),author:(author||"").trim(),begun:now()};S.books.push(nb);S.active=nb.id;save();
-    closePage();renderHead();renderGallery();$("q").focus();return}
+    closePage();renderHead();renderGallery();hint(`${nb.title} is on your shelf. Its words will gather here.`);$("q").focus();return}
 });
 document.addEventListener("input",e=>{if(e.target.id==="libq"){libQ=e.target.value;$("libResults").innerHTML=libQ.trim()?libResults():"";$("libShelves").hidden=!!libQ.trim()}if(e.target.id==="idxq"){idxQ=e.target.value;pageIndex()}if(e.target.id==="bookq"){bookQ=e.target.value;$("bookBody").innerHTML=bookBody()}if(e.target.id==="imp"){clearTimeout(suggT);suggT=setTimeout(previewImport,150)}});
 document.addEventListener("change",e=>{if(e.target.id==="restoreIn"&&e.target.files[0])restoreBackup(e.target.files[0]);if(e.target.id==="voiceSel"){S.prefs.voice=e.target.value;save();speak("lugubrious")}if(e.target.id==="impMulti")previewImport()});
