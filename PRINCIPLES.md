@@ -165,6 +165,18 @@ Bug found November 2026: when Margin opened, it loaded your words from your Clau
 
 Rule now: when the account copy arrives it is **merged**, never swapped in. Anything this device created since its last complete save to the account is kept and uploaded; anything deleted on another device stays deleted. The add-book sheet keeps its buttons above the keyboard, shrinking the cover if it must.
 
+## 3e. The screen sets the expectation
+
+- **Bringing in words from a book's page** (its title › More › *Bring in words from Notes*) puts them into **that book**. No title line needed; if the note starts with the book's title, that line is skipped.
+- **From the Library**, a note starts with its book's title, as in Notes. If the first line looks like a word rather than a title, Margin says so and offers *Add all to [the book you're reading]* in one tap, instead of quietly making a book called "ardent".
+
+## 3f. Words the dictionary doesn't have
+
+Paper books are full of old, rare, regional and invented words. Margin never refuses one:
+- Looking one up shows *Not in this dictionary*, any close spellings (*did you mean…*), and **Keep it anyway**. Kept, it becomes *your own word*: the leaf opens with the cursor on a handwritten line, *what it means, in your words*.
+- Importing lists each missing word with *did you mean…* or *keep it as it is*, plus *Keep all as they are*.
+- Your own words come back in Revisit once you've written a meaning for them.
+
 ## 4. Motion audit
 
 Rule: **no motion delays information, every motion says what just happened, and all of it collapses to a plain fade under Reduce Motion.**
